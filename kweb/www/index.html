@@ -1,0 +1,1145 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>kweb</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M1 12 Q4 2 8 9 T15 4%27 stroke=%27%235ec4ff%27 stroke-width=%272%27 fill=%27none%27/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0d1117;--panel:#131a22;--card:#17202b;--fg:#d6dde6;--dim:#8b96a3;--line:#2b3440;--accent:#5ec4ff;--ok:#7ee787;--warn:#f0b35e;--bad:#ff7b72}
+*{box-sizing:border-box}
+:root{color-scheme:dark}   /* native controls and scrollbars in the dark theme */
+*{scrollbar-width:thin;scrollbar-color:#3a4552 transparent}
+::-webkit-scrollbar{width:10px;height:10px} ::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#3a4552;border-radius:6px;border:2px solid transparent;background-clip:padding-box} ::-webkit-scrollbar-thumb:hover{background:#4b5868;background-clip:padding-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.4 system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--line)}
+header b{font-size:15px}
+.pill{padding:1px 8px;border-radius:9px;background:#1b2430;color:var(--dim);white-space:nowrap}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)}
+/* the ADC overload LED: green, red (with a glow) while the ADC clips */
+.adcled{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px;
+        background:radial-gradient(circle at 38% 35%,#d9ffd9 0,#3fd45a 45%,#1d7a31 100%);box-shadow:0 0 5px 1px rgb(63 212 90/.55)}
+.adcled.ov{background:radial-gradient(circle at 38% 35%,#ffe0dd 0,#ff4b3e 45%,#a3160d 100%);box-shadow:0 0 7px 2px rgb(255 75 62/.8)}
+main{padding:8px 16px 16px}
+.view{position:relative;margin-bottom:10px;background:var(--panel);border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.view h2{margin:0;padding:4px 10px;font-size:12px;font-weight:600;color:var(--dim);border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+canvas{display:block;width:100%}
+.spec{height:110px} .spec,.wf{cursor:crosshair} .axis{height:20px} .wf{height:150px;image-rendering:pixelated}
+.bar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;margin:8px 0}
+label{color:var(--dim)} input,select,button{background:#1b2430;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 7px;font:inherit}
+button{cursor:pointer} button.primary{border-color:var(--accent);color:var(--accent)} button:disabled{opacity:.5;cursor:default}
+input[type=number]{width:6.5em} input[type=range]{vertical-align:middle;width:90px}
+.vfos{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+.vfo{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.vfo.sel{border-color:var(--vc)}
+.vfo.parked{opacity:.55;border-style:dashed}
+.vfo .top{display:flex;align-items:flex-start;gap:8px}
+.vfo .top .tl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;flex:1;min-width:0}
+.vfo .top .tr{display:flex;align-items:center;gap:6px;flex:none;min-height:26px}
+.vfo .tag{font-weight:700;color:var(--vc)}
+.vfo .top .age{color:var(--dim);font:12px ui-monospace,monospace;white-space:nowrap;cursor:help}
+.vfo .f{font:600 17px/1 ui-monospace,monospace;width:8.5em}
+.row{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:center}
+.vfo .pb{display:inline-flex;align-items:center;gap:4px;white-space:nowrap} .vfo .lo,.vfo .hi{width:5em}
+.note{color:var(--warn)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;margin-top:10px}
+.panel h3{margin:0 0 4px;font-size:12px;color:var(--dim)}
+.meter{position:relative;flex:1;min-width:120px;height:10px;background:#0b1016;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.meter .lvl{position:absolute;inset:0;background:linear-gradient(90deg,#2f81f7,#3fb9d8,#7ee787,#e3d75a,#f0883e,#ff5a4f);clip-path:inset(0 100% 0 0)}   /* the scale fixed across the meter; the level reveals it (JS: clip-path) */
+.meter .thrm{position:absolute;top:-2px;bottom:-2px;width:2px;background:#ff7b72}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#3b4450} .dot.open{background:var(--ok)}
+.read{font:12px ui-monospace,monospace;color:var(--dim);white-space:nowrap;font-variant-numeric:tabular-nums;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.scale{font-weight:400;white-space:nowrap} .scale select,.scale input{padding:0 3px;font-size:11px} .scale input{width:4.2em}
+.scale input:disabled{opacity:.6}
+@media (max-width:640px){.wf{height:110px}.vfos{grid-template-columns:1fr}}
+/* the user's waterfall off: no spectrum, axis or waterfall (kweb sends no rows); the VFO cards in the page's flow */
+body.nowf #wsec>h2,body.nowf .spec,body.nowf .axis,body.nowf .wf,body.nowf #nsec{display:none}
+body.nowf.zoomwf{height:auto;overflow:visible} body.nowf.zoomwf #wsec{flex:none}
+body.nowf.zoomwf #wsec>.vfos{position:static;display:grid;pointer-events:auto}
+/* [kweb] zoom_waterfall: one main waterfall, taller by the narrow view's height */
+/* the waterfall fills the window down to the controls; the VFO panels float over its lower edge */
+body.zoomwf{height:100vh;display:flex;flex-direction:column;overflow:hidden}
+body.zoomwf main{flex:1;min-height:0;display:flex;flex-direction:column;padding-bottom:8px}
+body.zoomwf main>.bar{flex:none;margin:8px 0 0}
+body.zoomwf #wsec{flex:1;min-height:0;display:flex;flex-direction:column;margin-bottom:0}
+body.zoomwf #wwf{flex:1;min-height:120px;height:auto}
+body.zoomwf #wsec>.vfos{position:absolute;left:8px;right:8px;bottom:8px;z-index:2;display:flex;gap:8px;overflow-x:auto;align-items:flex-end;pointer-events:none}
+body.zoomwf #wsec>.vfos .vfo{pointer-events:auto;flex:0 0 370px;width:370px;min-width:0;overflow:hidden;background:color-mix(in srgb,var(--card) 80%,transparent);backdrop-filter:blur(3px)}
+.vfo .more{display:none} body.zoomwf #wsec>.vfos .vfo .more{display:inline-block}
+body.zoomwf #wsec>.vfos .vfo:not(.open)>:not(.top):not(.mrow):not(.crow){display:none}   /* compact over the waterfall: the top line + the meter; ▾ opens the rest */
+body.zoomwf #wsec>.vfos .vfo:not(.open) .cbw,body.zoomwf #wsec>.vfos .vfo:not(.open) .csq{display:inline-flex;align-items:center;gap:5px;flex:none;white-space:nowrap}
+body.zoomwf #wsec>.vfos .vfo:not(.open) .csqt{width:auto}
+.vfo .crow{display:none} body.zoomwf #wsec>.vfos .vfo:not(.open)>.crow{display:flex;align-items:center;gap:8px;flex-wrap:nowrap}
+body.zoomwf #wsec>.vfos .vfo:not(.open) .csql{flex:1;min-width:50px;width:auto}
+body.zoomwf #wsec>.vfos .vfo:not(.open) .f{width:6.6em}
+body.zoomwf #wsec>.vfos .vfo:not(.open) .tl>span:not(.tag){display:none}   /* (the "kHz" label: the frequency is plainly kHz) */
+body.zoomwf #wsec>.vfos .vfo:not(.open) .tl{flex-wrap:nowrap;gap:6px} body.zoomwf #wsec>.vfos .vfo:not(.open) .tl .mode{max-width:6.5em;min-width:0}
+.vfo .bwv{font:12px ui-monospace,monospace;min-width:5.5em;text-align:right}
+body.zoomwf #wsec>.vfos .vfo:not(.open) .mode{width:auto;max-width:7.5em}
+@media (max-width:640px){body.zoomwf{height:auto;overflow:visible} body.zoomwf #wwf{flex:none;height:260px}
+  body.zoomwf #wsec>.vfos{position:static;display:grid;padding:8px;pointer-events:auto}}
+/* the decodes window: floating, dragged by its title bar, resized from its corner (saved in the browser) */
+#digipanel{position:fixed;right:16px;bottom:16px;width:560px;max-width:calc(100vw - 32px);height:340px;min-width:300px;min-height:120px;z-index:50;margin:0;
+  display:flex;flex-direction:column;resize:both;overflow:hidden;box-shadow:0 8px 28px rgba(0,0,0,.55)}
+#digipanel[hidden]{display:none} #digipanel.min{height:auto!important;min-height:0;resize:none} #digipanel.min .digiscroll{display:none}
+#digipanel h3{display:flex;justify-content:space-between;gap:8px;cursor:move;user-select:none;margin:0 0 4px} #digipanel .dim{color:var(--dim);font-weight:400}
+#digipanel h3 button,#digipanel h3 label,#digipanel h3 .chip{cursor:pointer}
+#digibusy{display:inline-flex;align-items:center;gap:5px;color:var(--accent);font-weight:400;font-size:12px} #digibusy[hidden]{display:none}
+.spin{width:10px;height:10px;border:2px solid #5ec4ff40;border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+#digisearch{width:9em;font:12px system-ui,sans-serif;padding:1px 6px} #digitab mark{background:#5ec4ff40;color:inherit;border-radius:2px;padding:0 1px}
+.digiscroll{flex:1;min-height:0;overflow:auto} #digitab{border-collapse:collapse;width:auto;font:12px/1.35 ui-monospace,monospace}
+#digitab td.num,#digitab th.num{min-width:3.5ch}
+#digitab th{position:sticky;top:0;background:var(--panel);text-align:left;color:var(--dim);font-weight:600}
+#digitab td,#digitab th{padding:1px 8px 1px 0;white-space:nowrap} #digitab .num{text-align:right} #digitab tr.new td{color:var(--fg)}
+#digitab td{color:var(--fg)} #digitab tr.sep td{color:var(--dim);padding-top:6px;border-bottom:1px solid var(--line)}
+#digitab tr.cq td.msg{color:#7ee787} #digitab tr.cq td.msg b{font-weight:700} #digitab .low{color:var(--dim)}
+/* the period bar under the title: 2 px, the accent colour, the time left beside it */
+.digicyc{display:flex;align-items:center;gap:8px;margin:0 0 4px} .digicyc[hidden]{display:none}
+.digicyc .trk{flex:1;min-width:0;height:2px;background:var(--line);border-radius:1px;overflow:hidden}
+.digicyc .fill{height:100%;background:var(--accent);transform-origin:0 50%;transform:scaleX(0)}
+.digicyc .left{font:11px ui-monospace,monospace;color:var(--dim);white-space:nowrap;min-width:16ch;text-align:right}
+.digictl{display:flex;gap:10px;align-items:center;font-weight:400} .chip{border:1px solid var(--line);border-radius:9px;padding:0 7px;cursor:pointer;color:var(--dim)}
+.chip.on{color:var(--fg);border-color:var(--accent)} .vfo .dstat{color:var(--dim);font-size:12px}
+/* "On air": who listens where, the PC's streams, the board (a dropdown under the users pill) */
+#users.oa{cursor:pointer} #users.oa:hover,#users.oa.open{color:var(--fg);outline:1px solid var(--line)}
+#users.flash{animation:oaflash 1s ease-in-out 3}
+@keyframes oaflash{50%{color:var(--accent);outline:1px solid var(--accent)}}
+#onair{position:fixed;z-index:30;width:min(560px,calc(100vw - 32px));max-height:62vh;overflow:auto;background:var(--card);
+  border:1px solid var(--line);border-radius:6px;box-shadow:0 8px 24px #000a;padding:8px 10px}
+#onair h3{margin:8px 0 4px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim);font-weight:600}
+#onair .oah{display:flex;justify-content:space-between;align-items:center;gap:8px} #onair .oah b{font-size:13px}
+#onair .oar{display:flex;align-items:center;gap:8px;padding:3px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+#onair .oar:first-of-type{border-top:0} #onair .oaw{color:var(--dim);flex:1 1 auto;min-width:0}
+#onair .oav{display:flex;align-items:center;gap:6px;width:100%;padding-left:14px}
+#onair .oav .f{font-variant-numeric:tabular-nums;min-width:7.5em} #onair .oav .m{color:var(--dim);min-width:3.2em}
+#onair .oav .sp{flex:1} #onair button{padding:1px 7px;font-size:12px} #onair .dim{color:var(--dim)}
+#onair .you{color:var(--accent)}
+.vfo.along{outline:1px dashed var(--accent)} .alongbar{display:none;gap:8px;align-items:center;color:var(--accent);font-size:12px}
+.vfo.along .alongbar{display:flex!important}   /* (also in the compact card over the waterfall, which hides other rows) */
+</style></head>
+<body>
+<header>
+  <b>kweb</b>
+  <span id="conn" class="pill">connecting…</span>
+  <span id="ddc" class="pill">DDC: –</span>
+  <span id="role" class="pill">listener</span>
+  <span id="users" class="pill" role="button" tabindex="0" aria-haspopup="true" aria-expanded="false" title="who is on air">users –</span>
+  <span id="cpu" class="pill">CPU –</span>
+  <span id="adcp" class="pill" hidden><span class="adcled" id="adcled"></span><span id="adct">ADC</span></span>
+  <span id="gpsp" class="pill">GPS: no GPS data</span>
+  <button id="audio" class="primary">▶ start audio</button>
+  <label>volume <input id="vol" type="range" min="0" max="100" value="70"></label>
+  <span id="outdev" hidden><label>output <select id="sink"><option value="">default</option></select></label> <button id="pickdev">choose…</button></span>
+</header>
+<div id="onair" hidden role="dialog" aria-label="On air"></div>
+<main>
+  <section class="view" id="wsec">
+    <h2><span><span id="wtitle">Full band 0–33 MHz</span> — click: tune there · wheel: zoom · drag: pan</span><span><span class="scale" data-p="w">scale <select class="smode"><option value="auto">auto</option><option value="manual">manual</option></select> <input class="slo" type="number" step="1"> – <input class="shi" type="number" step="1"> dB · avg <select class="savg" title="spectrum line averaging (the waterfall is not averaged further)"><option value="off">off</option><option value="low">low</option><option value="med">medium</option><option value="high">high</option></select></span> <span id="wspan"></span></span></h2>
+    <canvas id="wspec" class="spec"></canvas><canvas id="waxis" class="axis"></canvas><canvas id="wwf" class="wf"></canvas>
+  </section>
+  <section class="view" id="nsec">
+    <h2><span id="ntitle">DDC window</span><span>click: tune the selected VFO · wheel: zoom · drag: pan · double-click: reset <span class="scale" data-p="n">scale <select class="smode"><option value="auto">auto</option><option value="manual">manual</option></select> <input class="slo" type="number" step="1"> – <input class="shi" type="number" step="1"> dB · avg <select class="savg" title="spectrum line averaging (the waterfall is not averaged further)"><option value="off">off</option><option value="low">low</option><option value="med">medium</option><option value="high">high</option></select></span></span></h2>
+    <canvas id="nspec" class="spec"></canvas><canvas id="naxis" class="axis"></canvas><canvas id="nwf" class="wf"></canvas>
+  </section>
+  <div class="bar">
+    <label>go to kHz <input id="goto" type="number" step="0.1" placeholder="e.g. 14074" style="width:8em"></label> <button id="gotogo">go</button>
+    <label>listen to <select id="source"></select></label>
+    <label title="off: no spectrum or waterfall (saves the Kiwi's CPU and your data; tune with go to or the VFO's frequency)"><input type="checkbox" id="wfon" checked> waterfall</label>
+    <label title="off: waterfall only, no receiver for you (+ VFO or this turns it back on)"><input type="checkbox" id="audon" checked> audio</label>
+    <button id="addvfo">+ VFO</button> <button id="digibtn" hidden title="the digital decodes window">decodes</button>
+    <span id="owner_ctl" hidden>
+      <label>DDC width <select id="width"></select></label>
+      <label>centre kHz <input id="dfc" type="number" step="1"></label>
+      <button id="dgo">move window</button>
+    </span>
+    <span id="claim"><label>owner password <input id="pw" type="password" style="width:8em"></label> <button id="claimgo">claim</button></span>
+    <span id="note" class="note"></span>
+  </div>
+  <div id="vfos" class="vfos"></div>
+  <div class="panel" id="digipanel" hidden><h3 id="digihead"><span>Decodes <span id="digistat" class="dim"></span> <span id="digibusy" hidden><span class="spin"></span></span></span>
+    <span class="digictl"><span id="digichips"></span><input id="digisearch" type="search" placeholder="search" title="show only decodes whose text contains this (as you type; Esc clears)" autocomplete="off" spellcheck="false"><label><input type="checkbox" id="digicq"> CQ only</label> <button id="digiclear">clear</button>
+      <button id="digimin" title="minimise">–</button><button id="digiclose" title="close (the 'decodes' button opens it again)">✕</button></span></h3>
+    <div class="digicyc" id="digicyc" hidden title="the current UTC period: it is decoded at its end"><div class="trk"><div class="fill" id="digicycf"></div></div><span class="left" id="digicyct"></span></div>
+    <div class="digiscroll"><table id="digitab"><thead><tr><th class="num">dB</th><th class="num">DT</th><th class="num">Freq</th><th>Message</th></tr></thead><tbody></tbody></table></div></div>
+</main>
+<template id="vfo_t">
+  <div class="vfo">
+    <div class="top"><span class="tl"><span class="tag"></span><input class="f" type="number" step="0.01" title="kHz"><span>kHz</span>
+      <select class="mode"><option value="usb">USB</option><option value="lsb">LSB</option><option value="cw">CW</option><option value="am">AM</option><option value="amn">AM narrow</option>
+        <option value="sam">SAM</option><option value="sau">SAM-U</option><option value="sal">SAM-L</option><option value="sas" title="synchronous AM with the sidebands apart: lower sideband in the left ear, upper in the right (for interference on one side, or ISB); not AM-stereo broadcasts">SAM L/R</option><option value="nfm">NFM</option><option value="iq" title="the channel's I in the left ear, Q in the right">IQ (I left, Q right)</option>
+        <optgroup label="digital"><option value="ft8">FT8</option><option value="ft4">FT4</option><option value="ft2">FT2</option><option value="wspr">WSPR</option></optgroup></select>
+      </span><span class="tr"><span class="age"></span><button class="more" title="more controls">▾</button><button class="del" title="remove this VFO">✕</button></span></div>
+    <div class="row"><span class="pb"><label>passband <input class="lo" type="number" step="50"> … <input class="hi" type="number" step="50"></label><button class="bwn" title="narrower">−</button><button class="bww" title="wider">+</button></span>
+      <label>codec <select class="codec"><option value="opus">Opus</option><option value="opus_hq">Opus HQ</option><option value="adpcm">ADPCM</option><option value="pcm12">PCM 12 kS/s</option></select></label></div>
+    <div class="row"><label>AGC <select class="agc"><option>slow</option><option>fast</option><option>manual</option></select></label>
+      <label class="gainl">gain <input class="gain" type="number" step="1" style="width:4.5em"> dB</label>
+      <label class="thrl">threshold <input class="thr" type="number" step="1" style="width:4.5em"> dB</label>
+      <label><input class="hang" type="checkbox"> hang</label></div>
+    <div class="row"><label><input class="nb" type="checkbox"> NB</label><label><input class="anf" type="checkbox"> notch</label><label><input class="nr" type="checkbox"> NR</label>
+      <span class="nfmctl"><label><input class="deemph" type="checkbox"> de-emph</label></span>
+      <span class="cwctl"><label title="the tone a signal on the dial is heard at">pitch <input class="pitch" type="number" min="200" max="1500" step="10" style="width:4.5em"> Hz</label></span></div>
+    <div class="row"><span class="dot" title="squelch open/closed"></span>
+      <label>squelch <select class="sqt"><option value="off">off</option><option value="snr">SNR</option><option value="level">level</option><option value="noise">noise (FM)</option></select></label>
+      <label class="sqautol"><input class="sqauto" type="checkbox"> auto</label>
+      <label class="pxxl" title="noise floor = this percentile of the spectrum around the VFO">P<select class="pxx"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
+      <input class="sql" type="range" step="0.5" style="width:110px"></div>
+    <div class="row crow"><span class="cbw" title="passband width"><span class="bwv"></span><button class="cbwn" title="narrower">−</button><button class="cbww" title="wider">+</button></span>
+      <span class="csq" title="squelch: type and threshold"><span class="dot"></span><select class="csqt"><option value="off">SQ off</option><option value="snr">SQ SNR</option><option value="level">SQ level</option><option value="noise">SQ noise</option></select></span>
+      <input class="csql" type="range" step="0.5" title="squelch threshold"></div>
+    <div class="row mrow"><div class="meter"><div class="lvl"></div><div class="thrm"></div></div><span class="read"></span></div>
+    <div class="row dstat" hidden></div>
+    <div class="row alongbar"><span class="alongt"></span><button class="alongstop" title="your own VFO again, when there is room">stop listening along</button></div>
+    <div class="row"><label>vol <input class="vvol" type="range" min="0" max="150" value="100"></label><label>pan <input class="pan" type="range" min="-100" max="100" value="0"></label>
+      <label><input class="mute" type="checkbox"> mute</label><label title="off: received but not played (e.g. for a decoder)"><input class="play" type="checkbox" checked> play</label>
+      <span class="vnote note"></span></div>
+  </div>
+</template>
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const COLORS = ['#ffb86b', '#7ee787', '#d2a8ff', '#ff7b72', '#79c0ff', '#f2cc60', '#56d4dd', '#ffa198'];
+let ws, st = null, sel = 0, opusOk = false;
+const W = { f0: 0, f1: 33.3333e6, held: null, spec: null }, N = { f0: 0, f1: 0, held: null, spec: null, userZoom: false };
+// [kweb] zoom_waterfall (status.zoom_cfg): one main waterfall zoomed down to min_span; Z: what feeds it (kweb's 'zoom')
+const ZC = { on: false, min: 50e3 };
+let Z = null, gotoWant = null;
+const vfos = new Map();          // id -> { el, state, audio: { gain, pan, dec, playAt } }
+const stats = { wide: 0, narrow: 0, wideBytes: 0, narrowBytes: 0, audio: 0, audioBytes: 0, status: 0, opus: 0, adpcm: 0, pcm: 0, played: 0 };
+let actx = null, master = null, sinkEl = null;
+
+// ---- connection
+// the user's choices, kept in this browser: waterfall on/off, audio on/off (off: waterfall only). Sent when connecting
+// (/ws?nowf&noaudio), so kweb starts without rows or without the default VFO rather than taking them away after
+const PREF = (() => { try { return Object.assign({ wf: true, audio: true }, JSON.parse(localStorage.getItem('kweb.prefs') || '{}')); } catch (e) { return { wf: true, audio: true }; } })();
+const savePref = () => { try { localStorage.setItem('kweb.prefs', JSON.stringify(PREF)); } catch (e) {} };
+let full = false;                          // kweb said it has max_users listeners: wait longer before trying again
+function connect() {
+  full = false;
+  const qs = [!PREF.wf && 'nowf', !PREF.audio && 'noaudio'].filter(Boolean).join('&');
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws' + (qs ? '?' + qs : ''));
+  ws.binaryType = 'arraybuffer';
+  ws.onopen = () => { $('conn').textContent = 'connected'; $('conn').className = 'pill ok'; sizeAll(); sendVis();
+                      uiSent = false; if (OA.open) send({ t: 'onair', on: true }); };   // (a new session: kweb knows neither)
+  ws.onclose = () => {
+    if (full) { setTimeout(connect, 15000); return; }
+    $('conn').textContent = 'disconnected – retrying'; $('conn').className = 'pill bad'; setTimeout(connect, 2000);
+  };
+  ws.onmessage = ev => typeof ev.data === 'string' ? onText(JSON.parse(ev.data)) : onBinary(ev.data);
+}
+const send = o => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
+const sendView = () => send({ t: 'view', wide: { f0: W.f0, f1: W.f1, px: $('wwf').width }, narrow: { f0: N.f0, f1: N.f1, px: $('nwf').width } });
+const note = s => { $('note').textContent = s; clearTimeout(note.t); note.t = setTimeout(() => $('note').textContent = '', 6000);
+                    if (/listen along/.test(s)) { $('users').classList.remove('flash'); void $('users').offsetWidth; $('users').classList.add('flash'); } };
+// listen along: kweb copies another listener's audio frames to us as vfo id ALONG, and their waterfall view; their
+// page-only settings (notch, NR, decoder, waterfall levels) come in the status and are applied here
+const ALONG = 200;
+let alongScale = null;                                   // our own waterfall levels, put back when we stop following
+const OA = { open: false, last: null };                  // the "On air" panel: open, its last data
+const following = () => !!(st && st.along);
+
+const SQR = { off: [-140, 0], level: [-140, -20], noise: [20, 90], snr: [-5, 40] };   // slider ranges (dBFS / dB)
+function onMeters(m) {                     // ~5/s: the squelch measure per VFO, its threshold, open/closed
+  for (const v of m.v) {
+    const x = vfos.get(v.id); if (!x) continue;
+    const q = c => x.el.querySelector(c), rng = SQR[v.sqt === 'off' ? 'level' : v.sqt], frac = val => Math.max(0, Math.min(1, (val - rng[0]) / (rng[1] - rng[0])));
+    const shown = v.sqt === 'off' ? v.level : v.m;
+    q('.lvl').style.clipPath = `inset(0 ${(100 - 100 * (v.sqt === 'noise' ? 1 - frac(shown) : frac(shown))).toFixed(1)}% 0 0)`;
+    q('.thrm').style.display = v.sqt === 'off' ? 'none' : ''; q('.thrm').style.left = (100 * (v.sqt === 'noise' ? 1 - frac(v.thr) : frac(v.thr))) + '%';
+    for (const d of x.el.querySelectorAll('.dot')) d.classList.toggle('open', !!v.open);
+    const fw = (x, n) => x.toFixed(1).padStart(n, '\u2007');     // (figure spaces: the readout keeps its width as digits come and go)
+    q('.read').textContent = `${fw(v.level, 6)} dBFS · SNR ${fw(v.snr, 5)} dB · N0 ${fw(v.n0, 6)} dBFS/bin` + (v.sqt === 'noise' ? ` · noise ${fw(v.noise, 5)} dB` : '');
+  }
+}
+// GPS: the header pill only (status + a UTC clock that ticks between status messages; details on the admin page)
+let gpsOff = null, gpsFix = '';
+function gpsShow(g) {
+  if (!g.valid) { gpsOff = null; gpsFix = ''; $('gpsp').title = ''; gpsTick(); return; }
+  gpsFix = g.fix; gpsOff = g.utc ? g.utc - Date.now() / 1e3 : null;     // (time also from one satellite: tsrc)
+  const pos = g.lat !== undefined ? `${g.lat}, ${g.lon}` + (g.grid ? ` (${g.grid})` : '') : g.grid || '';
+  $('gpsp').title = `${g.used} of ${g.tracked} satellites used` + (g.tsrc ? ` · time ${['', 'coarse (±10 ms, one satellite)', 'from satellites at a known position', 'from the fix'][g.tsrc]}` : '') + (pos ? ` · ${pos}` : '')
+    + (g.adc_hz > 0 ? ` · ADC clock ${g.ppm >= 0 ? '+' : ''}${g.ppm.toFixed(3)} ppm (tuning corrected)` : '');
+  gpsTick();
+}
+function gpsTick() {
+  const t = gpsOff !== null ? new Date((Date.now() / 1e3 + gpsOff) * 1e3).toISOString() : null;
+  $('gpsp').textContent = 'GPS: ' + (gpsFix || 'no GPS data') + (t ? ` · ${t.slice(11, 19)} UTC` : '');
+}
+setInterval(gpsTick, 1000);
+function onText(m) {
+  if (m.t === 'note') return note(m.msg);
+  if (m.t === 'full') {
+    full = true; $('conn').textContent = `full (${m.max} users) – retrying`; $('conn').className = 'pill bad';
+    $('note').textContent = `This receiver has ${m.max} listeners, the most it takes. The page tries again every 15 s.`; clearTimeout(note.t);
+    return;
+  }
+  if (m.t === 'm') return onMeters(m);
+  if (m.t === 'zoom') { Z = m; drawAxis('w'); return; }
+  if (m.t === 'onair') return onairShow(m);
+  if (m.t !== 'status') return;
+  stats.status++; st = m;
+  zoomCfg(m.zoom_cfg); if (ZC.on && m.zoom) { Z = m.zoom; drawAxis('w'); }
+  const d = m.ddc, active = d.state === 'active';
+  $('ddc').textContent = m.along ? `listening along to ${m.along.label}` : 'DDC: ' + d.state + (active ? ` ${(d.fc / 1e3).toFixed(1)} kHz · ${(d.fs * 0.8 / 1e3).toFixed(0)} kHz wide` : '') + (m.msg && !active ? ' – ' + m.msg : '');   // (the reason: kbridge's or kweb's)
+  $('ddc').className = 'pill ' + (active || m.along ? 'ok' : d.state === 'requested' ? 'warn' : 'bad');
+  $('role').textContent = m.you.owner ? 'owner' : 'listener';
+  $('users').textContent = `users ${m.users}` + (d.host ? ' · PC' : '') + (m.onair_ok ? ' ▾' : '');
+  $('users').classList.toggle('oa', !!m.onair_ok); if (!m.onair_ok && OA.open) onairToggle(false);
+  if (!uiSent && m.vfos) { uiSent = true; sendScale(); }
+  $('cpu').textContent = `Beagle idle ${m.cpu.idle}%` + (m.cpu.free !== undefined ? ` · ${Math.round(m.cpu.free)}% free` : ''); $('cpu').className = 'pill ' + (m.cpu.busy ? 'bad' : '');
+  gpsShow(m.gps);
+  {   // the ADC: overload (clipped samples in the last 1.5 s) for everyone; the RF attenuator's setting (admin sets it)
+    const a = m.adc, el = $('adcp'); el.hidden = !a;
+    if (a) {
+      const att = a.fitted && a.attn > 0 ? ` · ATT ${a.attn} dB` : '';
+      $('adcled').className = 'adcled' + (a.ov ? ' ov' : '');
+      $('adct').textContent = (a.ov ? 'ADC overload' : 'ADC') + att; el.className = 'pill ' + (a.ov ? 'bad' : '');
+      el.style.fontWeight = a.ov ? '700' : '';
+      el.title = a.ov ? `the ADC is clipping: ${a.rate} samples/s over full scale (a strong signal; the admin can add RF attenuation)`
+                      : 'no ADC clipping' + (a.fitted ? `; RF attenuator ${a.attn} dB` : '');
+    }
+  }
+  $('owner_ctl').hidden = !d.mine; $('claim').hidden = m.you.owner || d.own;   // window controls: whoever may move this window
+  const wsel = $('width');
+  if (wsel.options.length !== m.presets.length) wsel.innerHTML = m.presets.map(p => `<option value="${p.R}">${(p.span / 1e3).toFixed(0)} kHz (R=${p.R})</option>`).join('');
+  if (document.activeElement !== wsel) wsel.value = d.want_R;
+  if (document.activeElement !== $('dfc')) $('dfc').value = (d.want_fc / 1e3).toFixed(1);
+  const v = m.view, vact = v.state === 'active', srcName = (m.sources.find(x => x.key === m.src) || {}).name || (m.src >= 0 ? 'another range' : 'no source');
+  // follow the source: a new source, or its centre/width changed (a deliberate move: the zoom/pan is reset to it)
+  if (vact && (N.key !== m.src || N.fcSeen !== v.fc || N.fsSeen !== v.fs)) {
+    N.key = m.src; N.userZoom = false; N.fcSeen = v.fc; N.fsSeen = v.fs; N.f0 = v.fc - v.fs * 0.4; N.f1 = v.fc + v.fs * 0.4;
+    N.held = null; N.spec = null; drawAxis('n'); sendView();
+  }
+  if (gotoWant) {                        // (zoom_waterfall) "go to": show the source it landed on
+    if (performance.now() - gotoWant.t > 8000 || !ZC.on) gotoWant = null;
+    else if (vact && (gotoWant.f == null ? m.src === gotoWant.key || gotoWant.key == null && m.src !== gotoWant.from : Math.abs(gotoWant.f - v.fc) <= v.fs * 0.4)) {
+      // the zoom level is kept: the view only pans, to centre the target, when it is off screen
+      const tf = gotoWant.f != null ? gotoWant.f : v.fc, span = W.f1 - W.f0;
+      if (tf < W.f0 || tf > W.f1) setWide(tf - span / 2, tf + span / 2);
+      gotoWant = null;
+    }
+  }
+  $('ntitle').textContent = vact ? `${srcName}: ${(v.fc / 1e3).toFixed(1)} kHz ± ${(v.fs * 0.4 / 1e3).toFixed(0)} kHz` : `${srcName} (${v.state}${m.src < 0 && m.msg ? ': ' + m.msg : ''})`;
+  // grouped: the operator's bands, then receivers (free window, your own), then other ranges (the host's, if offered)
+  const opt = x => {
+    const label = x.fixed ? `${x.name} · ${((x.fc - x.fs * 0.4) / 1e6).toFixed(3)}–${((x.fc + x.fs * 0.4) / 1e6).toFixed(3)} MHz`
+                : x.range ? x.name
+                : (x.name || 'free window') + (x.fc > 0 ? ` ${(x.fc / 1e3).toFixed(1)} kHz` : x.fs > 0 ? ` · ${(x.fs * 0.8 / 1e3).toFixed(0)} kHz wide` : '');
+    const why = x.state === 'full' ? ' (none free)' : x.state === 'cpu' ? ' (CPU busy)' : '';
+    const info = x.state === 'idle' ? ' (idle)' : x.state === 'lingering' ? ' (idle, still running)' : '';
+    return `<option value="${x.key}"${(why && x.key !== m.src) ? ' disabled' : ''}>${label}${x.users ? ` · ${x.users} listening` : ''}${why}${info}</option>`; };
+  const grp = (title, xs) => xs.length ? `<optgroup label="${title}">${xs.map(opt).join('')}</optgroup>` : '';
+  let opts = grp('Bands', m.sources.filter(x => x.fixed)) + grp('Receivers', m.sources.filter(x => !x.fixed && !x.range))
+             + grp('Other ranges', m.sources.filter(x => x.range));
+  const ss = $('source');
+  if (m.along && !opts.includes('value="-99"')) opts = `<option value="-99" disabled>listening along to ${m.along.label}</option>` + opts;   // (no source of our own)
+  if (ss.dataset.opts !== opts) {        // new options reset the selection to the first: restore it (the user's pick while open)
+    const keep = document.activeElement === ss ? ss.value : String(m.src);
+    ss.innerHTML = opts; ss.dataset.opts = opts; ss.value = keep;
+  }
+  if (document.activeElement !== ss) ss.value = String(m.src);
+  const seen = new Set();
+  m.vfos.forEach(x => { seen.add(x.id); upsertVfo(x, vact); });
+  if (m.along) { seen.add(ALONG); alongShow(m.along); } else alongEnd();
+  for (const [id, x] of vfos) if (!seen.has(id)) { x.el.remove(); try { x.audio.dec && x.audio.dec.close(); } catch (e) {} vfos.delete(id); }
+  if (!vfos.has(sel) && vfos.size) selectVfo(vfos.keys().next().value);
+  $('addvfo').disabled = m.vfos.length >= m.vfo_per_user;
+}
+
+// zoom_waterfall on/off (live: the admin may switch it): the narrow view hidden, the main waterfall taller
+function zoomCfg(zc) {
+  const on = !!(zc && zc.on); ZC.min = on ? zc.min_span || 2e3 : 50e3;
+  if (on === ZC.on) return;
+  ZC.on = on; Z = null; gotoWant = null; document.body.classList.toggle('zoomwf', on); $('nsec').hidden = on;
+  if (on) $('wsec').appendChild($('vfos')); else $('digipanel').before($('vfos'));   // (on: the VFO panels float over the waterfall)
+  $('wtitle').textContent = on ? 'Waterfall' : 'Full band 0–33 MHz';
+  if (!on && W.f1 - W.f0 < 50e3) { const c = (W.f0 + W.f1) / 2; W.f0 = Math.max(0, c - 25e3); W.f1 = W.f0 + 50e3; }
+  requestAnimationFrame(sizeAll);                       // (after the layout change: the waterfall's new height)
+}
+// the page hidden (a background tab, a minimised window): kweb sends no zoom frames for it (nobody is looking), and
+// resumes at once when it is shown again
+function sendVis() { try { send({ t: 'vis', on: !document.hidden }); } catch (e) {} }
+document.addEventListener('visibilitychange', sendVis);
+function setWide(a, b) {                   // the main view to [a, b] (clamped to 0..33 MHz)
+  const top = 33.3333e6, w = Math.min(b - a, top);           // (shifted back inside, the span kept)
+  if (a < 0) { a = 0; b = w; } if (b > top) { b = top; a = top - w; }
+  if (!(b > a) || (a === W.f0 && b === W.f1)) return;
+  const a0 = W.f0, a1 = W.f1; W.f0 = a; W.f1 = b; remapView('w', a0, a1); sendView();
+}
+function zoomInfo() {                      // for #wspan: "31 Hz/px from 40m", "4.1 kHz detail"
+  if (!ZC.on || !Z) return '';             // (tier 'source': the source's own rows; 'capture': finer FFTs of its I/Q)
+  const hzpx = (W.f1 - W.f0) / Math.max(1, $('wwf').width), fmt = hz => hz >= 1e3 ? (hz / 1e3).toFixed(1) + ' kHz' : Math.round(hz) + ' Hz';
+  return (Z.tier === 'source' || Z.tier === 'capture' ? ` · ${fmt(hzpx)}/px from ${Z.name}` + (Z.detail_hz > hzpx * 1.5 ? ` (${fmt(Z.detail_hz)} bins)` : '')
+                                                      : ` · ${fmt(Math.max(hzpx, Z.detail_hz))} detail`) + (Z.why ? ` · ${Z.why}` : '');
+}
+
+function upsertVfo(v, active) {
+  let x = vfos.get(v.id);
+  if (!x) {
+    const el = $('vfo_t').content.firstElementChild.cloneNode(true);
+    el.style.setProperty('--vc', COLORS[v.id % COLORS.length]);
+    el.querySelector('.tag').textContent = String.fromCharCode(65 + v.id);
+    x = { el, state: v, audio: { playAt: 0 } }; vfos.set(v.id, x); $('vfos').appendChild(el); wireVfo(v.id, el);
+    if (vfos.size === 1) selectVfo(v.id);
+  }
+  if (!opusOk && opusChecked && v.codec.startsWith('opus') && v.id !== ALONG) send({ t: 'vfo', id: v.id, codec: 'adpcm' });   // no WebCodecs Opus here
+  if (edgeDrag === v.id && x.state) { v.lo = x.state.lo; v.hi = x.state.hi; }   // (mid-drag: the page's edges win)
+  x.state = v;
+  const q = c => x.el.querySelector(c), set = (c, val) => { const e = q(c); if (document.activeElement !== e) { if (e.type === 'checkbox') e.checked = !!val; else e.value = val; } };
+  if (x.dig && v.mode !== 'usb') digiStop(v.id);           // (changed to another mode elsewhere)
+  set('.f', (v.f / 1e3).toFixed(2)); set('.mode', x.dig || v.mode); set('.lo', v.lo); set('.hi', v.hi); set('.codec', v.codec);
+  { const bw = Math.abs(v.hi - v.lo); q('.bwv').textContent = bw >= 1000 ? `${(bw / 1e3).toFixed(bw < 10e3 ? 2 : 1)} kHz` : `${Math.round(bw)} Hz`; }
+  set('.agc', v.agc); set('.gain', v.gain); set('.thr', v.thr); set('.hang', v.hang); set('.nb', v.nb);
+  set('.deemph', v.deemph); set('.pitch', v.pitch ?? 600); set('.sqt', v.sqt); set('.csqt', v.sqt); set('.sqauto', v.sqauto); set('.pxx', v.pxx);
+  const rng = SQR[v.sqt] || SQR.off, sl = q('.sql'), csl = q('.csql'); sl.min = csl.min = rng[0]; sl.max = csl.max = rng[1]; set('.sql', v.sql); set('.csql', v.sql);
+  sl.disabled = csl.disabled = v.sqt === 'off' || (v.sqauto && v.sqt !== 'snr');
+  q('.gainl').hidden = v.agc !== 'manual'; q('.thrl').hidden = v.agc === 'manual'; q('.nfmctl').hidden = v.mode !== 'nfm'; q('.cwctl').hidden = v.mode !== 'cw';
+  q('.sqautol').hidden = v.sqt === 'off' || v.sqt === 'snr'; q('.pxxl').hidden = v.sqt !== 'snr';
+  const parked = active && !v.inwin;                        // (outside this source: kept, silent until a source covers it)
+  x.el.classList.toggle('parked', parked);
+  q('.vnote').textContent = parked ? 'parked: outside this range, silent until you listen to a source that covers it' : '';
+}
+
+// the followed VFO: a read-only strip (volume, pan, mute and play stay ours), filled from kweb's 'along' status
+function alongShow(a) {
+  const v = { id: ALONG, f: a.f, mode: a.mode, lo: a.lo, hi: a.hi, agc: a.agc, codec: a.codec, ch: a.ch, gain: a.gain, thr: a.thr, hang: a.hang,
+              nb: a.nb, deemph: a.deemph, pitch: a.pitch, sqt: a.sqt, sqauto: a.sqauto, sql: a.sql, pxx: a.pxx || 20, inwin: a.inwin };
+  const fresh = !vfos.has(ALONG);
+  upsertVfo(v, true);
+  const x = vfos.get(ALONG), q = c => x.el.querySelector(c);
+  if (fresh) {
+    x.el.classList.add('along'); q('.tag').textContent = '↪';
+    for (const e of x.el.querySelectorAll('input,select,button')) if (!e.matches('.vvol,.pan,.mute,.play,.more,.del,.alongstop')) e.disabled = true;
+    q('.del').title = 'stop listening along'; selectVfo(ALONG);
+  }
+  q('.alongt').textContent = `listening along to ${a.label}` + (a.n > 1 ? ` (with ${a.n - 1} other${a.n > 2 ? 's' : ''})` : '')
+    + (!opusOk && opusChecked && a.codec.startsWith('opus') ? ': they use Opus audio, which this browser cannot play (WebCodecs needs https)' : '');
+  const ui = a.ui || {};                                  // their notch and NR run here, on our copy of their audio
+  for (const c of ['anf', 'nr']) { const on = !!ui[c]; q('.' + c).checked = on; if (on && !x[c]) x[c] = lms(c); else if (!on) x[c] = null; }
+  if (ui.digi && DIGI[ui.digi]) {                         // their decoder: decoding here too (in this browser)
+    if (x.dig !== ui.digi) { x.dig = ui.digi; x.dc = null; x.dclk = null; digiShow(true); digiWorkerGet(); digiStatus(); }
+    q('.mode').value = ui.digi;
+  } else if (x.dig) digiStop(ALONG);
+  const sk = a.scale ? JSON.stringify(a.scale) : '';
+  if (sk && sk !== x.scaleKey) {                          // their waterfall levels, when they change (ours kept for later);
+    x.scaleKey = sk; if (!alongScale) alongScale = { ...SC.w };   // on auto, only that: the levels come from the same rows here
+    Object.assign(SC.w, { auto: !!a.scale.auto, avg: AVG_A[a.scale.avg] ? a.scale.avg : SC.w.avg }, a.scale.auto ? {} : { lo: a.scale.lo, hi: a.scale.hi });
+    scaleUi('w');
+  }
+  const w = a.view;                                       // their view: kweb sends the rows for it
+  if (w && w.f1 > w.f0 && (Math.abs(w.f0 - W.f0) > 1 || Math.abs(w.f1 - W.f1) > 1)) {
+    const a0 = W.f0, a1 = W.f1; W.f0 = w.f0; W.f1 = w.f1; remapView('w', a0, a1); drawAxis('w');
+  }
+}
+function alongEnd() {                                     // (not following: called with every status)
+  if (vfos.has(ALONG)) { digiStop(ALONG); sendView(); }   // (the strip itself goes with the VFOs kweb no longer lists)
+  if (alongScale) { Object.assign(SC.w, alongScale); alongScale = null; scaleUi('w'); }
+}
+// ---- "On air": every listener (as "listener N": no addresses or names), the PC's streams, the board. kweb sends it
+// only while the panel is open, at most once a second and only when it changed
+function onairToggle(on) {
+  OA.open = on === undefined ? !OA.open : on;
+  const el = $('onair'), pill = $('users');
+  el.hidden = !OA.open; pill.classList.toggle('open', OA.open); pill.setAttribute('aria-expanded', String(OA.open));
+  if (OA.open) {
+    el.innerHTML = '<div class="dim">…</div>';
+    if (OA.last) onairShow(OA.last);
+    const r = pill.getBoundingClientRect();
+    el.style.top = Math.round(r.bottom + 6) + 'px';
+    el.style.left = Math.round(Math.max(16, Math.min(r.left, innerWidth - el.offsetWidth - 16))) + 'px';
+  }
+  send({ t: 'onair', on: OA.open });
+}
+function onairShow(m) {
+  OA.last = m; if (!OA.open) return;
+  const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+  const kHz = f => (f / 1e3).toFixed(2) + ' kHz', wid = w => (w / 1e3).toFixed(w < 1e5 ? 1 : 0) + ' kHz wide';
+  const bw = v => { const b = Math.abs(v.hi - v.lo); return b >= 1000 ? (b / 1e3).toFixed(b < 1e4 ? 2 : 1) + ' kHz' : Math.round(b) + ' Hz'; };
+  const mine = st && st.along ? st.along.h : 0;
+  let h = `<div class="oah"><b>On air</b><span class="dim">listeners are numbered: no addresses or names</span><button class="oax" title="close (Esc)">✕</button></div>`;
+  h += `<h3>Web listeners · ${m.users.length}</h3>`;
+  for (const u of m.users) {
+    const me = u.label === m.you;
+    h += `<div class="oar"><b class="${me ? 'you' : ''}">listener ${u.label}${me ? ' (you)' : ''}</b><span class="oaw">${esc(u.where)}</span></div>`;
+    for (const v of u.vfos)
+      h += `<div class="oav"><span class="f">${kHz(v.f)}</span><span class="m">${esc(v.mode.toUpperCase())}</span><span class="dim">${bw(v)}${v.along ? ` · ${v.along} along` : ''}</span><span class="sp"></span>`
+         + (me ? '' : `<button data-tune="${v.f}" data-mode="${esc(v.mode)}" data-lo="${v.lo}" data-hi="${v.hi}" title="your VFO to this frequency and mode">tune here</button>`
+                    + `<button data-along="${v.h}"${v.h === mine ? ' disabled' : ''} title="hear exactly what they hear, and see their waterfall">${v.h === mine ? 'listening' : 'listen along'}</button>`) + `</div>`;
+  }
+  h += `<h3>The PC</h3>`;
+  if (!m.host.on) h += `<div class="dim">no PC connected</div>`;
+  else {
+    const n = m.host.slices.length;
+    h += `<div class="oar"><b>${esc(m.host.kind)}</b><span class="oaw">${n} receiver${n === 1 ? '' : 's'}</span></div>`;
+    for (const x of m.host.slices)
+      h += `<div class="oav"><span class="f">${kHz(x.fc)}</span><span class="dim">${wid(x.width)} · ${esc(x.link)}${x.users ? ` · ${x.users} listening` : ''}</span><span class="sp"></span>`
+         + `<button data-src="${x.key}" title="listen inside this receiver (no receiver of your own needed)">listen inside</button></div>`;
+  }
+  const b = m.board;
+  h += `<h3>The receiver</h3>`;
+  for (const w of b.windows) h += `<div class="oav"><span>${esc(w.name)}</span><span class="dim">${kHz(w.fc)} · ${wid(w.width)} · ${w.users} listening</span></div>`;
+  h += `<div class="oav"><span class="dim">own receivers ${b.own}${b.own_max ? ' of ' + b.own_max : ''} · zoomed detail ${b.snap.ddc >= 0 && b.snap.fps > 0 ? `on receiver ${b.snap.ddc}, ${b.snap.fps} frames/s` : 'idle'}`
+     + ` · ${b.ddcs_free} receiver${b.ddcs_free === 1 ? '' : 's'} free · CPU ${b.cpu} % busy</span></div>`;
+  $('onair').innerHTML = h;
+}
+$('users').addEventListener('click', () => { if (st && st.onair_ok) onairToggle(); });
+$('users').addEventListener('keydown', ev => { if ((ev.key === 'Enter' || ev.key === ' ') && st && st.onair_ok) { ev.preventDefault(); onairToggle(); } });
+document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && OA.open) onairToggle(false); });
+document.addEventListener('mousedown', ev => { if (OA.open && !ev.target.closest('#onair, #users')) onairToggle(false); });
+$('onair').addEventListener('click', ev => {
+  const t = ev.target.closest('button'); if (!t) return;
+  if (t.classList.contains('oax')) return onairToggle(false);
+  if (t.dataset.along) { send({ t: 'along', h: +t.dataset.along }); setAudio(true, false); return; }
+  if (t.dataset.src) { send({ t: 'source', key: +t.dataset.src }); return; }
+  if (t.dataset.tune) {                                   // our VFO there, in their mode and passband (kweb picks the source)
+    const id = vfos.has(sel) && sel !== ALONG ? sel : 0, f = +t.dataset.tune;
+    send({ t: 'tune', f, id }); send({ t: 'vfo', id, mode: t.dataset.mode, lo: +t.dataset.lo, hi: +t.dataset.hi }); setAudio(true, false);
+  }
+});
+// our page-only settings, for anyone listening along to us: notch, NR and decoder per VFO; the waterfall's levels
+let uiSent = false;
+function sendUi(id) { const x = vfos.get(id); if (!x || id === ALONG) return; send({ t: 'ui', id, anf: x.anf ? 1 : 0, nr: x.nr ? 1 : 0, digi: x.dig || '' }); }
+function sendScale() { if (following()) return; send({ t: 'ui', sauto: SC.w.auto ? 1 : 0, slo: Math.round(SC.w.lo), shi: Math.round(SC.w.hi), savg: SC.w.avg }); }
+function wireVfo(id, el) {
+  const q = c => el.querySelector(c), up = o => send(Object.assign({ t: 'vfo', id }, o));
+  el.addEventListener('mousedown', () => selectVfo(id));
+  q('.f').addEventListener('change', () => { up({ f: Math.round(+q('.f').value * 1e3) }); q('.f').blur(); });   // (blurred: a refused one reverts)
+  q('.mode').addEventListener('change', () => {
+    const m = q('.mode').value, x = vfos.get(id); if (!x) return;
+    if (DIGI[m]) digiStart(id, m);
+    else { const prev = x.dig ? x.prevCodec : null; if (x.dig) digiStop(id); up(prev ? { mode: m, codec: prev } : { mode: m }); }
+  });
+  for (const c of ['.lo', '.hi']) q(c).addEventListener('change', () => up({ lo: +q('.lo').value, hi: +q('.hi').value }));
+  q('.bwn').addEventListener('click', () => bwStep(id, -1)); q('.bww').addEventListener('click', () => bwStep(id, +1));
+  q('.cbwn').addEventListener('click', () => bwStep(id, -1)); q('.cbww').addEventListener('click', () => bwStep(id, +1));
+  q('.codec').addEventListener('change', () => { let c = q('.codec').value; if (c.startsWith('opus') && !opusOk) { note('this browser cannot decode Opus (WebCodecs): ADPCM'); c = 'adpcm'; } up({ codec: c }); });
+  q('.agc').addEventListener('change', () => up({ agc: q('.agc').value }));
+  q('.gain').addEventListener('change', () => up({ gain: +q('.gain').value }));
+  q('.thr').addEventListener('change', () => up({ thr: +q('.thr').value }));
+  q('.pitch').addEventListener('change', () => up({ pitch: +q('.pitch').value }));
+  for (const c of ['hang', 'nb', 'deemph']) q('.' + c).addEventListener('change', () => up({ [c]: q('.' + c).checked ? 1 : 0 }));
+  // notch and noise reduction run here in the browser (cheap for it, costly on the Beagle): local settings
+  for (const c of ['anf', 'nr']) q('.' + c).addEventListener('change', () => { const x = vfos.get(id); if (x) x[c] = q('.' + c).checked ? lms(c) : null; sendUi(id); });
+  q('.sql').addEventListener('change', () => up({ sql: +q('.sql').value }));
+  q('.csql').addEventListener('change', () => up({ sql: +q('.csql').value }));
+  q('.sqt').addEventListener('change', () => up({ sqt: q('.sqt').value }));
+  q('.csqt').addEventListener('change', () => up({ sqt: q('.csqt').value }));
+  q('.sqauto').addEventListener('change', () => up({ sqauto: q('.sqauto').checked ? 1 : 0 }));
+  q('.pxx').addEventListener('change', () => up({ pxx: +q('.pxx').value }));
+  q('.del').addEventListener('click', ev => { ev.stopPropagation(); if (id === ALONG) return send({ t: 'along', h: 0 });
+                                               send({ t: 'vfo_del', id }); if (vfos.size <= 1) setAudio(false, false); });
+  q('.alongstop').addEventListener('click', ev => { ev.stopPropagation(); send({ t: 'along', h: 0 }); });
+  const au = () => vfos.get(id).audio;
+  const vol = () => { if (au().gain) au().gain.gain.value = q('.mute').checked ? 0 : q('.vvol').value / 100; };
+  q('.vvol').addEventListener('input', vol); q('.mute').addEventListener('change', vol);
+  q('.pan').addEventListener('input', () => { if (au().pan) au().pan.pan.value = q('.pan').value / 100; });
+}
+function selectVfo(id) { sel = id; for (const [k, x] of vfos) x.el.classList.toggle('sel', k === id); drawSpec('n'); drawSpec('w'); }
+function addVfo(off) {
+  let id = 0; while (vfos.has(id)) id++;
+  const base = vfos.get(sel)?.state.f ?? (st ? st.ddc.fc : 7.1e6);
+  send({ t: 'vfo', id, f: base + off }); sel = id;
+}
+$('addvfo').addEventListener('click', () => { addVfo(vfos.size ? 5000 : 0); setAudio(true, false); });
+// waterfall on/off: kweb stops (or resumes) every row for this user; the page hides (shows) the spectrum and waterfalls
+function setWf(on) {
+  PREF.wf = on; savePref(); $('wfon').checked = on;
+  document.body.classList.toggle('nowf', !on);
+  send({ t: 'wf', on });
+  if (on) sizeAll();                       // (the canvases were hidden: their sizes, and the view, afresh)
+}
+// audio on/off (off: waterfall only). act: also add / remove the VFOs (not when it follows a VFO added or removed)
+function setAudio(on, act) {
+  PREF.audio = on; savePref(); $('audon').checked = on;
+  if (!act) return;
+  if (on) { if (!vfos.size) addVfo(0); }
+  else for (const id of [...vfos.keys()]) send({ t: 'vfo_del', id });
+}
+$('wfon').addEventListener('change', () => setWf($('wfon').checked));
+$('audon').addEventListener('change', () => setAudio($('audon').checked, true));
+$('wfon').checked = PREF.wf; $('audon').checked = PREF.audio; document.body.classList.toggle('nowf', !PREF.wf);
+
+// ---- waterfall rows
+function onBinary(buf) {
+  const dv = new DataView(buf), type = dv.getUint8(0);
+  if (type === 1 || type === 2) {
+    if (!PREF.wf) return;                  // (the waterfall off: a row still in flight; kweb sends a full one when it's on again)
+    if (type === 1) { stats.wide++; stats.wideBytes += buf.byteLength; } else { stats.narrow++; stats.narrowBytes += buf.byteLength; }
+    const V = type === 1 ? W : N, full = dv.getUint8(1) & 1, px = dv.getUint16(2, true);
+    const f0 = dv.getFloat64(12, true), f1 = dv.getFloat64(20, true), body = new Uint8Array(buf, 28);
+    // the held row keeps the view it was made for: deltas apply to it only if they match; it is drawn remapped into
+    // the current view, so rows still in flight for an older view (during a pan/zoom) keep the waterfall moving
+    if (type === 1 && (dv.getUint8(1) & 2)) { SC.w.snap = true; W.spec = null; }   // another provider (zoom_waterfall): rescale
+    if (full) { V.held = body.slice(0, px); V.hv = { f0, f1, px }; }
+    else { if (!V.held || !V.hv || V.hv.f0 !== f0 || V.hv.f1 !== f1 || V.hv.px !== px) return;
+      let vi = (px + 7) >> 3; for (let x = 0; x < px; x++) if (body[x >> 3] & (1 << (x & 7))) V.held[x] = body[vi++]; }
+    const p = type === 1 ? 'w' : 'n', w = $(p + 'wf').width;
+    addRow(p, V.hv.f0 === V.f0 && V.hv.f1 === V.f1 && px === w ? V.held : remapRow(V.held, V.hv, V.f0, V.f1, w));
+  } else if (type === 0x10) { stats.audio++; stats.audioBytes += buf.byteLength; onAudio(dv, buf); }
+}
+function cmap(t) { t = Math.max(0, Math.min(1, t));
+  const a = [[0,0,10],[20,30,120],[0,150,170],[230,220,40],[255,255,255]], x = t * 4, i = Math.min(3, Math.floor(x)), f = x - i;
+  return a[i].map((c, k) => Math.round(c + (a[i + 1][k] - c) * f)); }
+// display scale per view (full band 'w', narrow 'n'): auto = from the noise floor (P10 of the pixels) and the peaks
+// (P99.7), following fast when it must widen and slowly when it narrows (no pumping); manual = min/max dB. Saved per
+// browser (localStorage).
+const SC = { w: { auto: true, lo: -125, hi: -65, avg: 'low' }, n: { auto: true, lo: -125, hi: -65, avg: 'low' } };
+const AVG_A = { off: 1, low: 0.6, med: 0.3, high: 0.12 };   // spectrum line EMA per row (rows: narrow 20/s, full band 10/s)
+try { const v = JSON.parse(localStorage.getItem('kweb.scale') || 'null'); if (v) for (const p of ['w', 'n']) if (v[p]) { Object.assign(SC[p], v[p]); delete SC[p].scaleT; } } catch (e) {}
+const saveScale = () => { try { localStorage.setItem('kweb.scale', JSON.stringify(SC, (k, v) => k === 'scaleT' || k === 'snap' ? undefined : v)); } catch (e) {} };
+function scaleUi(p) {
+  const el = document.querySelector(`.scale[data-p="${p}"]`), s = SC[p], lo = el.querySelector('.slo'), hi = el.querySelector('.shi');
+  el.querySelector('.smode').value = s.auto ? 'auto' : 'manual'; lo.disabled = hi.disabled = s.auto;
+  el.querySelector('.savg').value = AVG_A[s.avg] ? s.avg : 'low';
+  if (document.activeElement !== lo) lo.value = Math.round(s.lo); if (document.activeElement !== hi) hi.value = Math.round(s.hi);
+}
+function autoScale(p, codes) {
+  const s = SC[p]; if (!s.auto) { s.snap = false; return; }
+  const h = new Uint32Array(256); let n = 0;
+  for (let x = 0; x < codes.length; x++) if (codes[x]) { h[codes[x]]++; n++; }   // (0: no data there)
+  if (n < 16) return;
+  let acc = 0, lo = 0, hi = 255;
+  for (let c = 0; c < 256; c++) { acc += h[c]; if (acc >= n * 0.10) { lo = c; break; } }
+  acc = 0; for (let c = 255; c >= 0; c--) { acc += h[c]; if (acc >= n * 0.003) { hi = c; break; } }
+  const tlo = lo / 2 - 140 - 8, thi = Math.max(hi / 2 - 140 + 6, tlo + 35);
+  if (s.snap) { s.lo = tlo; s.hi = thi; s.snap = false; }   // (a new provider: its levels at once)
+  else { s.lo += (tlo - s.lo) * (tlo < s.lo ? 0.3 : 0.04); s.hi += (thi - s.hi) * (thi > s.hi ? 0.3 : 0.03); }
+  if (!(s.scaleT > 0) || performance.now() - s.scaleT > 1000) { s.scaleT = performance.now(); scaleUi(p); }
+}
+for (const p of ['w', 'n']) {
+  const el = document.querySelector(`.scale[data-p="${p}"]`), s = SC[p];
+  el.querySelector('.smode').addEventListener('change', ev => { s.auto = ev.target.value === 'auto'; scaleUi(p); saveScale(); drawSpec(p); if (p === 'w') sendScale(); });
+  el.querySelector('.savg').addEventListener('change', ev => { s.avg = ev.target.value; saveScale(); if (p === 'w') sendScale(); });
+  for (const c of ['.slo', '.shi']) el.querySelector(c).addEventListener('change', () => {
+    const lo = +el.querySelector('.slo').value, hi = +el.querySelector('.shi').value;
+    if (hi - lo >= 5) { s.lo = lo; s.hi = hi; s.auto = false; } scaleUi(p); saveScale(); drawSpec(p); if (p === 'w') sendScale(); });
+  scaleUi(p);
+}
+// a row made for view hv (f0, f1, px) -> w pixels of [f0, f1] (0 = no data there)
+function remapRow(row, hv, f0, f1, w) {
+  const out = new Uint8Array(w), k = hv.px / (hv.f1 - hv.f0), d = (f1 - f0) / w;
+  for (let x = 0; x < w; x++) { const i = Math.floor((f0 + (x + 0.5) * d - hv.f0) * k); out[x] = i >= 0 && i < hv.px ? row[i] : 0; }
+  return out;
+}
+// the view went from [a0, a1] to [V.f0, V.f1]: move/stretch what is already drawn at once (the waterfall image and
+// the spectrum), so a pan or zoom shows immediately; new rows for the new view follow
+const tmpc = document.createElement('canvas');
+function remapView(p, a0, a1) {
+  const V = p === 'w' ? W : N, wf = $(p + 'wf'), w = wf.width, h = wf.height, sc = V.f1 - V.f0;
+  if (!(a1 > a0) || !(sc > 0) || (a0 === V.f0 && a1 === V.f1)) return;
+  tmpc.width = w; tmpc.height = h; tmpc.getContext('2d').drawImage(wf, 0, 0);
+  const ctx = wf.getContext('2d'); ctx.fillStyle = 'rgb(0,0,10)'; ctx.fillRect(0, 0, w, h);
+  ctx.drawImage(tmpc, 0, 0, w, h, (a0 - V.f0) / sc * w, 0, (a1 - a0) / sc * w, h);
+  if (V.spec) { const n = V.spec.length, ns = new Float32Array(n);
+    for (let x = 0; x < n; x++) { const i = Math.floor((V.f0 + (x + 0.5) / n * sc - a0) / (a1 - a0) * n); ns[x] = i >= 0 && i < n ? V.spec[i] : NaN; }
+    V.spec = ns; }
+  drawAxis(p); drawSpec(p);
+}
+function addRow(p, codes) {
+  const wf = $(p + 'wf'), ctx = wf.getContext('2d'), w = wf.width;
+  ctx.drawImage(wf, 0, 1);
+  const img = ctx.createImageData(w, 1);
+  autoScale(p, codes);
+  const S = SC[p], lo = S.lo, rg = Math.max(5, S.hi - S.lo);
+  for (let x = 0; x < w; x++) { const c = cmap((codes[x] / 2 - 140 - lo) / rg), o = 4 * x; img.data[o] = c[0]; img.data[o + 1] = c[1]; img.data[o + 2] = c[2]; img.data[o + 3] = 255; }
+  ctx.putImageData(img, 0, 0);
+  const V = p === 'w' ? W : N;
+  if (!V.spec || V.spec.length !== w) V.spec = Float32Array.from(codes, c => c / 2 - 140);
+  else { const a = AVG_A[SC[p].avg] || 0.6;
+    for (let x = 0; x < w; x++) { const d = codes[x] / 2 - 140; V.spec[x] = Number.isNaN(V.spec[x]) || !codes[x] ? (codes[x] ? d : NaN) : V.spec[x] + a * (d - V.spec[x]); } }
+  drawSpec(p);
+}
+function drawSpec(p) {
+  const V = p === 'w' ? W : N, c = $(p + 'spec'), ctx = c.getContext('2d'), w = c.width, h = c.height, dpr = devicePixelRatio;
+  ctx.clearRect(0, 0, w, h);
+  ctx.strokeStyle = '#2b3440'; ctx.fillStyle = '#8b96a3'; ctx.font = (10 * dpr) + 'px system-ui';
+  const S = SC[p], LO = S.lo, RANGE = Math.max(5, S.hi - S.lo), step = RANGE > 70 ? 20 : RANGE > 30 ? 10 : 5;
+  for (let db = Math.ceil(LO / step) * step; db <= S.hi; db += step) { const y = h - (db - LO) / RANGE * h; if (y < 8 || y > h) continue; ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); ctx.fillText(db + ' dB', 4, y - 2); }
+  const fx = f => (f - V.f0) / (V.f1 - V.f0) * w;
+  if (p === 'w' && st && st.view.state === 'active') { ctx.fillStyle = 'rgba(94,196,255,0.15)'; const a = fx(st.view.fc - st.view.fs * 0.4), b = fx(st.view.fc + st.view.fs * 0.4); ctx.fillRect(a, 0, Math.max(2, b - a), h); }
+  for (const [id, x] of vfos) {
+    const v = x.state, col = COLORS[id % COLORS.length], a = fx(v.f + v.lo), b = fx(v.f + v.hi);
+    ctx.fillStyle = col; ctx.globalAlpha = id === sel ? 0.22 : 0.1; ctx.fillRect(a, 0, Math.max(1, b - a), h);
+    ctx.globalAlpha = 1; ctx.fillRect(fx(v.f), 0, 1, h); ctx.fillText(String.fromCharCode(65 + id), fx(v.f) + 3, 12 * dpr);
+  }
+  if (!V.spec) return;
+  ctx.strokeStyle = '#5ec4ff'; ctx.lineWidth = dpr; ctx.beginPath();
+  let pen = false;
+  for (let x = 0; x < V.spec.length; x++) { if (Number.isNaN(V.spec[x])) { pen = false; continue; } const y = h - (V.spec[x] - LO) / RANGE * h; pen ? ctx.lineTo(x, y) : ctx.moveTo(x, y); pen = true; }
+  ctx.stroke();
+}
+function drawAxis(p) {
+  const V = p === 'w' ? W : N, c = $(p + 'axis'), ctx = c.getContext('2d'), w = c.width, span = V.f1 - V.f0, dpr = devicePixelRatio;
+  ctx.clearRect(0, 0, w, c.height); if (!(span > 0)) return;
+  const raw = span / 8, pw = Math.pow(10, Math.floor(Math.log10(raw))), stp = [1, 2, 5, 10].map(m => m * pw).find(s => s >= raw);
+  if (p === 'w' && ZC.on && Z && Z.fine) {   // (zoom_waterfall) the range shown from the source's rows
+    const a = (Z.fine[0] - V.f0) / span * w, b = (Z.fine[1] - V.f0) / span * w;
+    ctx.fillStyle = 'rgba(94,196,255,0.25)'; ctx.fillRect(a, 0, Math.max(1, b - a), c.height); }
+  ctx.fillStyle = '#8b96a3'; ctx.font = (10 * dpr) + 'px system-ui';
+  for (let f = Math.ceil(V.f0 / stp) * stp; f <= V.f1; f += stp) { const x = (f - V.f0) / span * w;
+    ctx.fillRect(x, 0, 1, 5 * dpr); ctx.fillText(stp >= 1e6 ? (f / 1e6).toFixed(0) + ' MHz' : stp >= 1e3 ? (f / 1e3).toFixed(stp >= 1e4 ? 0 : 1) + ' kHz' : (f / 1e3).toFixed(2), x + 3, 15 * dpr); }
+  if (p === 'w') $('wspan').textContent = `${(V.f0 / 1e6).toFixed(3)} – ${(V.f1 / 1e6).toFixed(3)} MHz` + zoomInfo();
+}
+function sizeAll() {
+  for (const id of ['wspec', 'waxis', 'wwf', 'nspec', 'naxis', 'nwf']) { const c = $(id), w = Math.round(c.clientWidth * devicePixelRatio), h = Math.round(c.clientHeight * devicePixelRatio);
+    if (c.width === w && c.height === h) continue;
+    // a canvas loses its picture when resized: keep the waterfall's history, stretched to the new width (the same
+    // frequencies) with its rows as they were (newest at the top), instead of starting it again
+    let keep = null;
+    if (id.endsWith('wf') && c.width > 0 && c.height > 0 && w > 0 && h > 0) {
+      keep = document.createElement('canvas'); keep.width = c.width; keep.height = c.height; keep.getContext('2d').drawImage(c, 0, 0);
+    }
+    c.width = w; c.height = h;
+    if (keep) { const g = c.getContext('2d'); g.imageSmoothingEnabled = true; g.drawImage(keep, 0, 0, keep.width, keep.height, 0, 0, w, keep.height); }
+  }
+  W.held = N.held = null; W.spec = N.spec = null; drawAxis('w'); drawAxis('n'); sendView();
+}
+document.addEventListener('click', ev => { const b = ev.target.closest('.vfo .more'); if (!b) return;
+  const el = b.closest('.vfo'), open = el.classList.toggle('open'); b.textContent = open ? '▴' : '▾'; b.title = open ? 'fewer controls' : 'more controls'; });
+window.addEventListener('resize', () => { clearTimeout(sizeAll.t); sizeAll.t = setTimeout(sizeAll, 200); });
+
+// ---- zoom / pan / tune
+function fAt(ev, el, V) { const r = el.getBoundingClientRect(); return V.f0 + (V.f1 - V.f0) * (ev.clientX - r.left) / r.width; }
+function zoom(V, p, f, k) { let a = f - (f - V.f0) * k, b = f + (V.f1 - f) * k;
+  const lim = p === 'w' ? [0, 33.3333e6] : [N.fcSeen - N.fsSeen / 2, N.fcSeen + N.fsSeen / 2], minSpan = p === 'w' ? ZC.min : 2e3;
+  if (b - a < minSpan) { const c = (a + b) / 2; a = c - minSpan / 2; b = c + minSpan / 2; }
+  if (a < lim[0]) { b += lim[0] - a; a = lim[0]; } if (b > lim[1]) { a -= b - lim[1]; b = lim[1]; } a = Math.max(a, lim[0]);
+  if (a === V.f0 && b === V.f1) return;            // (at the limit: nothing changes; dropping the held row stalled the waterfall)
+  const a0 = V.f0, a1 = V.f1; V.f0 = a; V.f1 = b; if (p === 'n') N.userZoom = true; remapView(p, a0, a1); sendView(); }
+// ---- passband edges: drag them to set low/high (both at once, mirrored, for the symmetric modes)
+const SYM = new Set(['am', 'amn', 'sam', 'sau', 'sal', 'sas', 'nfm', 'iq']);
+let edgeDrag = null;                               // the VFO whose edge is being dragged
+function edgeAt(ev, el, V) {                       // the VFO passband edge under the mouse (within ~6 px), or null
+  const r = el.getBoundingClientRect(), mx = ev.clientX - r.left, span = V.f1 - V.f0;
+  if (!(span > 0)) return null;
+  let best = null, bd = 7;
+  for (const [id, x] of vfos) {
+    const v = x.state; if (!v) continue;
+    for (const which of ['lo', 'hi']) {
+      const px = (v.f + v[which] - V.f0) / span * r.width, d = Math.abs(px - mx);
+      if (d < bd || (d === bd && id === sel)) { bd = d; best = { id, which }; }
+    }
+  }
+  return best;
+}
+// the − / + buttons: the next width in a list per mode. USB moves the high edge, LSB the low edge (the inner one
+// stays), CW the total width around its centre (the dial: the signal), the symmetric modes both edges (+-).
+const BW = { ssb: [1800, 2100, 2400, 2700, 3000, 3300, 3600, 4000, 5000], cw: [50, 100, 200, 300, 500, 800, 1000, 1500, 2000],
+             am: [2000, 2500, 3000, 3500, 4000, 4500, 5000, 6000, 7500, 9000, 10000], nfm: [3000, 4000, 5000, 6000, 7500, 10000, 12000],
+             iq: [2000, 5000, 10000, 12000] };
+function bwStep(id, dir) {
+  const x = vfos.get(id); if (!x || !x.state) return;
+  const v = x.state, m = v.mode;
+  const next = (list, cur) => dir > 0 ? (list.find(w => w > cur + 1) ?? list[list.length - 1]) : ([...list].reverse().find(w => w < cur - 1) ?? list[0]);
+  let lo = v.lo, hi = v.hi;
+  if (m === 'usb') hi = Math.max(lo + 50, next(BW.ssb, hi));
+  else if (m === 'lsb') lo = Math.min(hi - 50, -next(BW.ssb, -lo));
+  else if (m === 'cw') { const c = (lo + hi) / 2, w = next(BW.cw, hi - lo); lo = c - w / 2; hi = c + w / 2; }
+  else { const a = next(m === 'nfm' ? BW.nfm : m === 'iq' ? BW.iq : BW.am, Math.max(-lo, hi)); lo = -a; hi = a; }
+  v.lo = Math.round(lo); v.hi = Math.round(hi);
+  x.el.querySelector('.lo').value = v.lo; x.el.querySelector('.hi').value = v.hi;
+  drawSpec('w'); drawSpec('n'); send({ t: 'vfo', id, lo: v.lo, hi: v.hi });
+}
+function dragEdge(e, f, p) {
+  const x = vfos.get(e.id); if (!x) return;
+  const v = x.state, off = Math.max(-12000, Math.min(12000, f - v.f));
+  if (SYM.has(v.mode)) { const a = Math.max(50, Math.abs(off)); v.lo = -a; v.hi = a; }
+  else if (e.which === 'lo') v.lo = Math.min(off, v.hi - 50);
+  else v.hi = Math.max(off, v.lo + 50);
+  const q = c => x.el.querySelector(c); q('.lo').value = Math.round(v.lo); q('.hi').value = Math.round(v.hi);
+  drawSpec('w'); drawSpec('n');
+  const now = performance.now();
+  if (!(e.ts > 0) || now - e.ts > 100) { e.ts = now; send({ t: 'vfo', id: e.id, lo: Math.round(v.lo), hi: Math.round(v.hi) }); }
+}
+// both views: wheel zooms, a drag pans (inside 0..33 MHz / the source's span), a click without a drag tunes
+for (const p of ['w', 'n']) for (const id of [p + 'spec', p + 'wf']) {
+  const el = $(id), V = p === 'w' ? W : N;
+  const ready = () => p === 'w' || (Number.isFinite(N.fcSeen) && N.fsSeen > 0 && N.f1 > N.f0);   // (narrow: a source is on)
+  const edges = id.endsWith('spec');                    // passband edges are dragged on the spectrum only (the waterfall: pan)
+  el.addEventListener('wheel', ev => { ev.preventDefault(); if (p === 'w' && following()) return; if (ready()) zoom(V, p, fAt(ev, el, V), ev.deltaY > 0 ? 1.25 : 0.8); }, { passive: false });
+  let drag = null, edge = null;
+  el.addEventListener('mousedown', ev => {
+    ev.preventDefault(); V.moved = false;
+    if (p === 'w' && following()) { drag = edge = null; return; }   // (following: the view is the followed user's)
+    // (preventDefault keeps the browser from moving the focus: a field typed in before would keep it, and fields
+    // with focus are not refreshed from the status, e.g. the VFO's frequency after a click-to-tune)
+    if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+    edge = edges && ready() ? edgeAt(ev, el, V) : null; // a passband edge: resize the filter instead of panning
+    if (edge) { selectVfo(edge.id); edgeDrag = edge.id; V.moved = true; drag = null; return; }
+    drag = ready() ? { x: ev.clientX, f0: V.f0, f1: V.f1 } : null;
+  });
+  window.addEventListener('mouseup', () => {
+    if (edge) { const x = vfos.get(edge.id); if (x) send({ t: 'vfo', id: edge.id, lo: Math.round(x.state.lo), hi: Math.round(x.state.hi) }); edge = null; setTimeout(() => { edgeDrag = null; }, 400); }
+    if (drag) el.style.cursor = ''; drag = null;
+  });
+  el.addEventListener('mousemove', ev => { if (!drag && !edge) el.style.cursor = edges && ready() && edgeAt(ev, el, V) ? 'ew-resize' : ''; });
+  window.addEventListener('mousemove', ev => {
+    if (edge) { dragEdge(edge, fAt(ev, el, V), p); return; }
+    if (!drag) return;
+    if (Math.abs(ev.clientX - drag.x) > 3) { V.moved = true; el.style.cursor = 'grabbing'; }
+    if (!V.moved) return;
+    const r = el.getBoundingClientRect(), df = (drag.x - ev.clientX) / r.width * (drag.f1 - drag.f0);
+    const lim = p === 'w' ? [0, 33.3333e6] : [N.fcSeen - N.fsSeen / 2, N.fcSeen + N.fsSeen / 2];
+    let a = drag.f0 + df, b = drag.f1 + df;
+    if (a < lim[0]) { b += lim[0] - a; a = lim[0]; } if (b > lim[1]) { a -= b - lim[1]; b = lim[1]; }
+    if (a === V.f0 && b === V.f1) return;
+    const a0 = V.f0, a1 = V.f1; V.f0 = a; V.f1 = b; if (p === 'n') N.userZoom = true;
+    remapView(p, a0, a1);
+    const now = performance.now(); clearTimeout(drag.t);
+    if (!(drag.ts > 0) || now - drag.ts > 100) { drag.ts = now; sendView(); } else drag.t = setTimeout(sendView, 100);
+  });
+  if (p === 'w') {
+    // a click (not a drag) tunes the selected VFO there: kweb moves you to a source that covers it
+    el.addEventListener('click', ev => { if (W.moved || following()) return; const q = ZC.on && W.f1 - W.f0 < 1e6 ? 10 : 100;   // (zoomed in: 10 Hz)
+      const f = Math.round(fAt(ev, el, W) / q) * q; send({ t: 'tune', f, id: sel });
+      // shown at once (the marker and the frequency; kweb's next status corrects it if the tune was refused); the view
+      // is left as it is: the click was somewhere on it
+      const x = vfos.get(sel); if (x) { x.state.f = f; x.el.querySelector('.f').value = (f / 1e3).toFixed(2); drawSpec('w'); } });
+  } else {
+    el.addEventListener('click', ev => { if (N.moved || !ready()) return; const f = Math.round(fAt(ev, el, N) / 10) * 10, x = vfos.get(sel);
+      if (x) { x.state.f = f; x.el.querySelector('.f').value = (f / 1e3).toFixed(2); send({ t: 'vfo', id: sel, f }); drawSpec('n'); }
+      else send({ t: 'tune', f });                   // (no VFO yet: kweb adds one there if it can, or says why not)
+    });
+    el.addEventListener('dblclick', () => { N.userZoom = false; N.fcSeen = null; });
+  }
+}
+$('dgo').addEventListener('click', () => send({ t: 'ddc', fc: Math.round(+$('dfc').value * 1e3), R: +$('width').value }));
+$('width').addEventListener('change', () => send({ t: 'ddc', fc: st ? st.ddc.want_fc : 0, R: +$('width').value }));
+$('claimgo').addEventListener('click', () => send({ t: 'owner', pw: $('pw').value }));
+$('source').addEventListener('change', () => { const key = +$('source').value; send({ t: 'source', key }); $('source').blur();
+  if (ZC.on) gotoWant = { f: null, key: key === -100 ? null : key, from: st && st.src, t: performance.now() }; });   // (own receiver: its key is new)   // (blurred: the next status shows where the user really is, refused or not)
+const gotoF = () => { const k = +$('goto').value; if (!(k > 0)) return; const f = Math.round(k * 1e3);
+  send({ t: 'tune', f, id: sel }); if (ZC.on) gotoWant = { f, t: performance.now() }; };
+$('gotogo').addEventListener('click', gotoF);
+$('goto').addEventListener('keydown', ev => { if (ev.key === 'Enter') gotoF(); });
+
+// ---- audio: one chain per VFO (decoder -> gain -> stereo panner -> master -> output element or destination)
+const STEP = [7,8,9,10,11,12,13,14,16,17,19,21,23,25,28,31,34,37,41,45,50,55,60,66,73,80,88,97,107,118,130,143,157,173,190,209,230,253,279,307,337,371,408,449,494,544,598,658,724,796,876,963,1060,1166,1282,1411,1552,1707,1878,2066,2272,2499,2749,3024,3327,3660,4026,4428,4871,5358,5894,6484,7132,7845,8630,9493,10442,11487,12635,13899,15289,16818,18500,20350,22385,24623,27086,29794,32767];
+const IDX = [-1,-1,-1,-1,2,4,6,8];
+function adpcm(d, off, ns, out) {             // one self-contained ADPCM block at d[off]; returns the next offset
+  let pred = new DataView(d.buffer, d.byteOffset + off, 2).getInt16(0, true), idx = d[off + 2]; const b = off + 4;
+  for (let i = 0; i < ns; i++) { const code = (d[b + (i >> 1)] >> ((i & 1) * 4)) & 15, step = STEP[idx];
+    let dq = step >> 3; if (code & 4) dq += step; if (code & 2) dq += step >> 1; if (code & 1) dq += step >> 2;
+    pred += code & 8 ? -dq : dq; pred = Math.max(-32768, Math.min(32767, pred)); idx = Math.max(0, Math.min(88, idx + IDX[code & 7])); out[i] = pred / 32768; }
+  return b + ((ns + 1) >> 1);
+}
+function chain(id) {
+  const x = vfos.get(id); if (!x || !actx) return null;
+  const a = x.audio;
+  if (!a.gain) { a.gain = actx.createGain(); a.pan = actx.createStereoPanner(); a.gain.connect(a.pan); a.pan.connect(master);
+    const q = c => x.el.querySelector(c); a.gain.gain.value = q('.mute').checked ? 0 : q('.vvol').value / 100; a.pan.pan.value = q('.pan').value / 100; }
+  return a;
+}
+// NLMS predictor (32 taps), as kweb's on the Beagle was: the notch keeps the prediction error (removes steady tones,
+// predictable 24 samples ahead), noise reduction keeps the prediction (keeps what is predictable: the signal)
+function lms(kind) { return { w: new Float32Array(32), x: new Float32Array(192), p: 0, d: kind === 'nr' ? 1 : 24, mu: kind === 'nr' ? 0.004 : 0.01, pred: kind === 'nr' }; }
+function lmsRun(st, a) {
+  const w = st.w, x = st.x;
+  for (let i = 0; i < a.length; i++) {
+    const o = st.p + st.d; let pr = 0, pw = 1e-6;
+    for (let k = 0; k < 32; k++) { const xi = x[o + k]; pr += w[k] * xi; pw += xi * xi; }
+    const e = a[i] - pr, g = st.mu / pw * e;
+    for (let k = 0; k < 32; k++) w[k] = w[k] * 0.99999 + g * x[o + k];
+    st.p = (st.p + 95) % 96; x[st.p] = x[st.p + 96] = a[i];
+    a[i] = st.pred ? pr : e;
+  }
+}
+function play(id, chans, rate, planes, t0) {
+  const x = vfos.get(id), a = chain(id); if (!a || !x.el.querySelector('.play').checked) return;
+  if (chans === 1) { if (x.anf) lmsRun(x.anf, planes[0]); if (x.nr) lmsRun(x.nr, planes[0]); }
+  const n = planes[0].length, b = actx.createBuffer(chans, n, rate);
+  for (let c = 0; c < chans; c++) b.copyToChannel(planes[c], c);
+  const src = actx.createBufferSource(); src.buffer = b; src.connect(a.gain);
+  const now = actx.currentTime;
+  if (a.playAt < now + 0.04 || a.playAt > now + 0.6) a.playAt = now + 0.12;     // (re)start with ~120 ms of buffer
+  src.start(a.playAt);
+  if (t0) {   // the frame's first sample leaves the speaker (playAt - now) + the output latency from now
+    const buf = a.playAt - now, out = actx.outputLatency || actx.baseLatency || 0, g = ageOf(x);
+    g.hs += Date.now() / 1e3 - t0 + buf + out; g.hn++; g.buf += buf; g.out = out;
+  }
+  a.playAt += n / rate; stats.played++;
+}
+// ---- signal age per VFO (the card's top right): now (this computer's clock) minus the samples' UTC from the frame
+// headers, averaged over 250 ms. Heard: when the sample being played left the antenna. Arrived: when it got here.
+function ageOf(x) { return x.age || (x.age = { as: 0, an: 0, hs: 0, hn: 0, buf: 0, out: 0, src: 0 }); }
+const AGE_SRC = ['its arrival at kweb (no sample timing: older gateware or no GPS)', 'the ADC sample clock, on the system clock (GPS has no time yet: ~0.1 ms)', 'the ADC sample clock, on GPS time (sub-microsecond)'];
+setInterval(() => {
+  for (const [, x] of vfos) {
+    const el = x.el.querySelector('.age'), g = x.age; if (!el) continue;
+    if (!g || (!g.an && !g.hn)) { el.textContent = ''; el.title = ''; continue; }
+    const arr = g.an ? g.as / g.an : NaN, heard = g.hn ? g.hs / g.hn : NaN, ms = v => (v * 1e3).toFixed(0) + ' ms';
+    const v = g.hn ? heard : arr, approx = g.src === 0 ? '~' : '';
+    el.textContent = `${approx}${ms(v)}`;
+    el.title = (g.hn ? `you hear the signal ${ms(heard)} after it reached the antenna: ${ms(arr)} to arrive here, `
+                     + `${ms(g.buf / g.hn)} in the playback buffer, ${ms(g.out)} audio output` : `the audio arrives ${ms(arr)} after the signal reached the antenna (not playing)`)
+             + `.\nSample times from ${AGE_SRC[g.src]}; "now" is this computer's clock, so its error adds in.`;
+    g.as = g.an = g.hs = g.hn = g.buf = 0;
+  }
+}, 250);
+// ---- digital modes: FT8/FT4/FT2/WSPR are VFO modes on this page; the stream is USB at 12 kS/s PCM (kweb codec pcm12),
+// cut into UTC periods by the frames' server timestamps (kweb's clock, on GPS time via chrony) and decoded in a Web
+// Worker by jt9's / wsprd's WebAssembly decoders (/wasm/, fetched by 'make wasm').
+const DIGI = {
+  ft8:  { period: 15,   lo: 100, hi: 3100, dials: [1840, 3573, 5357, 7074, 10136, 14074, 18100, 21074, 24915, 28074, 50313] },
+  ft4:  { period: 7.5,  lo: 100, hi: 3100, dials: [3575.5, 7047.5, 10140, 14080, 18104, 21140, 24919, 28180, 50318] },
+  ft2:  { period: 3.75, lo: 100, hi: 3100, dials: [] },
+  wspr: { period: 120,  lo: 1300, hi: 1700, dials: [1836.6, 3568.6, 5287.2, 7038.6, 10138.7, 14095.6, 18104.6, 21094.6, 24924.6, 28124.6, 50293] },
+};
+const DIGI_FS = 12000;
+let digiWorker = null, digiQueue = 0;
+const digiBusy = new Map();   // VFO id -> { mode, t }: a period sent to the decoder, its result not back yet
+const digiPeriods = [];               // newest first: { t0, mode, vfo, khz, ms, decodes }
+const digiHide = new Set();          // VFO letters filtered out
+function digiWorkerGet() {
+  if (digiWorker) return digiWorker;
+  digiWorker = new Worker('digi-worker.js', { type: 'module' });
+  digiWorker.onmessage = ev => digiResult(ev.data);
+  digiWorker.onerror = e => note('digital decoder: ' + (e.message || 'failed to load'));
+  return digiWorker;
+}
+function digiStart(id, m) {
+  const x = vfos.get(id); if (!x) return;
+  if (!x.dig) x.prevCodec = x.state.codec === 'pcm12' ? 'adpcm' : x.state.codec;
+  if (x.dig && x.dig !== m) { digiWorkerGet().postMessage({ drop: id }); digiBusy.delete(id); }
+  x.dig = m; x.dc = null; x.dclk = null;
+  const D = DIGI[m];
+  send({ t: 'vfo', id, mode: 'usb', lo: D.lo, hi: D.hi, codec: 'pcm12', sqt: 'off' });   // (squelch off: a closed squelch
+                                                        // mutes frames, which the decoder takes as silence; signals sit below the noise)
+  // tune to the mode's frequency in this band (when one is within 150 kHz of the dial)
+  const f = x.state.f / 1e3, near = D.dials.reduce((b, d) => Math.abs(d - f) < Math.abs(b - f) ? d : b, Infinity);
+  if (Math.abs(near - f) <= 150 && Math.abs(near - f) > 0.05) { send({ t: 'vfo', id, f: Math.round(near * 1e3) }); x.el.querySelector('.f').value = near.toFixed(2); }
+  digiShow(true); digiWorkerGet(); digiStatus(); sendUi(id);
+}
+function digiStop(id) {
+  const x = vfos.get(id); if (!x || !x.dig) return;
+  x.dig = null; x.dc = null; x.dclk = null;
+  if (digiWorker) digiWorker.postMessage({ drop: id });
+  digiBusy.delete(id); digiStatus(); sendUi(id);
+}
+// a frame of 12 kS/s samples (sequence number seq; server stamp: its first sample at UTC stamp, s): into the current
+// period, a finished period to the worker. The audio is continuous: frames follow one another by their sequence
+// numbers (a lost one = its length of silence) and the stamps only steer that clock. (kweb stamps a frame when its
+// block leaves the demodulator, which jitters by tens of ms: placing each frame by its own stamp left holes and
+// phase jumps every 20 ms, and FT8 decoded nothing.)
+function digiFeed(x, seq, stamp, s16, muted) {
+  let k = x.dclk;
+  const n = s16.length;
+  if (!k || seq - k.seq > 50 || seq < k.seq) k = x.dclk = { t: stamp, seq, e: 0 };      // start, or a long gap
+  else if (seq > k.seq) k.t += (seq - k.seq) * n / DIGI_FS;                              // lost frames: silence
+  const t0 = k.t, err = stamp - t0;
+  k.e += 0.02 * (err - k.e);                                                             // (~1 s average of the stamps)
+  if (Math.abs(k.e) > 0.08) { k.t += k.e; k.e = 0; }                                     // drifted: re-anchor
+  k.t = t0 + n / DIGI_FS; k.seq = seq + 1;
+  { const ms = Date.now(), o = k.t - ms / 1e3;                                             // (for the period bar: this
+    x.doff = x.dat && ms - x.dat < 2000 && Math.abs(o - x.doff) < 0.5 ? x.doff + 0.02 * (o - x.doff) : o; x.dat = ms; }  // clock less ours, ~1 s avg)
+  const D = DIGI[x.dig], P = D.period, N = Math.round(P * DIGI_FS);
+  let c = x.dc;
+  const start = Math.floor(t0 / P) * P;
+  if (!c || t0 < c.start - 1 || t0 >= c.start + 2 * P) c = x.dc = { start, buf: new Float32Array(N), got: 0, partial: true };
+  for (let i = 0; i < s16.length; i++) {
+    const t = t0 + i / DIGI_FS;
+    let pos = Math.round((t - c.start) * DIGI_FS);
+    if (pos >= N) {                                     // a period complete: decode it, start the next
+      digiDone(x, c, N);
+      c = x.dc = { start: c.start + P, buf: new Float32Array(N), got: 0, partial: false };
+      pos = Math.round((t - c.start) * DIGI_FS);
+    }
+    if (pos >= 0 && pos < N) { c.buf[pos] = muted ? 0 : s16[i] / 32768; c.got++; }
+  }
+}
+function digiDone(x, c, N) {
+  if (c.partial || c.got < 0.9 * N) return;           // (joined mid-period, or too much missing)
+  if (digiQueue > 4) { note('digital decoding is falling behind: a period skipped'); return; }
+  const d = new Date(c.start * 1000), p2 = n => String(n).padStart(2, '0');
+  const hhmmss = p2(d.getUTCHours()) + p2(d.getUTCMinutes()) + p2(d.getUTCSeconds());
+  digiQueue++; c.sent = performance.now(); digiBusy.set(x.state.id, { mode: x.dig, t: c.sent });
+  digiWorkerGet().postMessage({ key: x.state.id, mode: x.dig, samples: c.buf, utc: +hhmmss, t0: c.start,
+    date: String(d.getUTCFullYear() % 100).padStart(2, '0') + p2(d.getUTCMonth() + 1) + p2(d.getUTCDate()),
+    hhmm: hhmmss.slice(0, 4), dialMHz: x.state.f / 1e6 }, [c.buf.buffer]);
+  digiStatus();
+}
+function digiResult(r) {
+  digiQueue = Math.max(0, digiQueue - 1); digiBusy.delete(r.key);
+  if (r.error) { note('digital decoder (' + r.mode + '): ' + r.error); digiStatus(); return; }
+  const x = vfos.get(r.key), vfo = String.fromCharCode(65 + r.key);
+  const d = new Date(r.t0 * 1000), utc = d.toISOString().slice(11, r.mode === 'ft4' || r.mode === 'ft2' ? 21 : 19);
+  digiPeriods.unshift({ t0: r.t0, utc, mode: r.mode.toUpperCase(), vfo, khz: x ? x.state.f / 1e3 : 0, ms: r.ms, decodes: r.decodes });
+  if (digiPeriods.length > 200) digiPeriods.length = 200;
+  if (x) x.dlast = { n: r.decodes.length, utc };
+  digiStatus(); digiTable();
+}
+function digiTable() {
+  const cq = $('digicq').checked, esc = t => String(t).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' })[c]);
+  const sq = $('digisearch').value.trim().toUpperCase();
+  // the search's matches marked in the message's HTML (text only, never inside a tag)
+  const reQ = sq ? new RegExp(esc(sq).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi') : null;
+  const mark = html => !reQ ? html : html.split(/(<[^>]*>)/).map(t => t.startsWith('<') ? t : t.replace(reQ, m => `<mark>${m}</mark>`)).join('');
+  let h = '', rows = 0;
+  for (const P of digiPeriods) {
+    if (digiHide.has(P.vfo)) continue;
+    const ds = P.decodes.filter(d => (!cq || /^CQ /.test(d.message)) && (!sq || d.message.toUpperCase().includes(sq)));
+    if ((cq || sq) && !ds.length) continue;
+    h += `<tr class="sep"><td colspan="4">── ${P.utc} · ${P.mode} · ${P.vfo} ${P.khz.toFixed(P.mode === 'WSPR' ? 1 : 0)} kHz · ${P.decodes.length} decode${P.decodes.length === 1 ? '' : 's'} · ${(P.ms / 1e3).toFixed(1)} s ──</td></tr>`;
+    for (const d of ds) {
+      const isCq = /^CQ /.test(d.message);
+      // WSJT-X style: audio Hz for FT modes, the absolute MHz for WSPR (as wsprd prints it)
+      const fq = P.mode === 'WSPR' ? (d.freqHz / 1e6).toFixed(6) : Math.round(d.audio);
+      const msg = isCq ? esc(d.message).replace(/^CQ ((?:DX |POTA |TEST |[A-Z]{2} )?)(\S+)/, 'CQ $1<b>$2</b>') : esc(d.message);
+      h += `<tr${isCq ? ' class="cq"' : ''}><td class="num">${Math.round(d.snr)}</td><td class="num">${d.dt.toFixed(1)}</td><td class="num">${fq}</td>`
+         + `<td class="msg">${mark(msg)}${d.low ? ' <span class="low">?</span>' : ''}${P.mode === 'WSPR' && d.drift ? ` <span class="low">drift ${d.drift}</span>` : ''}</td></tr>`;
+      if (++rows > 600) break;
+    }
+    if (rows > 600) break;
+  }
+  $('digitab').tBodies[0].innerHTML = h;
+  // per-VFO filter chips, only when more than one VFO has decodes
+  const letters = [...new Set(digiPeriods.map(P => P.vfo))].sort();
+  $('digichips').innerHTML = letters.length > 1 ? letters.map(l => `<span class="chip${digiHide.has(l) ? '' : ' on'}" data-v="${l}">${l}</span>`).join(' ') : '';
+}
+$('digichips').addEventListener('click', ev => { const v = ev.target.dataset && ev.target.dataset.v; if (!v) return; digiHide.has(v) ? digiHide.delete(v) : digiHide.add(v); digiTable(); });
+// the header line and each decoding VFO card's status line (once a second: the countdown to the period's end)
+function digiStatus() {
+  const on = [...vfos.values()].filter(x => x.dig);
+  $('digistat').textContent = on.length ? '· ' + on.map(x => `${x.el.querySelector('.tag').textContent} ${x.dig.toUpperCase()}`).join(', ')
+    : '· off';
+  const tnow = performance.now();
+  for (const [k, b] of digiBusy) if (tnow - b.t > 120e3) digiBusy.delete(k);   // (a result that never came)
+  $('digibusy').hidden = !digiBusy.size;
+  $('digibusy').title = digiBusy.size ? 'decoding ' + [...digiBusy].map(([k, b]) => `${String.fromCharCode(65 + k)} ${b.mode.toUpperCase()}`).join(', ') : '';
+  const now = Date.now() / 1e3;
+  for (const [, x] of vfos) {
+    const el = x.el.querySelector('.dstat');
+    if (!x.dig) { el.hidden = true; continue; }
+    const P = DIGI[x.dig].period, left = Math.ceil(P - (now % P)), c = x.dc;
+    el.hidden = false;
+    el.textContent = `${x.dig.toUpperCase()} · `
+      + (!c ? 'waiting for audio' : c.partial ? `joined mid-period: first decode in ${left} s` : `next decode in ${left} s`)
+      + (x.dlast ? ` · last ${x.dlast.utc}: ${x.dlast.n} decode${x.dlast.n === 1 ? '' : 's'}` : '');
+  }
+  digiBar();
+}
+setInterval(digiStatus, 1000);
+// the decodes window's period bar: how far through its current UTC period the first decoding VFO is (the bar's end
+// is that period's decode). Its clock: that VFO's audio clock above (the frames' server stamps, GPS time; a period is
+// decoded when the audio passes its end), before any audio the GPS time from the status, else this computer's clock.
+// Animated (requestAnimationFrame) only while the window is open and a VFO is decoding.
+let digiRaf = 0, digiTxtAt = 0;
+function digiBar() {
+  if (digiRaf) return;
+  digiTxtAt = 0;
+  const step = () => {
+    let x = null; for (const [, v] of vfos) if (v.dig) { x = v; break; }
+    if (!x || $('digipanel').hidden) { digiRaf = 0; $('digicyc').hidden = true; return; }
+    const ms = Date.now(), off = x.dat && ms - x.dat < 2000 ? x.doff : gpsOff !== null ? gpsOff : 0;
+    const P = DIGI[x.dig].period, t = ms / 1e3 + off, f = (t - Math.floor(t / P) * P) / P;
+    $('digicyc').hidden = false; $('digicycf').style.transform = `scaleX(${f})`;
+    if (ms - digiTxtAt > 200) { digiTxtAt = ms; $('digicyct').textContent = `${x.dig.toUpperCase()} · ${(P * (1 - f)).toFixed(1)} s left`; }
+    digiRaf = requestAnimationFrame(step);
+  };
+  step();
+}
+$('digiclear').addEventListener('click', () => { digiPeriods.length = 0; digiTable(); });
+// ---- the decodes window: open/close, minimise, drag, resize; its geometry is remembered in this browser
+const DW = (() => { try { return JSON.parse(localStorage.getItem('kweb.decodes') || 'null') || {}; } catch (e) { return {}; } })();
+const dwSave = () => { try { localStorage.setItem('kweb.decodes', JSON.stringify(DW)); } catch (e) {} };
+function dwApply() {
+  const el = $('digipanel');
+  if (DW.w) { el.style.width = DW.w + 'px'; el.style.height = DW.h + 'px'; }
+  if (DW.x !== undefined) { el.style.left = Math.max(0, Math.min(innerWidth - 120, DW.x)) + 'px'; el.style.top = Math.max(0, Math.min(innerHeight - 40, DW.y)) + 'px'; el.style.right = el.style.bottom = 'auto'; }
+  el.classList.toggle('min', !!DW.min); $('digimin').textContent = DW.min ? '▢' : '–'; $('digimin').title = DW.min ? 'restore' : 'minimise';
+}
+function digiShow(on) {
+  $('digipanel').hidden = !on; DW.closed = !on; dwSave();
+  $('digibtn').hidden = !(on ? false : (digiPeriods.length || [...vfos.values()].some(x => x.dig)));
+  if (on) { dwApply(); digiBar(); }
+}
+$('digibtn').addEventListener('click', () => digiShow(true));
+$('digiclose').addEventListener('click', () => digiShow(false));
+$('digimin').addEventListener('click', () => { DW.min = !DW.min; dwSave(); dwApply(); });
+$('digihead').addEventListener('mousedown', ev => {
+  if (ev.target.closest('button,label,input,.chip')) return;
+  ev.preventDefault();
+  const el = $('digipanel'), r = el.getBoundingClientRect(), dx = ev.clientX - r.left, dy = ev.clientY - r.top;
+  const mv = e => { DW.x = Math.max(0, Math.min(innerWidth - 120, e.clientX - dx)); DW.y = Math.max(0, Math.min(innerHeight - 40, e.clientY - dy));
+                    el.style.left = DW.x + 'px'; el.style.top = DW.y + 'px'; el.style.right = el.style.bottom = 'auto'; };
+  const upf = () => { window.removeEventListener('mousemove', mv); window.removeEventListener('mouseup', upf); dwSave(); };
+  window.addEventListener('mousemove', mv); window.addEventListener('mouseup', upf);
+});
+new ResizeObserver(() => {                       // (the corner handle: remember the size, not while minimised or hidden)
+  const el = $('digipanel'); if (el.hidden || DW.min) return;
+  const w = el.offsetWidth, h = el.offsetHeight; if (w && h && (w !== DW.w || h !== DW.h)) { DW.w = w; DW.h = h; dwSave(); }
+}).observe($('digipanel'));
+$('digicq').addEventListener('change', () => digiTable());
+$('digisearch').addEventListener('input', () => digiTable());   // (filters as you type)
+$('digisearch').addEventListener('keydown', ev => { if (ev.key === 'Escape') { ev.target.value = ''; digiTable(); } });
+
+function onAudio(dv, buf) {
+  {   // digital decoding works without audio playing: its 12 kS/s PCM goes to the period capture first
+    const x = vfos.get(dv.getUint8(1));
+    if (x && x.dig && dv.getUint8(2) === 3 && !(dv.getUint8(3) & 2)) {
+      const sec = dv.getUint32(12, true), nsec = dv.getUint32(16, true), seq = dv.getUint32(4, true);
+      digiFeed(x, seq, sec ? sec + nsec * 1e-9 : Date.now() / 1e3 - 0.3, new Int16Array(buf.slice(24)), !!(dv.getUint8(3) & 1));
+    }
+  }
+  const id = dv.getUint8(1), codec = dv.getUint8(2), flags = dv.getUint8(3), ns = dv.getUint32(8, true), chans = flags & 2 ? 2 : 1, muted = flags & 1;
+  const x = vfos.get(id); if (!x) return;
+  const sec = dv.getUint32(12, true), t0 = sec ? sec + dv.getUint32(16, true) * 1e-9 : 0;   // UTC of the frame's first sample
+  if (t0) { const g = ageOf(x); g.as += Date.now() / 1e3 - (t0 + 0.02); g.an++; g.src = flags & 4 ? 2 : flags & 8 ? 1 : 0; }   // (its last sample: +20 ms)
+  if (!actx) return;
+  const body = new Uint8Array(buf, 24);
+  if (codec === 2 || codec === 4) {                // Opus (CELT) via WebCodecs
+    stats.opus++;
+    const a = x.audio;
+    if (!a.dec || a.decCh !== chans) {
+      try { a.dec && a.dec.close(); } catch (e) {}
+      a.decCh = chans; a.ts = 0; a.stamps = new Map();
+      a.dec = new AudioDecoder({ output: d => { const pl = []; for (let c = 0; c < d.numberOfChannels; c++) { const f = new Float32Array(d.numberOfFrames); d.copyTo(f, { planeIndex: c, format: 'f32-planar' }); pl.push(f); }
+                                                const t = a.stamps.get(d.timestamp); a.stamps.delete(d.timestamp);
+                                                play(id, d.numberOfChannels, d.sampleRate, pl, t); d.close(); },
+                                 error: e => { note('Opus decoder: ' + e.message); a.dec = null; } });
+      a.dec.configure({ codec: 'opus', sampleRate: 24000, numberOfChannels: chans });
+    }
+    if (a.dec && a.dec.state === 'configured') {
+      if (t0) { a.stamps.set(a.ts, t0); if (a.stamps.size > 64) a.stamps.delete(a.stamps.keys().next().value); }
+      a.dec.decode(new EncodedAudioChunk({ type: 'key', timestamp: a.ts, data: body })); a.ts += 20000;
+    }
+  } else if (codec === 1) {                        // ADPCM: one block per channel
+    stats.adpcm++;
+    const pl = []; let off = 0;
+    for (let c = 0; c < chans; c++) { const f = new Float32Array(ns); off = adpcm(body, off, ns, f); if (muted) f.fill(0); pl.push(f); }
+    play(id, chans, 24000, pl, t0);
+  } else if (codec === 3) {                        // PCM 12 kS/s int16 (interleaved if stereo)
+    stats.pcm++;
+    const s16 = new Int16Array(buf.slice(24)), pl = [];
+    for (let c = 0; c < chans; c++) { const f = new Float32Array(ns); for (let i = 0; i < ns; i++) f[i] = s16[i * chans + c] / 32768; pl.push(f); }
+    play(id, chans, 12000, pl, t0);
+  }
+}
+$('audio').addEventListener('click', async () => {
+  if (!actx) {
+    actx = new AudioContext({ sampleRate: 48000 }); master = actx.createGain(); master.gain.value = $('vol').value / 100;
+    // through an <audio> element, so the output device can be chosen (HTMLMediaElement.setSinkId: Chrome and Firefox)
+    if ('setSinkId' in HTMLMediaElement.prototype) {
+      const dest = actx.createMediaStreamDestination(); master.connect(dest);
+      sinkEl = new Audio(); sinkEl.srcObject = dest.stream; sinkEl.play().catch(() => {});
+      $('outdev').hidden = false; listDevices();
+      $('pickdev').hidden = !(navigator.mediaDevices && navigator.mediaDevices.selectAudioOutput);
+    } else master.connect(actx.destination);
+  }
+  await actx.resume(); $('audio').textContent = '♪ audio on'; $('audio').className = '';
+});
+async function listDevices() {
+  try { const ds = (await navigator.mediaDevices.enumerateDevices()).filter(d => d.kind === 'audiooutput' && d.deviceId && d.deviceId !== 'default');
+    $('sink').innerHTML = '<option value="">default</option>' + ds.map((d, i) => `<option value="${d.deviceId}">${d.label || 'output ' + (i + 1)}</option>`).join('');
+  } catch (e) {}
+}
+$('sink').addEventListener('change', async () => { try { await sinkEl.setSinkId($('sink').value); } catch (e) { note('output device: ' + e.message); } });
+$('pickdev').addEventListener('click', async () => { try { const d = await navigator.mediaDevices.selectAudioOutput(); await sinkEl.setSinkId(d.deviceId);
+  if (![...$('sink').options].some(o => o.value === d.deviceId)) $('sink').add(new Option(d.label || 'chosen output', d.deviceId)); $('sink').value = d.deviceId; } catch (e) { note('output device: ' + e.message); } });
+$('vol').addEventListener('input', () => { if (master) master.gain.value = $('vol').value / 100; });
+
+// Opus via WebCodecs available? (else every VFO asks for ADPCM)
+let opusChecked = false;
+(async () => { try { opusOk = 'AudioDecoder' in window && (await AudioDecoder.isConfigSupported({ codec: 'opus', sampleRate: 24000, numberOfChannels: 1 })).supported; } catch (e) { opusOk = false; } opusChecked = true; })();
+setInterval(() => { document.body.dataset.stats = JSON.stringify(stats); document.body.dataset.opus = opusOk ? '1' : '0'; }, 500);   // (readable from test tools)
+sizeAll(); connect();
+</script>
+</body></html>

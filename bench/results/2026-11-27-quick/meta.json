@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-27T12:09:53.867Z",
+ "suites": [
+  "quick"
+ ],
+ "options": {
+  "measure": 45,
+  "settle": 10,
+  "hold": 30,
+  "dwell": 4,
+  "dwellQ": 10,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "quick.hostcap.193k.b12",
+  "quick.hp10x192.band40.usb-adpcm",
+  "quick.hp10x192.mixed.usb-adpcm.u8",
+  "quick.hp10x192.own.usb-adpcm",
+  "quick.hp10x192.shared.usb-adpcm",
+  "quick.hp10x192.shared.usb-adpcm.u8",
+  "quick.hp6x384.shared.usb-adpcm.u4",
+  "quick.none.free.usb-adpcm.u8.free417k",
+  "quick.none.shared.none.u0.idle",
+  "quick.none.shared.sas-opus_hq.u8",
+  "quick.none.shared.usb-adpcm.guardoff",
+  "quick.none.shared.usb-adpcm",
+  "quick.none.shared.usb-adpcm.u8",
+  "quick.none.shared.usb-opus.u8"
+ ]
+}

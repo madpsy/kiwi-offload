@@ -1,0 +1,44 @@
+{
+ "started": "2026-11-27T12:52:31.856Z",
+ "suites": [
+  "hostcap"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "hostcap.48k.b8",
+  "hostcap.48k.b10",
+  "hostcap.48k.b12",
+  "hostcap.48k.b16",
+  "hostcap.96k.b8",
+  "hostcap.96k.b10",
+  "hostcap.96k.b12",
+  "hostcap.96k.b16",
+  "hostcap.192k.b8",
+  "hostcap.192k.b10",
+  "hostcap.192k.b12",
+  "hostcap.192k.b16",
+  "hostcap.384k.b8",
+  "hostcap.384k.b10",
+  "hostcap.384k.b12",
+  "hostcap.384k.b16",
+  "hostcap.104k.b12",
+  "hostcap.834k.b10",
+  "hostcap.1480k.b10",
+  "hostcap.1480k.b12",
+  "hostcap.192k.b12.spi",
+  "hostcap.192k.b12.lanes",
+  "hostcap.192k.b12.with4listeners"
+ ]
+}

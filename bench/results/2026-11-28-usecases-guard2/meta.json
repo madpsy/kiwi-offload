@@ -1,0 +1,31 @@
+{
+ "started": "2026-11-28T08:32:55.180Z",
+ "suites": [
+  "usecases"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "usecases.raw_skim12.skimmix.usb-adpcm.skim12",
+  "usecases.raw_skim12.free.usb-adpcm.skim12",
+  "usecases.raw_skim13.skim13mix.usb-adpcm.skim13",
+  "usecases.hp10x192.band40.usb-adpcm.hpsdr",
+  "usecases.hp10x192.band40.usb-adpcm-v2.hpsdr.2vfo",
+  "usecases.none.shared.usb-adpcm.webonly",
+  "usecases.none.own.usb-adpcm.webonly.own104k",
+  "usecases.none.own.usb-adpcm.webonly.own417k",
+  "usecases.raw_ft8.ft8mix.usb-adpcm.ft8",
+  "usecases.raw_wide2.widemix.usb-adpcm.wide2"
+ ]
+}

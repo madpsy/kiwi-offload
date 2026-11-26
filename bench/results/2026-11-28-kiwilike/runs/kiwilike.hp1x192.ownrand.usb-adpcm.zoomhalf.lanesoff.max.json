@@ -1,0 +1,33 @@
+{
+ "id": "kiwilike.hp1x192.ownrand.usb-adpcm.zoomhalf.lanesoff.max",
+ "suite": "kiwilike",
+ "kind": "ramp",
+ "spec": {
+  "suite": "kiwilike",
+  "kind": "ramp",
+  "host": "hp1x192",
+  "pattern": "ownrand",
+  "profile": "usb/adpcm",
+  "id": "kiwilike.hp1x192.ownrand.usb-adpcm.zoomhalf.lanesoff.max",
+  "zoom": "half",
+  "patch": {
+   "pool": {
+    "host_ddcs": 1,
+    "web_ddcs": 12
+   },
+   "kbridge": {
+    "lanes": "off"
+   },
+   "kweb": {
+    "max_users": 13,
+    "own_max": 13,
+    "own_width": 52,
+    "vfo_per_user": 1,
+    "zoom_windows": 0,
+    "default_source": "own"
+   }
+  },
+  "tag": "zoomhalf.lanesoff.max"
+ },
+ "error": "admin connection: no status from kbridge"
+}

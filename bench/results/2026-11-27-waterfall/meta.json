@@ -1,0 +1,27 @@
+{
+ "started": "2026-11-27T13:32:36.828Z",
+ "suites": [
+  "waterfall"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "waterfall.none.band40.usb-adpcm.u1.px800",
+  "waterfall.none.band40.usb-adpcm.u1.px1024",
+  "waterfall.none.band40.usb-adpcm.u1.px1920",
+  "waterfall.none.band40.usb-adpcm.u1.px3840",
+  "waterfall.none.band40.none.u1.px1024.noaudio",
+  "waterfall.s1x104.band40.usb-adpcm.u1.host"
+ ]
+}

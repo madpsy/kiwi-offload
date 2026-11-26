@@ -1,0 +1,303 @@
+[
+ {
+  "id": "hostcap.192k.b10",
+  "measured": 52.1,
+  "predicted": 48.70836698638972,
+  "users": 0,
+  "mbps": 68.37
+ },
+ {
+  "id": "hostcap.192k.b12",
+  "measured": 59.6,
+  "predicted": 56.30408129315002,
+  "users": 0,
+  "mbps": 81.36
+ },
+ {
+  "id": "hostcap.192k.b16",
+  "measured": 66.7,
+  "predicted": 54.91241077351265,
+  "users": 0,
+  "mbps": 78.98
+ },
+ {
+  "id": "hostcap.192k.b8",
+  "measured": 46.9,
+  "predicted": 41.013247642512454,
+  "users": 0,
+  "mbps": 55.21
+ },
+ {
+  "id": "hostcap.48k.b10",
+  "measured": 18.3,
+  "predicted": 12.215023654217973,
+  "users": 0,
+  "mbps": 5.96
+ },
+ {
+  "id": "hostcap.48k.b12",
+  "measured": 19.4,
+  "predicted": 12.858232717915918,
+  "users": 0,
+  "mbps": 7.06
+ },
+ {
+  "id": "hostcap.48k.b16",
+  "measured": 20.8,
+  "predicted": 14.460408022036262,
+  "users": 0,
+  "mbps": 9.8
+ },
+ {
+  "id": "hostcap.48k.b8",
+  "measured": 22.7,
+  "predicted": 11.571814590520024,
+  "users": 0,
+  "mbps": 4.86
+ },
+ {
+  "id": "hostcap.96k.b10",
+  "measured": 22.4,
+  "predicted": 15.062685599862522,
+  "users": 0,
+  "mbps": 10.83
+ },
+ {
+  "id": "hostcap.96k.b12",
+  "measured": 21.8,
+  "predicted": 16.109362167152817,
+  "users": 0,
+  "mbps": 12.62
+ },
+ {
+  "id": "hostcap.96k.b16",
+  "measured": 27.6,
+  "predicted": 19.015497664042638,
+  "users": 0,
+  "mbps": 17.59
+ },
+ {
+  "id": "hostcap.96k.b8",
+  "measured": 25.8,
+  "predicted": 13.858130444210001,
+  "users": 0,
+  "mbps": 8.77
+ },
+ {
+  "id": "modes.none.band40.all",
+  "measured": 38.29,
+  "predicted": 47.35850955543681,
+  "users": 4,
+  "mbps": 0
+ },
+ {
+  "id": "modes.none.band40.nosharp",
+  "measured": 50,
+  "predicted": 56.69850955543684,
+  "users": 4,
+  "mbps": 0
+ },
+ {
+  "id": "quick.hostcap.193k.b12",
+  "measured": 58.9,
+  "predicted": 56.30992864827455,
+  "users": 0,
+  "mbps": 81.37
+ },
+ {
+  "id": "quick.hp10x192.band40.usb-adpcm",
+  "measured": 89.27,
+  "predicted": 91.08076457223298,
+  "users": 6,
+  "mbps": 58.9
+ },
+ {
+  "id": "quick.hp10x192.mixed.usb-adpcm.u8",
+  "measured": 99.35,
+  "predicted": 124.77924012441196,
+  "users": 8,
+  "mbps": 58.9
+ },
+ {
+  "id": "quick.hp10x192.own.usb-adpcm",
+  "measured": 51.4,
+  "predicted": 43.170921683462836,
+  "users": 0,
+  "mbps": 58.9
+ },
+ {
+  "id": "quick.hp10x192.shared.usb-adpcm",
+  "measured": 48.9,
+  "predicted": 43.170921683462836,
+  "users": 0,
+  "mbps": 58.9
+ },
+ {
+  "id": "quick.hp10x192.shared.usb-adpcm.u8",
+  "measured": 96.82,
+  "predicted": 100.3620979055663,
+  "users": 8,
+  "mbps": 58.9
+ },
+ {
+  "id": "quick.hp6x384.shared.usb-adpcm.u4",
+  "measured": 87.66,
+  "predicted": 93.11210707968654,
+  "users": 4,
+  "mbps": 70.67999999999999
+ },
+ {
+  "id": "quick.none.free.usb-adpcm.u8.free417k",
+  "measured": 64.91,
+  "predicted": 71.06399967248335,
+  "users": 8,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.none.u0.idle",
+  "measured": 10.67,
+  "predicted": 8.73,
+  "users": 0,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.sas-opus_hq.u8",
+  "measured": 90.1,
+  "predicted": 92.6162920182116,
+  "users": 8,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.usb-adpcm",
+  "measured": 87.33,
+  "predicted": 92.7021253515449,
+  "users": 13,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.usb-adpcm.guardoff",
+  "measured": 97.59,
+  "predicted": 106.62412535154488,
+  "users": 16,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.usb-adpcm.u8",
+  "measured": 63.38,
+  "predicted": 69.49879201821157,
+  "users": 8,
+  "mbps": 0
+ },
+ {
+  "id": "quick.none.shared.usb-opus.u8",
+  "measured": 88.83,
+  "predicted": 88.17879201821162,
+  "users": 8,
+  "mbps": 0
+ },
+ {
+  "id": "usecases.hp10x192.band40.usb-adpcm.hpsdr",
+  "measured": 88.22,
+  "predicted": 91.08076457223298,
+  "users": 6,
+  "mbps": 58.9
+ },
+ {
+  "id": "usecases.none.own.usb-adpcm.webonly.own104k",
+  "measured": 77.78,
+  "predicted": 178.15344936734644,
+  "users": 8,
+  "mbps": 0
+ },
+ {
+  "id": "usecases.none.own.usb-adpcm.webonly.own417k",
+  "measured": 86.56,
+  "predicted": 128.75673252753177,
+  "users": 4,
+  "mbps": 0
+ },
+ {
+  "id": "usecases.none.shared.usb-adpcm.webonly",
+  "measured": 95.11,
+  "predicted": 97.34279201821155,
+  "users": 14,
+  "mbps": 0
+ },
+ {
+  "id": "usecases.raw_ft8.ft8mix.usb-adpcm.ft8",
+  "measured": 89,
+  "predicted": 115.86724214411375,
+  "users": 6,
+  "mbps": 26.22
+ },
+ {
+  "id": "usecases.raw_skim12.free.usb-adpcm.skim12",
+  "measured": 88.11,
+  "predicted": 92.31005963179231,
+  "users": 5,
+  "mbps": 68.62
+ },
+ {
+  "id": "usecases.raw_skim12.skimmix.usb-adpcm.skim12",
+  "measured": 99.33,
+  "predicted": 135.9793475631855,
+  "users": 4,
+  "mbps": 68.46
+ },
+ {
+  "id": "usecases.raw_skim13.skim13mix.usb-adpcm.skim13",
+  "measured": 100,
+  "predicted": 129.03045633024183,
+  "users": 4,
+  "mbps": 85.19
+ },
+ {
+  "id": "usecases.raw_wide2.widemix.usb-adpcm.wide2",
+  "measured": 97.33,
+  "predicted": 114.5856924821674,
+  "users": 1,
+  "mbps": 86.66
+ },
+ {
+  "id": "waterfall.none.band40.none.u1.px1024.noaudio",
+  "measured": 31,
+  "predicted": 33.43650955543683,
+  "users": 1,
+  "mbps": 0
+ },
+ {
+  "id": "waterfall.none.band40.usb-adpcm.u1.px1024",
+  "measured": 25.23,
+  "predicted": 33.43650955543683,
+  "users": 1,
+  "mbps": 0
+ },
+ {
+  "id": "waterfall.none.band40.usb-adpcm.u1.px1920",
+  "measured": 21,
+  "predicted": 33.43650955543683,
+  "users": 1,
+  "mbps": 0
+ },
+ {
+  "id": "waterfall.none.band40.usb-adpcm.u1.px3840",
+  "measured": 29.23,
+  "predicted": 33.43650955543683,
+  "users": 1,
+  "mbps": 0
+ },
+ {
+  "id": "waterfall.none.band40.usb-adpcm.u1.px800",
+  "measured": 24.6,
+  "predicted": 33.43650955543683,
+  "users": 1,
+  "mbps": 0
+ },
+ {
+  "id": "waterfall.s1x104.band40.usb-adpcm.u1.host",
+  "measured": 32.17,
+  "predicted": 35.617573016885316,
+  "users": 1,
+  "mbps": 3.73
+ }
+]

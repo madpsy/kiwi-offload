@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>kweb admin</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Cpath d=%27M1 12 Q4 2 8 9 T15 4%27 stroke=%27%235ec4ff%27 stroke-width=%272%27 fill=%27none%27/%3E%3C/svg%3E">
+<style>
+:root{--bg:#0d1117;--panel:#131a22;--card:#17202b;--fg:#d6dde6;--dim:#8b96a3;--line:#2b3440;--accent:#5ec4ff;--ok:#7ee787;--warn:#f0b35e;--bad:#ff7b72}
+*{box-sizing:border-box}
+:root{color-scheme:dark}   /* native controls and scrollbars in the dark theme */
+*{scrollbar-width:thin;scrollbar-color:#3a4552 transparent}
+::-webkit-scrollbar{width:10px;height:10px} ::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#3a4552;border-radius:6px;border:2px solid transparent;background-clip:padding-box} ::-webkit-scrollbar-thumb:hover{background:#4b5868;background-clip:padding-box}
+[hidden]{display:none!important}   /* (hidden must win over display rules: main is a grid, hidden until signed in) */
+body{margin:0;background:var(--bg);color:var(--fg);font:13px/1.4 system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:8px 16px;border-bottom:1px solid var(--line)}
+header b{font-size:15px} header a{color:var(--accent)}
+.pill{padding:1px 8px;border-radius:9px;background:#1b2430;color:var(--dim);white-space:nowrap}
+.pill.ok{color:var(--ok)} .pill.warn{color:var(--warn)} .pill.bad{color:var(--bad)}
+main{padding:8px 16px 16px;display:grid;gap:10px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:8px 10px;min-width:0}
+.panel h3{margin:0 0 6px;font-size:12px;color:var(--dim);display:flex;justify-content:space-between;gap:8px}
+.wide{grid-column:1/-1}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:3px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--dim);font-weight:600}
+td.num{text-align:right}
+.host{color:var(--accent)} .web{color:var(--ok)} .own{color:var(--warn)} .free{color:var(--dim)} .zoom{color:var(--ok);opacity:.75}
+label{color:var(--dim)} input,button{background:#1b2430;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:3px 7px;font:inherit}
+button{cursor:pointer} button.primary{border-color:var(--accent);color:var(--accent)}
+textarea{width:100%;min-height:420px;background:#0b1016;color:var(--fg);border:1px solid var(--line);border-radius:4px;padding:8px;
+         font:12px/1.45 ui-monospace,monospace;resize:vertical}
+.msg{margin-top:6px;white-space:pre-wrap;color:var(--dim)} .msg.bad{color:var(--bad)} .msg.ok{color:var(--ok)}
+.scroll{overflow-x:auto}
+td.wrap{white-space:normal;overflow-wrap:break-word}
+#login{padding:24px 16px} #login .panel{max-width:420px}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+/* GPS */
+.gps-top{display:grid;gap:12px;grid-template-columns:minmax(260px,1.4fr) repeat(2,minmax(220px,1fr))}
+@media (max-width:900px){.gps-top{grid-template-columns:1fr}}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:2px 12px;align-content:start;font-variant-numeric:tabular-nums}
+.kv dt{color:var(--dim)} .kv dd{margin:0;white-space:normal}
+.kv .sect{grid-column:1/-1;margin-top:6px;color:var(--fg);font-weight:600;font-size:12px}
+figure{margin:0} figcaption{color:var(--dim);font-size:12px;margin-bottom:4px}
+.legend{display:flex;gap:12px;color:var(--dim);font-size:12px;margin-top:4px} .legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:4px;vertical-align:-1px}
+svg text{fill:var(--dim);font:11px system-ui,sans-serif} svg .lbl{fill:var(--fg)}
+.subs span{display:inline-block;width:9px;height:9px;margin-right:2px;border:1px solid var(--line);border-radius:2px}
+.subs span.on{background:var(--accent);border-color:var(--accent)}
+h4{margin:10px 0 4px;font-size:12px;color:var(--dim)}
+/* system history: two charts per metric (24 hours, the last 15 minutes) */
+.hist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 18px}
+@media (max-width:900px){.hist{grid-template-columns:1fr}}
+.hc{position:relative;min-width:0} .hc .ht{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--fg);margin:6px 0 2px}
+.hc .ht .lg{color:var(--dim);display:flex;gap:10px} .hc .ht .lg i{display:inline-block;width:10px;height:3px;border-radius:2px;margin-right:4px;vertical-align:3px}
+.hc svg{display:block;width:100%;height:110px} .hc svg .grid{stroke:var(--line);stroke-width:1} .hc svg .ev{stroke:#8b96a3;stroke-opacity:.35;stroke-width:1}
+.evf{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px} .evf button{background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:12px;padding:2px 10px;font:inherit;font-size:12px;cursor:pointer}
+.evf button.on{color:var(--fg);border-color:#2f9bdc;background:rgba(47,155,220,.12)}
+.evlog{max-height:340px;overflow-y:auto;overflow-x:hidden} #evlog td.ev{white-space:normal;overflow-wrap:anywhere;width:35%}
+#evlog td.dt{white-space:normal;overflow-wrap:anywhere} #evlog td{vertical-align:top;font-size:12.5px} #evlog td.tm{white-space:nowrap;color:var(--dim);font-variant-numeric:tabular-nums}
+#evlog td.k span{display:inline-block;border:1px solid var(--line);border-radius:3px;padding:0 5px;font-size:11px;color:var(--dim)} #evlog td.dt{color:var(--dim)} #evlog td.k span.bad{color:var(--bad);border-color:var(--bad)}
+.hc svg .band{stroke:var(--panel);stroke-width:1;stroke-linejoin:round} .hc svg .bl{fill:var(--dim);font-size:10px}
+.hc svg .meas{fill:none;stroke:var(--fg);stroke-opacity:.75;stroke-width:1.5;stroke-dasharray:1 2.5;stroke-linecap:round}
+.hc .ht .lg i.ms{background:none;border-top:2px dotted var(--fg);height:0;opacity:.75}
+.topline{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--dim);margin:2px 0 6px;white-space:pre-wrap}
+.topline b{color:var(--fg);font-weight:normal}
+#top{font:12px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace} #top th,#top td{padding:1px 8px} #top th.num{text-align:right} #top td.cmd{width:40%}
+#top tr.ko td{color:var(--fg)} #top .dim{color:var(--dim)} .topth{font-weight:normal;color:var(--dim);margin-left:10px;cursor:pointer} .topth input{vertical-align:-2px} #top tr.ko td.cmd{color:var(--accent)} #top td.hot{color:var(--warn)} #top tr:not(.ko) td{color:var(--dim)}
+#users td{vertical-align:top} #users td.lt{white-space:normal;min-width:12ch;max-width:30ch}
+#users td.vf{white-space:normal;width:55%} #users .vi{display:inline-block;white-space:nowrap;margin-right:14px}
+#users tr.hostrow td{color:var(--fg)} #users .dim{color:var(--dim);font-size:11.5px}
+#ddcs tr.tot td{border-top:1px solid var(--line);color:var(--dim)} #ddcs td.dim{color:var(--dim)}
+.hc svg .tri{fill:var(--bad);stroke-width:2} .tri{color:var(--bad);font-style:normal;font-size:10px;margin-right:4px}
+.lg i.hatch,.htip i.hatch,.ecbox i.hatch{background:repeating-linear-gradient(45deg,#8b96a3 0 2px,transparent 2px 4px);height:8px;width:10px;vertical-align:-1px}
+.sicards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:4px 0 12px}
+.sicard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:10px 12px}
+.sih{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px} .sih i{display:inline-block;width:10px;height:3px;border-radius:2px}
+.sibig{font-size:26px;color:var(--fg);font-variant-numeric:tabular-nums;margin-top:2px} .sibig small{font-size:13px;color:var(--dim)}
+.sicard .d,.ecbox .d{color:var(--dim);font-size:12px} .sidrop{margin:6px 0 8px;font-size:13px} .sidrop.ok{color:var(--ok)} .sidrop.bad{color:var(--bad)}
+.simt{font-size:11.5px;color:var(--dim);margin-bottom:3px} .simtrack{position:relative;height:8px;background:#0d1117;border:1px solid var(--line);border-radius:4px}
+.simtyp{position:absolute;left:0;top:0;bottom:0;border-radius:4px 0 0 4px;opacity:.9} .simpk{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--fg);margin-left:-1px}
+.ecbox{--ecl:180px;--ecr:110px} .ech{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--fg);margin:2px 0 6px}
+.ech .lg{color:var(--dim);display:flex;gap:10px;align-items:center} .ech .lg i{display:inline-block;width:10px;height:8px;margin-right:4px;vertical-align:-1px}
+.ectk{display:inline-block;width:2px;height:10px;background:var(--fg);margin-right:4px;vertical-align:-1px}
+.ecrows{position:relative} .ecr{display:grid;grid-template-columns:var(--ecl) 1fr var(--ecr);align-items:center;gap:0;height:20px;font-size:12.5px}
+.ecn{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding-right:8px;color:var(--fg)} .ecv{text-align:right;font-variant-numeric:tabular-nums;color:var(--fg)}
+.ect{position:relative;height:12px} .ecb{position:absolute;left:0;top:0;bottom:0;background:#8b96a3;opacity:.75;border-radius:0 4px 4px 0;min-width:2px}
+.ecb.acq{background:repeating-linear-gradient(45deg,#8b96a3 0 3px,rgba(139,150,163,.25) 3px 6px);opacity:1}
+.eca{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--fg);margin-left:-1px}
+.ecref{position:absolute;top:0;bottom:0;border-left:1px dashed var(--bad);z-index:1;pointer-events:none}
+.ecref span{position:absolute;top:-16px;left:4px;font-size:11px;color:var(--bad);white-space:nowrap} .ecrows{margin-top:2px}
+.ecnote{margin-top:6px}
+@media (max-width:700px){.sicards{grid-template-columns:1fr}.ecbox{--ecl:120px;--ecr:90px}}
+.hc svg .ref{stroke:#8b96a3;stroke-width:1;stroke-dasharray:4 3} .hc svg .over{fill:var(--bad);stroke:var(--panel);stroke-width:2} .hc svg .xh{stroke:var(--fg);stroke-opacity:.5;stroke-width:1}
+.htip{position:absolute;pointer-events:none;background:#0b1016;border:1px solid var(--line);border-radius:4px;padding:4px 7px;font-size:12px;
+      color:var(--fg);white-space:nowrap;z-index:2;max-width:360px} .htip .d{color:var(--dim)} .htip i{display:inline-block;width:8px;height:3px;margin-right:5px;vertical-align:3px}
+.htip .e{color:var(--dim);white-space:normal}
+/* status LEDs: the Beagle's four user LEDs as kbridge drives them */
+.ledboard{display:flex;flex-wrap:wrap;gap:8px 28px;align-items:flex-start;padding:10px 14px;background:#0b1016;border:1px solid var(--line);
+          border-radius:6px;width:fit-content;max-width:100%}
+.ledcell{display:grid;justify-items:center;gap:3px;min-width:84px}
+.led{--led:#4aa8ff;--lvl:1;width:16px;height:16px;border-radius:50%;background:#1c2430;box-shadow:inset 0 1px 2px #000;margin-bottom:4px}
+.led.on{background:radial-gradient(circle at 38% 35%,#e8f4ff 0,var(--led) 45%,#1f5fa8 100%);
+        box-shadow:0 0 calc(6px*var(--lvl)) calc(2px*var(--lvl)) rgb(74 168 255/calc(.75*var(--lvl))),0 0 calc(18px*var(--lvl)) calc(5px*var(--lvl)) rgb(74 168 255/calc(.3*var(--lvl)));
+        opacity:calc(.45 + .55*var(--lvl))}
+.led.blink{animation:ledblink 1s infinite}
+@keyframes ledblink{
+  0%,49.9%{background:radial-gradient(circle at 38% 35%,#e8f4ff 0,var(--led) 45%,#1f5fa8 100%);
+           box-shadow:0 0 calc(6px*var(--lvl)) calc(2px*var(--lvl)) rgb(74 168 255/calc(.75*var(--lvl))),0 0 calc(18px*var(--lvl)) calc(5px*var(--lvl)) rgb(74 168 255/calc(.3*var(--lvl)))}
+  50%,100%{background:#1c2430;box-shadow:inset 0 1px 2px #000}}
+@media (prefers-reduced-motion:reduce){.led.blink{animation:none;background:linear-gradient(90deg,var(--led) 50%,#1c2430 50%)}}
+.attn{display:flex;align-items:center;gap:10px;margin-top:8px;flex-wrap:wrap} .attn input{width:220px} .attn output{min-width:4.5em;font-variant-numeric:tabular-nums}
+.attn .dim{color:var(--dim);font-size:12px}
+.ovdot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:0;background:#2b3440}
+.ovdot.on{background:var(--bad);box-shadow:0 0 6px 1px rgb(255 123 114/.7)}
+.lname{font:600 11px ui-monospace,monospace;color:var(--dim)} .lwhat{color:var(--fg)} .lstate{color:var(--dim);font-size:12px}
+.kv a,.msg a{color:var(--accent)}
+</style></head>
+<body>
+<header>
+  <b>kweb admin</b>
+  <span id="conn" class="pill">connecting</span>
+  <span id="cpu" class="pill">CPU –</span>
+  <span id="hostp" class="pill">host –</span>
+  <span id="usersp" class="pill">users –</span>
+  <a href="/">← back to kweb</a>
+</header>
+<div id="login">
+  <div class="panel">
+    <h3>Sign in</h3>
+    <form id="lf"><label>admin password <input id="pw" type="password" autocomplete="current-password"></label> <button class="primary">sign in</button></form>
+    <div id="lmsg" class="msg"></div>
+  </div>
+</div>
+<main id="main" hidden>
+  <section class="panel"><h3><span>Status LEDs</span><span id="ledsum"></span></h3>
+    <div class="ledboard" id="ledboard"></div></section>
+  <section class="panel"><h3><span>Receiver hardware</span><span id="hwsum"></span></h3>
+    <dl class="kv" id="hwkv"></dl>
+    <div class="attn" id="attnrow"><label for="attn">RF attenuator</label>
+      <input id="attn" type="range" min="0" max="31.5" step="0.5" value="0"><output id="attnv">0 dB</output>
+      <span class="dim" id="attnnote"></span></div></section>
+  <section class="panel"><h3><span>DDCs</span><span id="ddcsum"></span></h3><div class="scroll"><table id="ddcs"></table></div></section>
+  <section class="panel"><h3><span>Windows</span><span>bands, free window, own receivers · kHz</span></h3><div class="scroll"><table id="wins"></table></div></section>
+  <section class="panel wide"><h3><span>Users</span></h3><div class="scroll"><table id="users"></table></div></section>
+  <section class="panel wide" id="topsec"><h3><span>Processes <label class="topth"><input type="checkbox" id="topth"> threads</label></span><span id="topsum">updates once a second while on screen</span></h3>
+    <div class="topline" id="topline"></div><div class="scroll"><table id="top"></table></div></section>
+  <section class="panel wide"><h3><span>System history</span><span>kept in memory only: since kweb started, up to 24 hours</span></h3>
+    <div class="hist" id="hist"></div></section>
+  <section class="panel wide"><h3><span>Stream internals</span><span>the links' FPGA FIFOs and the eCPU (history: Stream FIFO, eCPU busy above)</span></h3>
+    <div id="si"></div></section>
+  <section class="panel wide"><h3><span>Event log</span><span id="evsum">memory only: up to 24 hours</span></h3>
+    <div class="evf" id="evf"></div>
+    <div class="scroll evlog"><table id="evlog"></table></div></section>
+  <section class="panel wide" id="gpssec">
+    <h3><span>GPS</span><span id="gpssum"></span></h3>
+    <div id="gpsoff" class="msg">no GPS data (kbridge not running, or [kbridge] gps = off)</div>
+    <div id="gpson" hidden>
+      <div class="gps-top">
+        <dl class="kv" id="gpskv"></dl>
+        <figure><figcaption>Sky: satellites by azimuth / elevation</figcaption><svg id="sky" viewBox="0 0 240 240" width="100%" style="max-width:260px"></svg>
+          <div class="legend"><span><i style="background:#2f9bdc"></i>used in the fix</span><span><i style="background:#d08a2c"></i>tracked, not used</span></div></figure>
+        <figure><figcaption id="scap">Recent fixes around their mean (metres)</figcaption><svg id="scat" viewBox="0 0 240 240" width="100%" style="max-width:260px"></svg></figure>
+      </div>
+      <h4>Channels</h4><div class="scroll"><table id="gpsch"></table></div>
+      <h4>Search: last peak / mean per satellite (dashed line: acquired at ≥ 16, then confirmed on fresh samples; trk = tracked)</h4>
+      <div class="scroll"><svg id="snr" viewBox="0 0 660 150" style="width:100%;max-width:760px;min-width:520px"></svg></div>
+    </div>
+  </section>
+  <section class="panel wide">
+    <h3><span>Configuration <span id="cpath"></span></span><span>kbridge and kweb read this one file</span></h3>
+    <textarea id="cfg" spellcheck="false"></textarea>
+    <div><button id="save" class="primary">save and apply</button> <button id="reload">reload from disk</button></div>
+    <div id="smsg" class="msg"></div>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const esc = x => String(x).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+const khz = f => (f / 1e3).toFixed(1);
+let ws, pw = '', authed = false;
+const send = o => ws && ws.readyState === 1 && ws.send(JSON.stringify(o));
+function connect() {
+  ws = new WebSocket((location.protocol === 'https:' ? 'wss://' : 'ws://') + location.host + '/ws?admin');
+  ws.onopen = () => { $('conn').textContent = 'connected'; $('conn').className = 'pill ok'; if (pw) send({ t: 'admin_auth', pw }); };
+  ws.onclose = () => { $('conn').textContent = 'disconnected'; $('conn').className = 'pill bad'; setTimeout(connect, 2000); };
+  ws.onmessage = ev => { if (typeof ev.data === 'string') on(JSON.parse(ev.data)); };
+}
+function on(m) {
+  if (m.t === 'note') { (authed ? $('smsg') : $('lmsg')).textContent = m.msg; (authed ? $('smsg') : $('lmsg')).className = 'msg bad'; return; }
+  if (m.t === 'admin_hist') { HIST = m; histDraw(); evDraw(); return; }
+  if (m.t === 'admin_top') { topDraw(m); return; }
+  if (m.t === 'admin_config') { if (!authed) setTimeout(() => send({ t: 'admin_hist' }), 300);
+    authed = true; $('login').hidden = true; $('main').hidden = false; $('cpath').textContent = m.path;
+    if (!$('cfg').dataset.dirty) $('cfg').value = m.text; return; }
+  if (m.t === 'admin_saved') { const ok = m.msg.startsWith('saved'); $('smsg').textContent = m.msg; $('smsg').className = 'msg ' + (ok ? 'ok' : 'bad');
+    if (ok) delete $('cfg').dataset.dirty; return; }
+  if (m.t !== 'admin') return;
+  $('cpu').textContent = `CPU idle ${m.cpu.idle}% · ${Math.round(m.cpu.free)}% free ` + (m.cpu.guard === false ? '(CPU guard off: nothing is refused for CPU)' : `(reserve ${m.cpu.reserve}%)`);
+  $('cpu').className = 'pill ' + (m.cpu.free < 2 ? 'bad' : m.cpu.free < 10 ? 'warn' : 'ok');
+  $('hostp').textContent = m.host ? 'host attached' : 'no host'; $('hostp').className = 'pill ' + (m.host ? 'ok' : '');
+  $('usersp').textContent = `users ${m.users.length} / ${m.users_max}`;
+  const byd = new Map(m.ddcs.map(d => [d.ddc, d]));
+  const LK = m.links, lkd = new Map(((LK && LK.ddc) || []).map(x => [x.ddc, x]));
+  if (LK) { LKS = LK; siDraw(); }
+  const lpct = x => { const mx = x.lane ? LK.lanes_max : LK.spi_max; return mx > 0 ? x.mbps / mx * 100 : 0; };
+  let rows = '<tr><th>DDC</th><th>used by</th><th class="num">centre kHz</th><th class="num">usable</th><th class="num">kS/s</th><th>link</th><th class="num">Mbit/s</th><th class="num">of link</th><th class="num">users</th></tr>';
+  let nweb = 0, nhost = 0;
+  for (let k = 0; k < 13; k++) {
+    const d = byd.get(k);
+    if (!d) { rows += `<tr><td>${k}${k < 4 ? '*' : ''}</td><td class="free">free</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`; continue; }
+    const x = lkd.get(k);
+    if (d.who === 'host') nhost++; else nweb++;
+    const tag = d.who === 'own' ? (/own receiver/.test(d.name) ? '' : ' (own receiver)') : d.who === 'web' ? ' (web)' : d.who === 'zoom' ? ' (zoom window: gives way first)' : '';
+    rows += `<tr><td>${k}${k < 4 ? '*' : ''}</td><td class="${d.who} wrap">${esc(d.name)}${tag}</td>`
+          + `<td class="num">${khz(d.fc)}</td><td class="num">${(d.fs * 0.8 / 1e3).toFixed(0)}</td><td class="num">${(d.fs / 1e3).toFixed(0)}</td>`
+          + (x ? `<td>${x.lane ? 'lanes' : 'SPI'}</td><td class="num">${x.mbps.toFixed(2)}</td><td class="num">${lpct(x).toFixed(1)} %</td>`
+               : `<td>${d.lanes ? 'lanes' : 'SPI'}</td><td></td><td></td>`)
+          + `<td class="num">${d.users || ''}</td></tr>`;
+  }
+  if (LK) {                                         // the snapshots' share, and each link's total against its budget
+    const sum = l => (LK.ddc || []).filter(x => x.lane === l).reduce((a, x) => a + x.mbps, 0) + (LK.snap_lane === l ? LK.snap : 0);
+    if (LK.snap_lane >= 0) rows += `<tr><td></td><td class="dim">waterfall snapshots</td><td></td><td></td><td></td><td>${LK.snap_lane ? 'lanes' : 'SPI'}</td>`
+      + `<td class="num">${LK.snap.toFixed(2)}</td><td class="num">${(LK.snap / (LK.snap_lane ? LK.lanes_max : LK.spi_max) * 100).toFixed(1)} %</td><td></td></tr>`;
+    for (const [l, n, mx, me] of [[0, 'SPI', LK.spi_max, LK.spi_meas], [1, 'lanes', LK.lanes_max, LK.lanes_meas]])
+      rows += `<tr class="tot"><td></td><td>${n} total (budget ${mx.toFixed(0)} Mbit/s; measured ${me.toFixed(1)})</td><td></td><td></td><td></td><td>${n}</td>`
+            + `<td class="num">${sum(l).toFixed(2)}</td><td class="num">${(sum(l) / mx * 100).toFixed(1)} %</td><td></td></tr>`;
+  }
+  $('ddcs').innerHTML = rows;
+  $('ddcsum').textContent = `host ${nhost} · web ${nweb} (max ${m.web_ddcs}) · free ${13 - nhost - nweb} · * = can go to 52 kHz`;
+  rows = '<tr><th>window</th><th>state</th><th>on</th><th class="num">centre</th><th class="num">width</th><th class="num">users</th><th class="num">CPU %</th></tr>';
+  for (const w of m.windows)
+    rows += `<tr><td class="wrap">${esc(w.name)}${w.retired ? ' (removed)' : ''}</td><td>${esc(w.state)}</td><td>${esc(w.on.replace(/^host /, ''))}</td><td class="num">${khz(w.fc)}</td>`
+          + `<td class="num">${(w.width / 1e3).toFixed(0)}</td><td class="num">${w.users || ''}</td><td class="num">${w.cost.toFixed(1)}</td></tr>`;
+  $('wins').innerHTML = rows;
+  rows = '<tr><th>id</th><th>address</th><th>listening to</th><th>VFOs</th><th>role</th><th class="num">connected</th></tr>';
+  for (const u of m.users)
+    rows += `<tr><td>${u.id}</td><td>${esc(u.ip)}</td><td class="lt">${esc(u.src)}</td><td class="vf">${u.vfos.map(v => `<span class="vi">${khz(v.f)} ${v.mode}/${v.codec}</span>`).join('') || '–'}</td>`
+          + `<td>${u.admin ? 'admin' : u.owner ? 'owner' : ''}</td><td class="num">${Math.floor(u.age / 60)}:${String(Math.round(u.age % 60)).padStart(2, '0')}</td></tr>`;
+  const H = m.hostinfo;                             // the host (the HPSDR bridge ...): its client from its label, its receivers
+  if (H) {
+    const cl = (H.label.match(/client (\S+)/) || [])[1], ago = H.age, hip = H.addr.replace(/:\d+$/, '');
+    rows += `<tr class="hostrow"><td>host</td><td>${cl && cl !== 'local' ? esc(cl) + `<div class="dim">via ${esc(H.addr)}</div>`
+                                                 : esc(hip) + (cl ? '<div class="dim">client on the bridge\'s machine</div>' : '')}</td>`
+          + `<td class="lt">${esc(H.label || 'host program')}</td>`
+          + `<td class="vf">${H.slices.map(x => `<span class="vi">${khz(x.fc)} <span class="dim">(${(x.fs / 1e3).toFixed(0)} kS/s${x.label ? ', ' + esc(x.label.replace(/,.*/, '')) : ''})</span></span>`).join('') || '–'}</td>`
+          + `<td>host</td><td class="num">${ago ? Math.floor(ago / 3600) ? Math.floor(ago / 3600) + 'h ' + String(Math.floor(ago / 60 % 60)).padStart(2, '0') + 'm' : Math.floor(ago / 60) + ':' + String(Math.round(ago % 60)).padStart(2, '0') : ''}</td></tr>`;
+  }
+  $('users').innerHTML = rows;
+  gps(m.gps, m.clock);
+  leds(m.leds);
+  hw(m.hw);
+}
+
+// ---- GPS
+const C_USED = '#2f9bdc', C_TRK = '#d08a2c';      // validated pair on the dark panel (dataviz validator: all checks pass)
+const fmtT = s => s < 0 ? '–' : s < 90 ? `${s.toFixed(0)} s` : s < 5400 ? `${(s / 60).toFixed(1)} min` : `${(s / 3600).toFixed(1)} h`;
+const svgEl = (tag, a, inner = '') => `<${tag} ${Object.entries(a).map(([k, v]) => `${k}="${v}"`).join(' ')}>${inner}</${tag}>`;
+// the known antenna position (time from one satellite): where it comes from, its height above the WGS84 ellipsoid
+function refTxt(r) {
+  if (!r || !r.src) return 'none yet (needs gps_location or a fix)';
+  const SRC = ['', `gps_location + ground elevation + ${r.agl} m antenna height + ${r.geoid} m geoid`, 'survey of this receiver\'s fixes',
+               `gps_location at sea level + ${r.agl} m antenna height + ${r.geoid} m geoid (no ground elevation given)`, 'short survey', 'latest fix'];
+  return `${r.lat.toFixed(6)}, ${r.lon.toFixed(6)}, ${r.alt.toFixed(1)} m (ellipsoid) · ${SRC[r.src] || '?'}`;
+}
+// the status LEDs, as kbridge drives them on the board (bridge/kleds.c): mode 0 off, 1 on, 2 blinking at 1 Hz
+const LEDS = [['USR0', 'stream', ['stopped', 'streaming cleanly', 'a stream error in the last 10 s']],
+              ['USR1', 'GPS', ['no satellite', 'GPS time', 'tracking, no time yet']],
+              ['USR2', 'host', ['no host client', 'host client attached', '']],
+              ['USR3', 'web', ['no listener', 'kweb in use', '']]];
+const LED_LVL = { 0: ['brightest', 1], 5: ['medium', .75], 10: ['dimmer', .55], 20: ['dimmest', .4] };
+// the board (kbridge's khw.c): EEPROM model/serial, FPGA DNA, the RF step attenuator (set here only), ADC overload
+let attnBusy = 0;                                   // (while the slider is held: don't move it under the pointer)
+function hw(H) {
+  const ok = H && H.valid, kv = [];
+  if (ok) {
+    const ago = H.ov_age > 1e6 ? 'never' : H.ov_age < 1.5 ? 'now' : fmtT(H.ov_age) + ' ago';
+    kv.push(['board', H.model ? `KiwiSDR ${H.model}` + (H.serial ? `, serial ${H.serial}` : '') : 'unknown (EEPROM not read)']);
+    kv.push(['FPGA DNA', H.dna !== '0000000000000000' ? H.dna : 'not read']);
+    kv.push(['FPGA', H.xadc_age > 10 ? 'no monitor data (needs stream gateware v23)'
+                   : H.vccint < 0.1 ? 'the on-chip monitor answers but reads zero (its supply may not be powered on this board)'
+                   : `${H.temp.toFixed(1)} °C · VCCINT ${H.vccint.toFixed(3)} V · VCCAUX ${H.vccaux.toFixed(3)} V · VCCBRAM ${H.vccbram.toFixed(3)} V`]);
+    kv.push(['GPS 1 PPS', !H.pps_armed ? 'not pulsing (needs GPS time, gateware v22, gps_pps = on)'
+                         : `pulsing (${H.pps_armed} armed)` + (H.pps_dev ? ' · /dev/pps0 for chrony' : ' · Linux does not see it (no /dev/pps0)')]);
+    kv.push(['ADC overload', `<span class="ovdot${H.ov_age < 1.5 ? ' on' : ''}"></span>` + (H.ov_age < 1.5 ? `clipping: ${H.ov_rate} samples/s` : 'no clipping')
+             + ` · last ${ago} · ${H.ov_total} clipped samples since kbridge started`]);
+  }
+  $('hwkv').innerHTML = ok ? kv.map(([k, v]) => `<dt>${k}</dt><dd>${v}</dd>`).join('') : '<dt>kbridge</dt><dd>not running</dd>';
+  $('hwsum').textContent = ok && H.ov_age < 1.5 ? 'ADC OVERLOAD' : '';
+  $('hwsum').style.color = 'var(--bad)';
+  const a = $('attn'), fit = ok && H.attn_fitted;
+  a.disabled = !fit;
+  $('attnnote').textContent = !ok ? '' : fit ? 'admin only: adds attenuation ahead of the ADC (0.5 dB steps)'
+                                            : 'not fitted on this board (rf_attn_fitted in [kbridge] overrides)';
+  if (fit && Date.now() > attnBusy) { a.value = H.attn_db; $('attnv').textContent = H.attn_db + ' dB'; }
+}
+$('attn').addEventListener('input', () => { attnBusy = Date.now() + 3000; $('attnv').textContent = $('attn').value + ' dB'; });
+$('attn').addEventListener('change', () => { attnBusy = Date.now() + 1500; send({ t: 'admin_attn', db: +$('attn').value }); });
+// ---- system history (kweb: memory only). Two charts per metric: 24 hours (5-minute buckets: mean line, faint band up
+// to each bucket's peak) and the last 15 minutes (5 s points); event lines (users, host, DDCs, kbridge) on every chart.
+// Blue = web / receive, orange = host / transmit (validated earlier for this dark surface).
+let HIST = null;
+const HCOL = ['#2f9bdc', '#d08a2c'];
+const HDEF = [
+  { t: 'CPU busy', u: '%', max: 100, ceil: 'ceiling', s: [{ k: 'cpu', n: 'busy' }] },   // (averages only: the dots too)
+  { t: 'Load average', u: '', ref: 'cores', s: [{ k: 'load', n: '1-minute load', p: 'load_max' }] },
+  { t: 'Memory in use', u: '%', max: 100, s: [{ k: 'mem', n: 'in use' }] },
+  { t: 'Network', u: 'Mbit/s', s: [{ k: 'rx', n: 'receive', p: 'rx_max' }, { k: 'tx', n: 'transmit', p: 'tx_max' }] },
+  { t: 'SPI link', u: 'Mbit/s', stack: 'spi' },
+  { t: 'Lanes link', u: 'Mbit/s', stack: 'lanes' },
+  { t: 'Stream FIFO', u: '% full', kind: 'fifo' },
+  { t: 'eCPU busy', u: 'ms per second', kind: 'ecpu' },
+  { t: 'Users', u: '', int: 1, s: [{ k: 'users', n: 'web users', p: 'users_max' }, { k: 'host', n: 'host client' }] },
+  { t: 'DDCs in use', u: '', int: 1, s: [{ k: 'ddc_web', n: 'web' }, { k: 'ddc_host', n: 'host' }] },
+];
+setInterval(() => { if (authed) send({ t: 'admin_hist' }); }, 5000);
+const hfmt = (v, d) => (d.int ? v.toFixed(v % 1 ? 1 : 0) : v < 10 ? v.toFixed(2) : v.toFixed(1)) + (d.u ? ' ' + d.u : '');
+const hclock = (t, sec) => new Date(t * 1000).toTimeString().slice(0, sec ? 8 : 5);
+function histDraw() {
+  const box = $('hist'); if (!HIST || !box) return;
+  if (!box.children.length) box.innerHTML = HDEF.map((d, i) => ['coarse', 'fine'].map(w =>
+    `<div class="hc" id="hc_${i}_${w}"><div class="ht"><span>${d.t}${d.u ? ` (${d.u})` : ''} · ${w === 'coarse' ? '24 hours' : 'last 15 minutes'}</span>`
+    + (d.kind === 'fifo' ? `<span class="lg"><span><i style="background:${LCOL[0]}"></i>SPI</span><span><i style="background:${LCOL[1]}"></i>lanes</span>`
+         + `<span><b class="tri">▲</b>groups dropped</span><span><i class="hatch"></i>GPS acquisition</span></span>`
+       : d.kind === 'ecpu' ? `<span class="lg"><span><i class="hatch"></i>GPS acquisition</span><span><i style="background:${ECOL}"></i>other commands</span></span>`
+       : d.stack ? `<span class="lg"><span><i style="background:${SCOL.host}"></i>host</span><span><i style="background:${SCOL.web}"></i>web</span>`
+         + `<span><i style="background:${SCOL.snap}"></i>snapshots</span><span><i class="ms"></i>measured</span></span>`
+       : d.s.length > 1 ? `<span class="lg">${d.s.map((x, j) => `<span><i style="background:${HCOL[j]}"></i>${x.n}</span>`).join('')}</span>` : '')
+    + `</div><svg></svg></div>`).join('')).join('');
+  HDEF.forEach((d, i) => ['coarse', 'fine'].forEach(w => (d.kind === 'fifo' ? fifoChart : d.kind === 'ecpu' ? ecpuChart : d.stack ? stackChart : histChart)(
+    $(`hc_${i}_${w}`), d, HIST[w], w === 'coarse' ? 86400 : 900, HIST.events || [])));
+  siDraw();
+}
+function histChart(el, d, D, span, events) {
+  const svg = el.querySelector('svg'), W = Math.max(200, svg.clientWidth || el.clientWidth), H = 110, L = 40, R = 6, T = 6, B = 18;
+  const n = D[d.s[0].k].length, now = Date.now() / 1000, t1 = Math.max(now, D.end || now), t0 = t1 - span;
+  const tAt = i => D.end - (n - 1 - i) * D.step;
+  let top = d.max || 0;
+  if (!d.max) for (const x of d.s) for (const v of D[x.p || x.k]) top = Math.max(top, v);
+  const ref = d.ref ? HIST[d.ref] : 0; if (ref) top = Math.max(top, ref);
+  if (!d.max) { const e = Math.pow(10, Math.floor(Math.log10(Math.max(top, d.int ? 2 : 0.1)))); top = Math.ceil(Math.max(top, d.int ? 2 : 0.1) / e) * e; }
+  const X = t => L + (t - t0) / span * (W - L - R), Y = v => T + (1 - v / top) * (H - T - B);
+  let g = '';
+  const al = v => v === 0 ? '0' : top >= 10 || d.int ? String(Math.round(v)) : v.toFixed(top >= 1 ? 1 : 2);   // axis labels
+  for (const f of [0, 0.5, 1]) g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${Y(top * f)}" y2="${Y(top * f)}"/>`
+    + (d.int && f === 0.5 && top % 2 ? '' : `<text x="${L - 4}" y="${Y(top * f) + 4}" text-anchor="end">${al(top * f)}</text>`);
+  if (ref) g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${Y(ref)}" y2="${Y(ref)}"/><text x="${W - R - 2}" y="${Y(ref) - 3}" text-anchor="end">${ref} core${ref > 1 ? 's' : ''}: saturated</text>`;
+  const ceil = d.ceil && HIST[d.ceil] > 0 && HIST[d.ceil] < 100 ? HIST[d.ceil] : 0;   // the CPU guard's ceiling: 100 - cpu_reserve (100: guard off)
+  if (ceil) g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${Y(ceil)}" y2="${Y(ceil)}"/><text x="${W - R - 2}" y="${Y(ceil) + 11}" text-anchor="end">guard ceiling ${+(100 - ceil).toFixed(1)}% kept free</text>`;
+  const tick = span > 3600 ? 6 * 3600 : 300;
+  for (let t = Math.ceil(t0 / tick) * tick; t <= t1; t += tick) g += `<text x="${X(t)}" y="${H - 4}" text-anchor="middle">${hclock(t)}</text>`;
+  for (const e of events) if (e[0] >= t0 && e[0] <= t1) g += `<line class="ev" x1="${X(e[0])}" x2="${X(e[0])}" y1="${T}" y2="${H - B}"/>`;
+  d.s.forEach((x, j) => {
+    const pts = D[x.k].map((v, i) => `${X(tAt(i)).toFixed(1)},${Y(v).toFixed(1)}`);
+    if (x.p && D[x.p]) {                              // the peak band (faint), from the mean up to the peak
+      const up = D[x.p].map((v, i) => `${X(tAt(i)).toFixed(1)},${Y(v).toFixed(1)}`);
+      if (n > 1) g += `<polygon points="${pts.join(' ')} ${up.reverse().join(' ')}" fill="${HCOL[j]}" fill-opacity=".14" stroke="none"/>`;
+    }
+    if (n > 1) g += `<polyline points="${pts.join(' ')}" fill="none" stroke="${HCOL[j]}" stroke-width="2" stroke-linejoin="round"/>`;
+  });
+  if (ceil) { const k = d.s[0].p || d.s[0].k; D[k].forEach((v, i) => { if (v > ceil) g += `<circle class="over" cx="${X(tAt(i)).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="4"/>`; }); }
+  if (!n) g += `<text x="${(L + W - R) / 2}" y="${H / 2}" text-anchor="middle">no data yet (a point every ${D.step} s)</text>`;
+  g += `<line class="xh" id="xh" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>`;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+  // hover: the nearest point's values, and the events within a few pixels of it
+  let tip = el.querySelector('.htip'); if (!tip) { tip = document.createElement('div'); tip.className = 'htip'; tip.hidden = true; el.appendChild(tip); }
+  svg.onmouseleave = () => { tip.hidden = true; svg.querySelector('#xh').setAttribute('visibility', 'hidden'); };
+  svg.onmousemove = ev => {
+    const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) * W / r.width, t = t0 + (x - L) / (W - L - R) * span;
+    if (!n || x < L) { tip.hidden = true; return; }
+    const i = Math.max(0, Math.min(n - 1, Math.round(n - 1 - (D.end - t) / D.step))), ti = tAt(i), xx = X(ti);
+    const xh = svg.querySelector('#xh'); xh.setAttribute('x1', xx); xh.setAttribute('x2', xx); xh.setAttribute('visibility', 'visible');
+    const near = events.filter(e => Math.abs(X(e[0]) - x) <= 4 * W / r.width + 2);
+    tip.innerHTML = `<div class="d">${hclock(ti - (span > 3600 ? D.step : 0), true)}${span > 3600 ? '–' + hclock(ti, true) : ''}</div>`
+      + d.s.map((s2, j) => `<div><i style="background:${HCOL[j]}"></i>${s2.n} ${hfmt(D[s2.k][i], d)}${s2.p && D[s2.p] ? ` <span class="d">(peak ${hfmt(D[s2.p][i], d)})</span>` : ''}</div>`).join('')
+      + (ceil && D[d.s[0].p || d.s[0].k][i] > ceil ? `<div class="e" style="color:var(--bad)">over the guard ceiling (${+ceil.toFixed(1)}%)</div>` : '')
+      + near.slice(-6).map(e => `<div class="e">${hclock(e[0], true)} ${e[2].replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</div>`).join('');
+    tip.hidden = false;
+    const tw = tip.offsetWidth, px = ev.clientX - el.getBoundingClientRect().left;
+    tip.style.left = Math.max(0, Math.min(el.clientWidth - tw, px + 12 > el.clientWidth - tw ? px - tw - 12 : px + 12)) + 'px';
+    tip.style.top = '24px';
+  };
+}
+// the links (SPI, lanes): each DDC's budgeted Mbit/s stacked (snapshots at the bottom, then DDC numbers upward), coloured by
+// owner (host / web), labelled with the DDC number at the right; the budget dashed; the measured rate as a line
+const SCOL = { host: HCOL[1], web: HCOL[0], snap: '#5b6673' };
+function stackChart(el, d, D, span, events) {
+  const svg = el.querySelector('svg'), W = Math.max(200, svg.clientWidth || el.clientWidth), H = 110, L = 40, R = 26, T = 6, B = 18;
+  const n = D.cpu.length, now = Date.now() / 1000, t1 = Math.max(now, D.end || now), t0 = t1 - span, tAt = i => D.end - (n - 1 - i) * D.step;
+  const S = D[d.stack] || {}, meas = D[d.stack + '_meas'] || [], mx = HIST[d.stack + '_max'] || 0;
+  const keys = Object.keys(S).sort((a, b) => a === 'snap' ? -1 : b === 'snap' ? 1 : a - b);
+  const cum = keys.map(() => new Array(n).fill(0)); let run = new Array(n).fill(0);
+  keys.forEach((k, j) => { S[k].v.forEach((v, i) => { run[i] += v; }); cum[j] = run.slice(); });
+  let top = mx; for (const v of run) top = Math.max(top, v); for (const v of meas) top = Math.max(top, v);
+  { const e = Math.pow(10, Math.floor(Math.log10(Math.max(top, 1)))); top = Math.ceil(Math.max(top, 1) / e * 2) / 2 * e; }
+  const X = t => L + (t - t0) / span * (W - L - R), Y = v => T + (1 - v / top) * (H - T - B);
+  let g = '';
+  for (const f of [0, 0.5, 1]) g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${Y(top * f)}" y2="${Y(top * f)}"/><text x="${L - 4}" y="${Y(top * f) + 4}" text-anchor="end">${+(top * f).toFixed(top * f % 1 ? 1 : 0)}</text>`;
+  const tick = span > 3600 ? 6 * 3600 : 300;
+  for (let t = Math.ceil(t0 / tick) * tick; t <= t1; t += tick) g += `<text x="${X(t)}" y="${H - 4}" text-anchor="middle">${hclock(t)}</text>`;
+  for (const e of events) if (e[0] >= t0 && e[0] <= t1) g += `<line class="ev" x1="${X(e[0])}" x2="${X(e[0])}" y1="${T}" y2="${H - B}"/>`;
+  if (n > 1) keys.forEach((k, j) => {                // each band: from the one below to its own cumulative top
+    const lo = j ? cum[j - 1] : new Array(n).fill(0), hi = cum[j];
+    const up = hi.map((v, i) => `${X(tAt(i)).toFixed(1)},${Y(v).toFixed(1)}`), dn = lo.map((v, i) => `${X(tAt(i)).toFixed(1)},${Y(v).toFixed(1)}`).reverse();
+    g += `<polygon class="band" points="${up.join(' ')} ${dn.join(' ')}" fill="${SCOL[S[k].who]}"/>`;
+    const h = Y(lo[n - 1]) - Y(hi[n - 1]);         // the DDC number at the right edge, if the band is tall enough there
+    if (k !== 'snap' && h >= 8) g += `<text class="bl" x="${W - R + 3}" y="${((Y(lo[n - 1]) + Y(hi[n - 1])) / 2 + 3.5).toFixed(1)}">D${k}</text>`;
+  });
+  if (mx) g += `<line class="ref" x1="${L}" x2="${W - R}" y1="${Y(mx)}" y2="${Y(mx)}"/><text x="${L + 4}" y="${Y(mx) + 11}">budget ${+mx.toFixed(1)} Mbit/s</text>`;
+  if (n > 1 && meas.length) g += `<polyline class="meas" points="${meas.map((v, i) => `${X(tAt(i)).toFixed(1)},${Y(v).toFixed(1)}`).join(' ')}"/>`;
+  if (!n) g += `<text x="${(L + W - R) / 2}" y="${H / 2}" text-anchor="middle">no data yet (a point every ${D.step} s)</text>`;
+  else if (!keys.length) g += `<text x="${(L + W - R) / 2}" y="${H / 2}" text-anchor="middle">nothing on this link</text>`;
+  g += `<line class="xh" id="xh" x1="0" x2="0" y1="${T}" y2="${H - B}" visibility="hidden"/>`;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = g;
+  let tip = el.querySelector('.htip'); if (!tip) { tip = document.createElement('div'); tip.className = 'htip'; tip.hidden = true; el.appendChild(tip); }
+  svg.onmouseleave = () => { tip.hidden = true; svg.querySelector('#xh').setAttribute('visibility', 'hidden'); };
+  svg.onmousemove = ev => {
+    const r = svg.getBoundingClientRect(), x = (ev.clientX - r.left) * W / r.width, t = t0 + (x - L) / (W - L - R) * span;
+    if (!n || x < L) { tip.hidden = true; return; }
+    const i = Math.max(0, Math.min(n - 1, Math.round(n - 1 - (D.end - t) / D.step))), ti = tAt(i), xx = X(ti);
+    const xh = svg.querySelector('#xh'); xh.setAttribute('x1', xx); xh.setAttribute('x2', xx); xh.setAttribute('visibility', 'visible');
+    const tot = keys.reduce((a, k) => a + S[k].v[i], 0), pc = v => mx ? ` <span class="d">${(v / mx * 100).toFixed(1)} %</span>` : '';
+    const near = events.filter(e => Math.abs(X(e[0]) - x) <= 4 * W / r.width + 2);
+    tip.innerHTML = `<div class="d">${hclock(ti - (span > 3600 ? D.step : 0), true)}${span > 3600 ? '–' + hclock(ti, true) : ''}</div>`
+      + `<div>total ${tot.toFixed(2)} of ${+mx.toFixed(1)} Mbit/s${pc(tot)}</div>`
+      + keys.slice().reverse().filter(k => S[k].v[i] > 0).map(k => `<div><i style="background:${SCOL[S[k].who]}"></i>${k === 'snap' ? 'snapshots' : 'DDC ' + k + ' (' + S[k].who + ')'} ${S[k].v[i].toFixed(2)}${pc(S[k].v[i])}</div>`).join('')
+      + (meas.length ? `<div class="d">measured ${meas[i].toFixed(2)} Mbit/s</div>` : '')
+      + near.slice(-6).map(e => `<div class="e">${hclock(e[0], true)} ${e[2].replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</div>`).join('');
+    tip.hidden = false;
+    const tw = tip.offsetWidth, px = ev.clientX - el.getBoundingClientRect().left;
+    tip.style.left = Math.max(0, Math.min(el.clientWidth - tw, px + 12 > el.clientWidth - tw ? px - tw - 12 : px + 12)) + 'px';
+    tip.style.top = '24px';
+  };
+}
+// ---- stream internals: the FIFOs (how full, drops, GPS acquisition behind) and the eCPU's time (validated: aqua / violet,
+// dark surface, adjacent and against each other; the page's blue/orange keep meaning web/host). Hatching = GPS acquisition.
+const LCOL = ['#00a888', '#9887ef'], ECOL = '#8b96a3';
+const hatchDef = id => `<defs><pattern id="${id}" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">`
+  + `<rect width="6" height="6" fill="${ECOL}" fill-opacity=".10"/><line x1="0" y1="0" x2="0" y2="6" stroke="${ECOL}" stroke-opacity=".55" stroke-width="2"/></pattern></defs>`;
+function chartFrame(el, D, span, top, fmtAxis) {           // (shared: geometry, grid, time ticks)
+  const svg = el.querySelector('svg'), W = Math.max(200, svg.clientWidth || el.clientWidth), H = 110, L = 40, R = 30, T = 8, B = 18;
+  const n = (D.cpu || []).length, now = Date.now() / 1000, t1 = Math.max(now, D.end || now), t0 = t1 - span, tAt = i => D.end - (n - 1 - i) * D.step;
+  const X = t => L + (t - t0) / span * (W - L - R), Y = v => T + (1 - Math.min(v, top) / top) * (H - T - B);
+  let g = '';
+  for (const f of [0, 0.5, 1]) g += `<line class="grid" x1="${L}" x2="${W - R}" y1="${Y(top * f)}" y2="${Y(top * f)}"/><text x="${L - 4}" y="${Y(top * f) + 4}" text-anchor="end">${fmtAxis(top * f)}</text>`;
+  const tick = span > 3600 ? 6 * 3600 : 300;
+  for (let t = Math.ceil(t0 / tick) * tick; t <= t1; t += tick) g += `<text x="${X(t)}" y="${H - 4}" text-anchor="middle">${hclock(t)}</text>`;
+  return { svg, W, H, L, R, T, B, n, t0, t1, tAt, X, Y, g };
+}
+function acqBands(F, D, id) {                              // hatched spans where the GPS was acquiring (behind everything)
+  let g = '', i = 0; const a = D.acq || [];
+  while (i < F.n) { if (!(a[i] > 0)) { i++; continue; } let j = i; while (j + 1 < F.n && a[j + 1] > 0) j++;
+    const x0 = Math.max(F.L, F.X(F.tAt(i) - D.step)), x1 = F.X(F.tAt(j));
+    g += `<rect x="${x0.toFixed(1)}" y="${F.T}" width="${Math.max(1.5, x1 - x0).toFixed(1)}" height="${F.H - F.T - F.B}" fill="url(#${id})"/>`; i = j + 1; }
+  return g;
+}
+function chartHover(el, F, span, D, events, body) {        // crosshair + tooltip (as the other charts)
+  let tip = el.querySelector('.htip'); if (!tip) { tip = document.createElement('div'); tip.className = 'htip'; tip.hidden = true; el.appendChild(tip); }
+  F.svg.onmouseleave = () => { tip.hidden = true; F.svg.querySelector('#xh').setAttribute('visibility', 'hidden'); };
+  F.svg.onmousemove = ev => {
+    const r = F.svg.getBoundingClientRect(), x = (ev.clientX - r.left) * F.W / r.width, t = F.t0 + (x - F.L) / (F.W - F.L - F.R) * span;
+    if (!F.n || x < F.L) { tip.hidden = true; return; }
+    const i = Math.max(0, Math.min(F.n - 1, Math.round(F.n - 1 - (D.end - t) / D.step))), ti = F.tAt(i), xx = F.X(ti);
+    const xh = F.svg.querySelector('#xh'); xh.setAttribute('x1', xx); xh.setAttribute('x2', xx); xh.setAttribute('visibility', 'visible');
+    const near = events.filter(e => Math.abs(F.X(e[0]) - x) <= 4 * F.W / r.width + 2);
+    tip.innerHTML = `<div class="d">${hclock(ti - (span > 3600 ? D.step : 0), true)}${span > 3600 ? '–' + hclock(ti, true) : ''}</div>` + body(i)
+      + near.slice(-6).map(e => `<div class="e">${hclock(e[0], true)} ${e[2].replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]))}</div>`).join('');
+    tip.hidden = false;
+    const tw = tip.offsetWidth, px = ev.clientX - el.getBoundingClientRect().left;
+    tip.style.left = Math.max(0, Math.min(el.clientWidth - tw, px + 12 > el.clientWidth - tw ? px - tw - 12 : px + 12)) + 'px'; tip.style.top = '24px';
+  };
+}
+function fifoChart(el, d, D, span, events) {               // both FIFOs' peak fill (% of 4K words), drops, GPS acquisition
+  const F = chartFrame(el, D, span, 100, v => v ? v.toFixed(0) : '0'), id = 'hx' + el.id, depth = HIST.fifo_depth || 4096;
+  const S = [D.fifo_spi || [], D.fifo_lanes || []], Dr = [D.drops_spi || [], D.drops_lanes || []];
+  let g = hatchDef(id) + F.g + acqBands(F, D, id);
+  g += `<line class="ref" x1="${F.L}" x2="${F.W - F.R}" y1="${F.Y(100)}" y2="${F.Y(100)}"/><text x="${F.L + 4}" y="${F.Y(100) + 11}">full: groups dropped</text>`;
+  for (const e of events) if (e[0] >= F.t0 && e[0] <= F.t1) g += `<line class="ev" x1="${F.X(e[0])}" x2="${F.X(e[0])}" y1="${F.T}" y2="${F.H - F.B}"/>`;
+  if (F.n > 1) S.forEach((v, l) => {
+    g += `<polyline points="${v.map((y, i) => `${F.X(F.tAt(i)).toFixed(1)},${F.Y(y).toFixed(1)}`).join(' ')}" fill="none" stroke="${LCOL[l]}" stroke-width="2" stroke-linejoin="round"/>`;
+    g += `<text class="bl" x="${F.W - F.R + 3}" y="${(F.Y(v[F.n - 1]) + 3.5 + (l ? 6 : -6) * (Math.abs(S[0][F.n - 1] - S[1][F.n - 1]) < 9)).toFixed(1)}">${l ? 'lanes' : 'SPI'}</text>`;
+  });
+  S.forEach((v, l) => Dr[l].forEach((n, i) => { if (!(n > 0)) return;        // drops: a red triangle on the line, ringed in its link's colour
+    const x = F.X(F.tAt(i)), y = F.Y(v[i]) - 2, r = 4 + Math.min(4, Math.log10(1 + n) * 1.6);
+    g += `<path class="tri" d="M${x.toFixed(1)},${(y - r).toFixed(1)} L${(x + r).toFixed(1)},${(y + r * 0.8).toFixed(1)} L${(x - r).toFixed(1)},${(y + r * 0.8).toFixed(1)}Z" stroke="${LCOL[l]}"/>`; }));
+  if (!F.n) g += `<text x="${(F.L + F.W - F.R) / 2}" y="${F.H / 2}" text-anchor="middle">no data yet (a point every ${D.step} s)</text>`;
+  g += `<line class="xh" id="xh" x1="0" x2="0" y1="${F.T}" y2="${F.H - F.B}" visibility="hidden"/>`;
+  F.svg.setAttribute('viewBox', `0 0 ${F.W} ${F.H}`); F.svg.innerHTML = g;
+  chartHover(el, F, span, D, events, i => ['SPI', 'lanes'].map((nm, l) => `<div><i style="background:${LCOL[l]}"></i>${nm} peak ${S[l][i].toFixed(0)} %`
+      + ` <span class="d">(${Math.round(S[l][i] / 100 * depth)} of ${depth} words)</span>${Dr[l][i] > 0 ? ` <b class="tri">▲ ${Dr[l][i]} groups dropped</b>` : ''}</div>`).join('')
+    + ((D.acq || [])[i] > 0 ? `<div class="d"><i class="hatch"></i>GPS acquiring (${Math.round(D.acq[i] * 100)} % of the time)</div>` : ''));
+}
+function ecpuChart(el, d, D, span, events) {               // the eCPU's busy time per second: GPS acquisition (hatched) on the rest
+  const A = D.ec_acq || [], O = D.ec_other || [], id = 'hx' + el.id;
+  let top = 1; for (let i = 0; i < A.length; i++) top = Math.max(top, A[i] + O[i]);
+  { const e = Math.pow(10, Math.floor(Math.log10(top))); top = Math.ceil(top / e * 2) / 2 * e; }
+  const F = chartFrame(el, D, span, top, v => +v.toFixed(v < 10 ? 1 : 0));
+  let g = hatchDef(id) + F.g;
+  for (const e of events) if (e[0] >= F.t0 && e[0] <= F.t1) g += `<line class="ev" x1="${F.X(e[0])}" x2="${F.X(e[0])}" y1="${F.T}" y2="${F.H - F.B}"/>`;
+  if (F.n > 1) {
+    const base = F.Y(0), xs = A.map((_, i) => F.X(F.tAt(i)).toFixed(1));
+    const lo = O.map((v, i) => `${xs[i]},${F.Y(v).toFixed(1)}`), hi = O.map((v, i) => `${xs[i]},${F.Y(v + A[i]).toFixed(1)}`);
+    g += `<polygon class="band" points="${xs[0]},${base} ${lo.join(' ')} ${xs[F.n - 1]},${base}" fill="${ECOL}" fill-opacity=".55"/>`;
+    g += `<polygon class="band" points="${lo.join(' ')} ${hi.slice().reverse().join(' ')}" fill="url(#${id})"/>`;
+    g += `<polyline points="${hi.join(' ')}" fill="none" stroke="${ECOL}" stroke-width="1.5"/>`;
+  }
+  if (!F.n) g += `<text x="${(F.L + F.W - F.R) / 2}" y="${F.H / 2}" text-anchor="middle">no data yet (a point every ${D.step} s)</text>`;
+  g += `<line class="xh" id="xh" x1="0" x2="0" y1="${F.T}" y2="${F.H - F.B}" visibility="hidden"/>`;
+  F.svg.setAttribute('viewBox', `0 0 ${F.W} ${F.H}`); F.svg.innerHTML = g;
+  chartHover(el, F, span, D, events, i => `<div><i class="hatch"></i>GPS acquisition ${A[i].toFixed(1)} ms/s</div>`
+    + `<div><i style="background:${ECOL}"></i>other commands ${O[i].toFixed(1)} ms/s</div><div class="d">eCPU busy ${(A[i] + O[i]).toFixed(1)} ms of each second (${((A[i] + O[i]) / 10).toFixed(1)} %)</div>`);
+}
+// the Stream internals panel: the two links now (cards) and the eCPU's commands over the last 15 minutes
+let LKS = null;
+function siDraw() {
+  const box = $('si'); if (!box || !HIST || !HIST.fine) return;
+  const F = HIST.fine, depth = HIST.fifo_depth || 4096, L = LKS, esc3 = x => String(x).replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const med = a => { const b = a.filter(x => x > 0).sort((p, q) => p - q); return b.length ? b[b.length >> 1] : 0; };
+  const cards = ['SPI', 'lanes'].map((nm, l) => {
+    const fifo = l ? F.fifo_lanes || [] : F.fifo_spi || [], dr = (l ? F.drops_lanes : F.drops_spi) || [];
+    const drops = dr.reduce((a, b) => a + b, 0), now = fifo.length ? fifo[fifo.length - 1] : 0, peak = Math.max(0, ...fifo), typ = med(fifo);
+    const meas = L ? (l ? L.lanes_meas : L.spi_meas) : 0, max = L ? (l ? L.lanes_max : L.spi_max) : 0;
+    return `<div class="sicard"><div class="sih"><i style="background:${LCOL[l]}"></i>${nm} link</div>`
+      + `<div class="sibig">${meas.toFixed(1)}<small> Mbit/s</small></div><div class="d">of a ${max.toFixed(0)} Mbit/s budget</div>`
+      + `<div class="sidrop ${drops ? 'bad' : 'ok'}">${drops ? `▲ ${drops.toLocaleString()} groups dropped` : '✓ no drops'} <span class="d">· last 15 min</span></div>`
+      + `<div class="simeter" title="FIFO fill: typical ${typ.toFixed(0)} %, peak ${peak.toFixed(0)} % of ${depth} words over 15 minutes">`
+      + `<div class="simt">FPGA FIFO · typical ${typ.toFixed(0)} % · peak ${peak.toFixed(0)} %</div><div class="simtrack">`
+      + `<span class="simtyp" style="width:${Math.min(100, typ)}%;background:${LCOL[l]}"></span><span class="simpk" style="left:${Math.min(100, peak)}%"></span></div></div></div>`;
+  }).join('');
+  // eCPU commands: worst time (bar) and average (tick). (Times as kbridge waited, queueing included: not how long the
+  // stream paused, so no FIFO line here; that shows in the Stream FIFO history.)
+  const E = (HIST.ecpu || []).slice().sort((a, b) => b[5] - a[5]).slice(0, 12);
+  const scale = Math.max(...E.map(e => e[4]), 1);
+  const rows = E.map(e => `<div class="ecr" title="${esc3(e[1])}: ${e[2]} runs in 15 min, average ${e[3].toFixed(2)} ms, worst ${e[4].toFixed(2)} ms, ${e[5].toFixed(1)} ms of eCPU time a minute">`
+      + `<span class="ecn">${esc3(e[1])}<span class="d"> ×${e[2]}</span></span><span class="ect">`
+      + `<span class="ecb${e[6] ? ' acq' : ''}" style="width:${(e[4] / scale * 100).toFixed(1)}%"></span>`
+      + `<span class="eca" style="left:${(e[3] / scale * 100).toFixed(1)}%"></span></span>`
+      + `<span class="ecv">${e[4].toFixed(1)} ms <span class="d">avg ${e[3].toFixed(1)}</span></span></div>`).join('');
+  box.innerHTML = `<div class="sicards">${cards}</div><div class="ecbox"><div class="ech"><span>eCPU commands · last 15 minutes</span>`
+    + `<span class="lg"><span><i class="hatch"></i>GPS acquisition</span><span><i style="background:${ECOL}"></i>other</span><span><b class="ectk"></b>average</span></span></div>`
+    + `<div class="ecrows">${rows || '<div class="d">no commands yet</div>'}</div>`
+    + `<div class="d ecnote">bar: the longest single run, tick: the average, as kbridge waited for each (queueing behind other commands included), most eCPU time first. `
+    + `The GPS sample reads (hatched) are long transfers that also pause the SPI stream while they run: see Stream FIFO above.</div></div>`;
+}
+window.addEventListener('resize', () => histDraw());
+// the process list: asked for once a second only while the panel is on screen and the tab visible (kweb reads /proc then)
+let topSeen = false;
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { topSeen = es.some(e => e.isIntersecting); }).observe($('topsec'));
+else topSeen = true;
+setInterval(() => { if (authed && topSeen && document.visibilityState === 'visible') send({ t: 'admin_top', threads: $('topth').checked ? 1 : 0 }); }, 1000);
+function topDraw(m) {
+  const c = m.cpu, mb = k => (k / 1024).toFixed(0), tm = s => `${Math.floor(s / 60)}:${(s % 60).toFixed(2).padStart(5, '0')}`;
+  $('topline').innerHTML = `load <b>${m.load ? m.load.map(v => v.toFixed(2)).join(' ') : '–'}</b> · tasks <b>${m.tasks}</b>, ${m.nrun} running`
+    + (c ? ` · %CPU <b>${c.us.toFixed(1)}</b> us <b>${c.sy.toFixed(1)}</b> sy <b>${c.ni.toFixed(1)}</b> ni <b>${c.id.toFixed(1)}</b> id <b>${c.wa.toFixed(1)}</b> wa <b>${c.si.toFixed(1)}</b> si` : '')
+    + ` · MiB <b>${mb(m.mem.total)}</b> total, <b>${mb(m.mem.avail)}</b> available`;
+  $('topsum').textContent = `once a second while on screen · this list costs kweb ${m.cost_ms.toFixed(1)} ms of CPU per sample`;
+  const esc2 = x => String(x).replace(/[&<>]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[ch]));
+  const TH = m.threads;
+  $('top').innerHTML = '<tr><th class="num">' + (TH ? 'TID' : 'PID') + '</th><th>USER</th><th class="num">NI</th><th>S</th><th class="num">%CPU</th><th class="num">%MEM</th><th class="num">RES MiB</th>' + (TH ? '' : '<th class="num">THR</th>') + '<th class="num">TIME+</th><th>' + (TH ? 'THREAD' : 'COMMAND') + '</th></tr>'
+    + m.procs.map(p => `<tr class="${/^(kbridge|kweb)/.test(TH ? p[10] : p[9]) ? 'ko' : ''}"><td class="num">${p[0]}</td><td>${esc2(p[1])}</td><td class="num">${p[8]}</td><td>${p[5]}</td>`
+      + `<td class="num${p[2] >= 50 ? ' hot' : ''}">${p[2].toFixed(1)}</td><td class="num">${p[3].toFixed(1)}</td><td class="num">${(p[4] / 1024).toFixed(1)}</td>`
+      + (TH ? '' : `<td class="num">${p[7]}</td>`) + `<td class="num">${tm(p[6])}</td><td class="cmd">${esc2(p[9])}${TH ? ` <span class="dim">${esc2(p[10])}</span>` : ''}</td></tr>`).join('');
+}
+// the event log: the charts' events, newest first, with their detail (addresses, browser, frequencies, rates)
+const EVK = { stream: 'stream errors', user: 'web users', host: 'host', ddc: 'DDCs', kbridge: 'kbridge', admin: 'admin' };
+let evOn = new Set(Object.keys(EVK)), evSig = '';
+function evDraw() {
+  const ev = (HIST && HIST.events) || [], esc = x => String(x || '').replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const f = $('evf'), cnt = {}; for (const e of ev) cnt[e[1]] = (cnt[e[1]] || 0) + 1;
+  f.innerHTML = Object.entries(EVK).map(([k, n]) => `<button data-k="${k}" class="${evOn.has(k) ? 'on' : ''}">${n} ${cnt[k] || 0}</button>`).join('');
+  f.onclick = e => { const k = e.target.dataset && e.target.dataset.k; if (!k) return; evOn.has(k) ? evOn.delete(k) : evOn.add(k); evSig = ''; evDraw(); };
+  const rows = ev.filter(e => evOn.has(e[1]) || !EVK[e[1]]), sig = rows.length + ':' + (rows.length ? rows[rows.length - 1][0] : 0);
+  $('evsum').textContent = `${ev.length} event${ev.length === 1 ? '' : 's'} · memory only: up to 24 hours`;
+  if (sig === evSig) return; evSig = sig;
+  const today = new Date().toDateString();
+  $('evlog').innerHTML = rows.length ? '<tr><th>time</th><th>kind</th><th>event</th><th>detail</th></tr>' + rows.slice().reverse().map(e => {
+    const d = new Date(e[0] * 1000);
+    return `<tr><td class="tm">${d.toDateString() === today ? '' : d.toLocaleDateString([], { day: 'numeric', month: 'short' }) + ' '}${hclock(e[0], true)}</td>`
+      + `<td class="k"><span class="${e[1] === 'stream' ? 'bad' : ''}">${esc(EVK[e[1]] || e[1])}</span></td><td class="ev">${esc(e[2])}</td><td class="dt">${esc(e[3])}</td></tr>`;
+  }).join('') : '<tr><td class="dt">no events yet</td></tr>';
+}
+function leds(L) {
+  const b = $('ledboard');
+  if (!b.children.length)
+    b.innerHTML = LEDS.map((d, i) => `<div class="ledcell" title="${d[0]}: ${d[1]}"><span class="led" id="led${i}"></span>`
+      + `<span class="lname">${d[0]}</span><span class="lwhat">${d[1]}</span><span class="lstate" id="lst${i}"></span></div>`).join('');
+  const run = L && L.running, lv = run ? LED_LVL[L.level] : null;
+  LEDS.forEach((d, i) => {
+    const el = $('led' + i), m = run && lv ? L.mode[i] : 0;
+    const cls = 'led' + (m === 1 ? ' on' : m === 2 ? ' blink' : '');
+    if (el.className !== cls) el.className = cls;             // (unchanged: the blink keeps its phase)
+    el.style.setProperty('--lvl', lv ? lv[1] : 1);
+    $('lst' + i).textContent = !run ? 'dark' : !lv ? '–' : d[2][m];
+  });
+  if (run && L.err && L.err_age < 10) $('lst0').textContent = `${L.err} (${L.err_age} s ago: see the event log)`;   // why it blinks
+  $('ledsum').textContent = !run ? 'kbridge not running: all dark'
+    : lv ? `brightness: ${lv[0]} · [kbridge] leds` : L.level === -1 ? 'off (dark) · [kbridge] leds' : 'left to Linux (heartbeat, SD, CPU, eMMC) · [kbridge] leds';
+}
+function gps(g, clk) {
+  $('gpsoff').hidden = !!(g && g.valid); $('gpson').hidden = !(g && g.valid);
+  if (!g || !g.valid) { $('gpssum').textContent = ''; return; }
+  const trk = g.chans.filter(c => c.state === 2), fix = g.fixes > 0;
+  $('gpssum').textContent = `${g.fix} · ${trk.length} of ${g.chans.length} channels tracking · ${g.used} used`;
+  const TS = ['', 'coarse: one satellite, travel time assumed (±10 ms)', 'satellites at a known position (sub-µs)', 'full fix'];
+  const utc = g.utc > 0 ? new Date(g.utc * 1000).toISOString().replace('T', ' ').slice(0, 19) + ' UTC' : '–';
+  const osm = fix ? ` · <a href="https://www.openstreetmap.org/?mlat=${g.lat.toFixed(6)}&mlon=${g.lon.toFixed(6)}#map=17/${g.lat.toFixed(6)}/${g.lon.toFixed(6)}" target="_blank" rel="noopener">map</a>` : '';
+  const kv = [
+    ['Status'], ['state', g.fix], ['fixes', fix ? `${g.fixes} (${g.fpm} in the last minute), last ${fmtT(g.age)} ago` : 'none yet'],
+    ['time to first fix', g.ttff >= 0 ? fmtT(g.ttff) : `– (running ${fmtT(g.uptime)})`],
+    ['Time'], ['UTC', utc], ['time from', g.tsrc ? TS[g.tsrc] : '–'], ['GPS week / TOW', g.utc > 0 ? `${g.week} / ${g.tow.toFixed(3)} s` : '–'],
+    ['leap seconds', `${g.leap}${g.have_leap ? ' (from the satellites)' : ' (default until subframe 4 page 18)'}`],
+    ['Position'], ['lat / lon', fix ? `${g.lat.toFixed(6)}, ${g.lon.toFixed(6)}${osm}` : '–'], ['altitude', fix ? `${g.alt.toFixed(0)} m (ellipsoid)` : '–'],
+    ['known position', refTxt(g.ref)], ['survey', g.ref && g.ref.survey_n ? `${g.ref.survey_n} fixes: ${g.ref.survey_lat.toFixed(6)}, ${g.ref.survey_lon.toFixed(6)}, ${g.ref.survey_alt.toFixed(1)} m (ellipsoid)` : 'no fixes yet'],
+    ['locator', g.grid || '–'], ['DOP', fix ? `G ${g.dop[0]} · P ${g.dop[1]} · H ${g.dop[2]} · V ${g.dop[3]} · T ${g.dop[4]}` : '–'],
+    ['Clocks'], ['ADC clock source', clk ? (clk.ext ? `external input, ${(clk.hz / 1e6).toFixed(6)} MHz nominal (GPS ${clk.gps ? 'corrects the tuning' : 'only measures it'})` : 'on-board oscillator, 66.666600 MHz nominal') : '–'],
+    ['ADC clock', g.adc_hz > 0 ? `${(g.adc_hz / 1e6).toFixed(6)} MHz (${g.ppm >= 0 ? '+' : ''}${g.ppm.toFixed(3)} ppm vs 66.6666 MHz)` : 'not measured yet'],
+    ['last measurement', g.adc_last > 0 ? `${(g.adc_last / 1e6).toFixed(6)} MHz · ${g.corrections} used` : '–'],
+    ['GPS TCXO', g.tcxo_src ? `${(16.368 * (1 + g.tcxo_ppm * 1e-6)).toFixed(6)} MHz (${g.tcxo_ppm >= 0 ? '+' : ''}${g.tcxo_ppm.toFixed(2)} ppm, from the satellites${g.tcxo_src === 1 ? ': last run' : ''})`
+                            : `${(g.ecpu_hz / 1e6).toFixed(4)} MHz (16.368 nominal; timed at start against the system clock, to ±${g.ecpu_err} ppm)`],
+    ['Search'], ['state', g.search.state + (g.search.wait > 0 && g.search.state !== 'all channels busy' ? ` (${g.search.wait.toFixed(0)} s)` : '')],
+    ['progress', `PRN ${g.search.prn || '–'} · ${g.search.sweeps} sweeps · ${g.search.attempts} attempts · ${g.search.unconfirmed} not confirmed`],
+    ['CPU', `${g.search.cpu.toFixed(1)} % of a core`],
+  ];
+  $('gpskv').innerHTML = kv.map(r => r.length === 1 ? `<div class="sect">${r[0]}</div>` : `<dt>${r[0]}</dt><dd>${r[1]}</dd>`).join('');
+  // channels
+  const st = ['free', 'pulling in', 'tracking'];
+  let rows = '<tr><th>ch</th><th>PRN</th><th>state</th><th>used</th><th class="num">C/N0 dB-Hz</th><th class="num">RSSI</th><th class="num">acq SNR</th>'
+    + '<th class="num">carrier Hz</th><th class="num">code Hz</th><th>subframes</th><th class="num">frames</th><th class="num">parity err</th>'
+    + '<th class="num">glitches</th><th class="num">unlocked</th><th>loop gain</th><th>ephemeris</th><th>az / el</th><th class="num">tracking</th><th class="num">last data</th></tr>';
+  g.chans.forEach((c, i) => {
+    if (!c.state) { rows += `<tr><td>${i + 1}</td><td class="free" colspan="18">free</td></tr>`; return; }
+    const subs = [1, 2, 3, 4, 5].map(k => `<span class="${c.sub >> k & 1 ? 'on' : ''}" title="subframe ${k}"></span>`).join('');
+    rows += `<tr><td>${i + 1}</td><td>${c.prn}</td><td>${st[c.state]}</td><td>${c.used ? 'yes' : ''}${c.alert ? ' (alert)' : ''}</td>`
+      + `<td class="num">${c.cn0.toFixed(1)}</td><td class="num">${c.rssi}</td><td class="num">${c.snr.toFixed(1)}</td>`
+      + `<td class="num">${c.lo.toFixed(0)}</td><td class="num">${c.ca.toFixed(2)}</td><td class="subs">${subs}</td>`
+      + `<td class="num">${c.frames}</td><td class="num">${c.perr}</td><td class="num">${c.glitches}</td><td class="num">${c.unlocked}</td>`
+      + `<td>${['×1', '÷2', '÷4'][c.gain] || c.gain}</td><td>${c.eph ? `ok${c.eph_age ? `, ${c.eph_age >= 0 ? '+' : ''}${c.eph_age.toFixed(1)} h` : ''}` : 'incomplete'}</td>`
+      + `<td>${c.el > 0 ? `${c.az}° / ${c.el}°` : '–'}</td><td class="num">${fmtT(c.t)}</td><td class="num">${c.data_age >= 0 ? fmtT(c.data_age) : '–'}</td></tr>`;
+  });
+  $('gpsch').innerHTML = rows;
+  sky(g); scatter(g); snrBars(g);
+}
+function sky(g) {
+  const cx = 120, cy = 116, R = 96, P = 'var(--panel)';
+  let o = '';
+  for (const el of [0, 30, 60]) o += svgEl('circle', { cx, cy, r: R * (90 - el) / 90, fill: 'none', stroke: 'var(--line)' });
+  o += svgEl('line', { x1: cx - R, y1: cy, x2: cx + R, y2: cy, stroke: 'var(--line)' }) + svgEl('line', { x1: cx, y1: cy - R, x2: cx, y2: cy + R, stroke: 'var(--line)' });
+  o += svgEl('text', { x: cx, y: cy - R - 4, 'text-anchor': 'middle' }, 'N') + svgEl('text', { x: cx + R + 4, y: cy + 4 }, 'E')
+     + svgEl('text', { x: cx, y: cy + R + 13, 'text-anchor': 'middle' }, 'S') + svgEl('text', { x: cx - R - 12, y: cy + 4 }, 'W')
+     + svgEl('text', { x: cx + 3, y: cy - R * 60 / 90 + 11 }, '30°') + svgEl('text', { x: cx + 3, y: cy - R * 30 / 90 + 11 }, '60°');
+  let n = 0;
+  for (const c of g.chans) {
+    if (c.state !== 2 || c.el <= 0) continue;     // az/el come from a fix the satellite was in (kept when it drops out)
+    const r = R * (90 - c.el) / 90, a = c.az * Math.PI / 180, x = cx + r * Math.sin(a), y = cy - r * Math.cos(a);
+    o += svgEl('circle', { cx: x.toFixed(1), cy: y.toFixed(1), r: 6, fill: c.used ? C_USED : C_TRK, stroke: P, 'stroke-width': 2 },
+               `<title>PRN ${c.prn}: az ${c.az}°, el ${c.el}°, ${c.cn0.toFixed(0)} dB-Hz</title>`)
+       + svgEl('text', { x: (x + 9).toFixed(1), y: (y + 4).toFixed(1), class: 'lbl' }, c.prn);
+    n++;
+  }
+  if (!n) o += svgEl('text', { x: cx, y: cy + 4, 'text-anchor': 'middle' }, 'positions after the first fix');
+  $('sky').innerHTML = o;
+}
+function scatter(g) {
+  const h = g.hist, cx = 120, cy = 120, R = 100;
+  let o = svgEl('line', { x1: cx - R, y1: cy, x2: cx + R, y2: cy, stroke: 'var(--line)' }) + svgEl('line', { x1: cx, y1: cy - R, x2: cx, y2: cy + R, stroke: 'var(--line)' });
+  if (h.length < 2) { $('scat').innerHTML = o + svgEl('text', { x: cx, y: cy - 8, 'text-anchor': 'middle' }, 'needs fixes'); $('scap').textContent = 'Recent fixes around their mean (metres)'; return; }
+  const lat0 = h.reduce((a, p) => a + p[0], 0) / h.length, lon0 = h.reduce((a, p) => a + p[1], 0) / h.length, alt0 = h.reduce((a, p) => a + p[2], 0) / h.length;
+  const k = Math.cos(lat0 * Math.PI / 180) * 111320, pts = h.map(p => [(p[1] - lon0) * k, (p[0] - lat0) * 110540, p[2] - alt0]);
+  const ext = Math.max(...pts.map(p => Math.max(Math.abs(p[0]), Math.abs(p[1])))) || 1;
+  const steps = [1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000], span = steps.find(s => s >= ext) || ext, sc = R / span;
+  const drms2 = 2 * Math.sqrt(pts.reduce((a, p) => a + p[0] * p[0] + p[1] * p[1], 0) / pts.length);
+  const sdAlt = Math.sqrt(pts.reduce((a, p) => a + p[2] * p[2], 0) / pts.length);
+  o += svgEl('circle', { cx, cy, r: Math.min(R, drms2 * sc).toFixed(1), fill: 'none', stroke: 'var(--dim)', 'stroke-dasharray': '3 3' }, '<title>2DRMS</title>');
+  o += svgEl('text', { x: cx + R - 2, y: cy - 4, 'text-anchor': 'end' }, `${span} m`) + svgEl('text', { x: cx + 4, y: cy - R + 10 }, 'N');
+  pts.forEach((p, i) => {
+    const last = i === pts.length - 1;
+    o += svgEl('circle', { cx: (cx + p[0] * sc).toFixed(1), cy: (cy - p[1] * sc).toFixed(1), r: last ? 5 : 3, fill: C_USED, 'fill-opacity': last ? 1 : 0.55,
+               stroke: last ? 'var(--fg)' : 'none', 'stroke-width': 1.5 }, `<title>${last ? 'latest: ' : ''}${p[0].toFixed(1)} m E, ${p[1].toFixed(1)} m N, ${p[2] >= 0 ? '+' : ''}${p[2].toFixed(1)} m up</title>`);
+  });
+  $('scat').innerHTML = o;
+  $('scap').textContent = `Last ${pts.length} fixes around their mean: 2DRMS ${drms2.toFixed(1)} m (dashed), altitude σ ${sdAlt.toFixed(1)} m`;
+}
+function snrBars(g) {
+  const W = 660, H = 150, L = 30, B = 128, T = 10, bw = (W - L - 6) / 32;
+  const ymax = Math.max(30, ...g.snr.map(x => x[0])) * 1.08, y = v => B - (B - T) * v / ymax;
+  const tracked = new Set(g.chans.filter(c => c.state).map(c => c.prn));
+  let o = '';
+  for (const v of [0, 10, 20, 30, 40, 60, 80].filter(v => v <= ymax))
+    o += svgEl('line', { x1: L, y1: y(v).toFixed(1), x2: W - 4, y2: y(v).toFixed(1), stroke: 'var(--line)', 'stroke-width': v ? 0.5 : 1 })
+       + svgEl('text', { x: L - 4, y: (y(v) + 4).toFixed(1), 'text-anchor': 'end' }, v);
+  g.snr.forEach((s, i) => {
+    const prn = i + 1, x = L + 3 + i * bw, w = bw - 2, v = s[0];
+    if (v > 0) {
+      const top = y(v), r = Math.min(4, (B - top) / 2, w / 2);
+      o += svgEl('path', { d: `M${x.toFixed(1)},${B} V${(top + r).toFixed(1)} Q${x.toFixed(1)},${top.toFixed(1)} ${(x + r).toFixed(1)},${top.toFixed(1)} H${(x + w - r).toFixed(1)} Q${(x + w).toFixed(1)},${top.toFixed(1)} ${(x + w).toFixed(1)},${(top + r).toFixed(1)} V${B} Z`,
+                          fill: C_USED, 'fill-opacity': tracked.has(prn) ? 1 : 0.6 }, `<title>PRN ${prn}: ${v.toFixed(1)} at ${s[1] >= 0 ? '+' : ''}${s[1]} Hz${tracked.has(prn) ? ' (tracked)' : ''}</title>`);
+    }
+    // hit target over the whole column, so empty PRNs explain themselves too
+    o += svgEl('rect', { x: x.toFixed(1), y: T, width: w.toFixed(1), height: B - T, fill: 'transparent' }, `<title>PRN ${prn}: ${v > 0 ? `${v.toFixed(1)} at ${s[1] >= 0 ? '+' : ''}${s[1]} Hz` : 'not searched yet'}${tracked.has(prn) ? ' (tracked)' : ''}</title>`);
+    o += svgEl('text', { x: (x + w / 2).toFixed(1), y: B + 12, 'text-anchor': 'middle', class: tracked.has(prn) ? 'lbl' : '' }, prn);
+    if (tracked.has(prn)) o += svgEl('text', { x: (x + w / 2).toFixed(1), y: (y(Math.max(v, 0)) - 4).toFixed(1), 'text-anchor': 'middle', class: 'lbl' }, 'trk');
+  });
+  o += svgEl('line', { x1: L, y1: y(16).toFixed(1), x2: W - 4, y2: y(16).toFixed(1), stroke: 'var(--fg)', 'stroke-dasharray': '4 3', 'stroke-width': 1 },
+             '<title>acquisition threshold 16</title>');
+  $('snr').innerHTML = o;
+}
+$('lf').addEventListener('submit', ev => { ev.preventDefault(); pw = $('pw').value; $('lmsg').textContent = ''; send({ t: 'admin_auth', pw }); });
+$('cfg').addEventListener('input', () => { $('cfg').dataset.dirty = '1'; });
+$('save').addEventListener('click', () => { $('smsg').textContent = 'saving…'; $('smsg').className = 'msg'; send({ t: 'admin_save', text: $('cfg').value }); });
+$('reload').addEventListener('click', () => { delete $('cfg').dataset.dirty; send({ t: 'admin_auth', pw }); });
+connect();
+</script>
+</body></html>

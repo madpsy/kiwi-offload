@@ -1,0 +1,44 @@
+[Unit]
+Description=KiwiSDR (kiwi-offload) to openHPSDR bridge
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=nobody
+Group=nogroup
+# the Kiwi running kbridge: edit the address
+ExecStart=/usr/local/bin/kiwi-hpsdr-bridge --kiwi 192.168.1.50
+Restart=on-failure
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/log
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictRealtime=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+
+# Network capabilities
+# HPSDR protocols 1 and 2 use UDP ports 1024-1042
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+# Resource limits
+LimitNOFILE=65536
+LimitNPROC=512
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=kiwi-hpsdr-bridge
+
+[Install]
+WantedBy=multi-user.target

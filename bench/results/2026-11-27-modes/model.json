@@ -1,0 +1,211 @@
+{
+ "per_host": {},
+ "per_profile": {
+  "usb/adpcm": {
+   "measured": 2.22,
+   "kweb_model": 2.6
+  },
+  "usb/pcm12": {
+   "measured": 2.75,
+   "kweb_model": 3.15
+  },
+  "usb/opus": {
+   "measured": 4.55,
+   "kweb_model": 4.6
+  },
+  "usb/opus_hq": {
+   "measured": 5.18,
+   "kweb_model": 5.1
+  },
+  "lsb/adpcm": {
+   "measured": 2.21,
+   "kweb_model": 2.6
+  },
+  "lsb/pcm12": {
+   "measured": 2.74,
+   "kweb_model": 3.15
+  },
+  "lsb/opus": {
+   "measured": 4.55,
+   "kweb_model": 4.6
+  },
+  "lsb/opus_hq": {
+   "measured": 4.72,
+   "kweb_model": 5.1
+  },
+  "cw/adpcm": {
+   "measured": 2.43,
+   "kweb_model": 2.6
+  },
+  "cw/pcm12": {
+   "measured": 4.18,
+   "kweb_model": 3.15
+  },
+  "cw/opus": {
+   "measured": 4.96,
+   "kweb_model": 4.6
+  },
+  "cw/opus_hq": {
+   "measured": 5.14,
+   "kweb_model": 5.1
+  },
+  "am/adpcm": {
+   "measured": 1.18,
+   "kweb_model": 2.9
+  },
+  "am/pcm12": {
+   "measured": 1.86,
+   "kweb_model": 3.45
+  },
+  "am/opus": {
+   "measured": 4.43,
+   "kweb_model": 4.9
+  },
+  "am/opus_hq": {
+   "measured": 4.68,
+   "kweb_model": 5.4
+  },
+  "amn/adpcm": {
+   "measured": 1.11,
+   "kweb_model": 2.9
+  },
+  "amn/pcm12": {
+   "measured": 1.58,
+   "kweb_model": 3.45
+  },
+  "amn/opus": {
+   "measured": 5.14,
+   "kweb_model": 4.9
+  },
+  "amn/opus_hq": {
+   "measured": 6.39,
+   "kweb_model": 5.4
+  },
+  "sam/adpcm": {
+   "measured": 5.58,
+   "kweb_model": 5.5
+  },
+  "sam/pcm12": {
+   "measured": 6.74,
+   "kweb_model": 6.05
+  },
+  "sam/opus": {
+   "measured": 8.47,
+   "kweb_model": 7.5
+  },
+  "sam/opus_hq": {
+   "measured": 8.8,
+   "kweb_model": 8
+  },
+  "sau/adpcm": {
+   "measured": 6.39,
+   "kweb_model": 5.5
+  },
+  "sau/pcm12": {
+   "measured": 6.27,
+   "kweb_model": 6.05
+  },
+  "sau/opus": {
+   "measured": 6.54,
+   "kweb_model": 7.5
+  },
+  "sau/opus_hq": {
+   "measured": 7.11,
+   "kweb_model": 8
+  },
+  "sal/adpcm": {
+   "measured": 3.72,
+   "kweb_model": 5.5
+  },
+  "sal/pcm12": {
+   "measured": 4.33,
+   "kweb_model": 6.05
+  },
+  "sal/opus": {
+   "measured": 6.68,
+   "kweb_model": 7.5
+  },
+  "sal/opus_hq": {
+   "measured": 6.83,
+   "kweb_model": 8
+  },
+  "sas/adpcm": {
+   "measured": 4.49,
+   "kweb_model": 6.1
+  },
+  "sas/pcm12": {
+   "measured": 5.61,
+   "kweb_model": 7.2
+  },
+  "sas/opus": {
+   "measured": 8.14,
+   "kweb_model": 9.05
+  },
+  "sas/opus_hq": {
+   "measured": 8.5,
+   "kweb_model": 9.8
+  },
+  "nfm/adpcm": {
+   "measured": 1.83,
+   "kweb_model": 3.9
+  },
+  "nfm/pcm12": {
+   "measured": 2.54,
+   "kweb_model": 4.45
+  },
+  "nfm/opus": {
+   "measured": 4.58,
+   "kweb_model": 5.9
+  },
+  "nfm/opus_hq": {
+   "measured": 4.96,
+   "kweb_model": 6.4
+  },
+  "iq/adpcm": {
+   "measured": 1.64,
+   "kweb_model": 3
+  },
+  "iq/pcm12": {
+   "measured": 2.64,
+   "kweb_model": 4.1
+  },
+  "iq/opus": {
+   "measured": 5.54,
+   "kweb_model": 5.95
+  },
+  "iq/opus_hq": {
+   "measured": 5.89,
+   "kweb_model": 6.7
+  },
+  "usb/adpcm/v2": {
+   "measured": 6.57,
+   "kweb_model": 4.5
+  },
+  "usb/adpcm/v4": {
+   "measured": 13.86,
+   "kweb_model": 8.3
+  },
+  "usb/adpcm/nb": {
+   "measured": 2.72,
+   "kweb_model": 2.6
+  },
+  "usb/adpcm (sharp filters off)": {
+   "measured": 1.99,
+   "kweb_model": 2.6
+  },
+  "lsb/adpcm (sharp filters off)": {
+   "measured": 1.89,
+   "kweb_model": 2.6
+  },
+  "cw/adpcm (sharp filters off)": {
+   "measured": 2.32,
+   "kweb_model": 2.6
+  },
+  "usb/opus (sharp filters off)": {
+   "measured": 4.18,
+   "kweb_model": 4.6
+  }
+ },
+ "sources": {},
+ "baseline_idle": null
+}

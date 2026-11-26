@@ -1,0 +1,2 @@
+id,suite,kind,host,pattern,profile,requested,admitted,ramp_admitted,cpu_mean,cpu_p95,kweb_pct,kbridge_pct,spi_plan,lanes_plan,spi_meas,lanes_meas,ddcs,audio_missing_pct,audio_skipped_pct,audio_age_ms,fpga_drops,host_lost,gps_search,limit_resource,limit
+kiwilike.hp1x192.ownrand.usb-adpcm.u9.zoomhalf,kiwilike,fixed,hp1x192,ownrand,usb/adpcm,9,9,,84.34,88,51.99,31.23,26.61,5.89,27.2,5.93,10,0.14,0,-4267.16,0,,0.44,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 88 %)

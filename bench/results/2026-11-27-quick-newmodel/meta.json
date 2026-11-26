@@ -1,0 +1,27 @@
+{
+ "started": "2026-11-27T14:06:53.505Z",
+ "suites": [
+  "quick"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "quick.none.band40.usb-adpcm",
+  "quick.none.band40.usb-adpcm.guardoff",
+  "quick.none.own.usb-adpcm",
+  "quick.none.own.usb-adpcm.own417k",
+  "quick.hp10x192.band40.usb-adpcm",
+  "quick.hp10x192.own.usb-adpcm"
+ ]
+}

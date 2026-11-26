@@ -1,0 +1,226 @@
+{
+ "per_host": {
+  "hp10x192": {
+   "label": "HPSDR 10 × 192 kHz",
+   "idle": null,
+   "a": 62.66,
+   "per_listener": 3.01,
+   "from": "usecases.hp10x192.band40.usb-adpcm.hpsdr"
+  },
+  "none": {
+   "label": "no host",
+   "idle": null,
+   "a": 24.66,
+   "per_listener": 3.92,
+   "from": "usecases.none.shared.usb-adpcm.webonly"
+  }
+ },
+ "per_profile": {
+  "usb/adpcm": {
+   "measured": 2.94,
+   "kweb_model": 4.2
+  },
+  "usb/pcm12": {
+   "measured": 3.06,
+   "kweb_model": 4.7
+  },
+  "usb/opus": {
+   "measured": 4.75,
+   "kweb_model": 6.5
+  },
+  "usb/opus_hq": {
+   "measured": 4.91,
+   "kweb_model": 6.7
+  },
+  "lsb/adpcm": {
+   "measured": 2.06,
+   "kweb_model": 4.2
+  },
+  "lsb/pcm12": {
+   "measured": 3,
+   "kweb_model": 4.7
+  },
+  "lsb/opus": {
+   "measured": 4.53,
+   "kweb_model": 6.5
+  },
+  "lsb/opus_hq": {
+   "measured": 4.75,
+   "kweb_model": 6.7
+  },
+  "cw/adpcm": {
+   "measured": 2.31,
+   "kweb_model": 4.4
+  },
+  "cw/pcm12": {
+   "measured": 3,
+   "kweb_model": 4.9
+  },
+  "cw/opus": {
+   "measured": 5.69,
+   "kweb_model": 6.7
+  },
+  "cw/opus_hq": {
+   "measured": 5.16,
+   "kweb_model": 6.9
+  },
+  "am/adpcm": {
+   "measured": 1.63,
+   "kweb_model": 3.35
+  },
+  "am/pcm12": {
+   "measured": 2.25,
+   "kweb_model": 3.85
+  },
+  "am/opus": {
+   "measured": 4.47,
+   "kweb_model": 5.65
+  },
+  "am/opus_hq": {
+   "measured": 4.69,
+   "kweb_model": 5.85
+  },
+  "amn/adpcm": {
+   "measured": 1.88,
+   "kweb_model": 3.35
+  },
+  "amn/pcm12": {
+   "measured": 2.31,
+   "kweb_model": 3.85
+  },
+  "amn/opus": {
+   "measured": 4.38,
+   "kweb_model": 5.65
+  },
+  "amn/opus_hq": {
+   "measured": 4.75,
+   "kweb_model": 5.85
+  },
+  "sam/adpcm": {
+   "measured": 3.94,
+   "kweb_model": 5.45
+  },
+  "sam/pcm12": {
+   "measured": 4.53,
+   "kweb_model": 5.95
+  },
+  "sam/opus": {
+   "measured": 6.59,
+   "kweb_model": 7.75
+  },
+  "sam/opus_hq": {
+   "measured": 6.75,
+   "kweb_model": 7.95
+  },
+  "sau/adpcm": {
+   "measured": 3.81,
+   "kweb_model": 5.45
+  },
+  "sau/pcm12": {
+   "measured": 4.72,
+   "kweb_model": 5.95
+  },
+  "sau/opus": {
+   "measured": 6.5,
+   "kweb_model": 7.75
+  },
+  "sau/opus_hq": {
+   "measured": 6.66,
+   "kweb_model": 7.95
+  },
+  "sal/adpcm": {
+   "measured": 3.97,
+   "kweb_model": 5.45
+  },
+  "sal/pcm12": {
+   "measured": 4.63,
+   "kweb_model": 5.95
+  },
+  "sal/opus": {
+   "measured": 6.5,
+   "kweb_model": 7.75
+  },
+  "sal/opus_hq": {
+   "measured": 6.81,
+   "kweb_model": 7.95
+  },
+  "sas/adpcm": {
+   "measured": 5.28,
+   "kweb_model": 5.8
+  },
+  "sas/pcm12": {
+   "measured": 5.38,
+   "kweb_model": 7
+  },
+  "sas/opus": {
+   "measured": 7.76,
+   "kweb_model": 9.4
+  },
+  "sas/opus_hq": {
+   "measured": 8.08,
+   "kweb_model": 9.7
+  },
+  "nfm/adpcm": {
+   "measured": 2.72,
+   "kweb_model": 4.05
+  },
+  "nfm/pcm12": {
+   "measured": 3.66,
+   "kweb_model": 4.55
+  },
+  "nfm/opus": {
+   "measured": 5.13,
+   "kweb_model": 6.35
+  },
+  "nfm/opus_hq": {
+   "measured": 5.22,
+   "kweb_model": 6.55
+  },
+  "iq/adpcm": {
+   "measured": 1.72,
+   "kweb_model": 3.5
+  },
+  "iq/pcm12": {
+   "measured": 3.09,
+   "kweb_model": 4.7
+  },
+  "iq/opus": {
+   "measured": 5.25,
+   "kweb_model": 7.1
+  },
+  "iq/opus_hq": {
+   "measured": 5.59,
+   "kweb_model": 7.4
+  },
+  "usb/adpcm/v2": {
+   "measured": 5.09,
+   "kweb_model": 7.4
+  },
+  "usb/adpcm/v4": {
+   "measured": 10.34,
+   "kweb_model": 13.8
+  },
+  "usb/adpcm/nb": {
+   "measured": 2.81,
+   "kweb_model": 4.2
+  },
+  "usb/adpcm (sharp filters off)": {
+   "measured": 1.91,
+   "kweb_model": 4.2
+  },
+  "lsb/adpcm (sharp filters off)": {
+   "measured": 2.22,
+   "kweb_model": 4.2
+  },
+  "cw/adpcm (sharp filters off)": {
+   "measured": 2.41,
+   "kweb_model": 4.4
+  },
+  "usb/opus (sharp filters off)": {
+   "measured": 4.69,
+   "kweb_model": 6.5
+  }
+ },
+ "sources": {},
+ "baseline_idle": null
+}

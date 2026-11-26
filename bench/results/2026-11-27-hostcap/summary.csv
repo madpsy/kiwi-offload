@@ -1,0 +1,13 @@
+id,suite,kind,host,pattern,profile,requested,admitted,ramp_admitted,cpu_mean,cpu_p95,kweb_pct,kbridge_pct,spi_plan,lanes_plan,spi_meas,lanes_meas,ddcs,audio_missing_pct,audio_skipped_pct,audio_age_ms,fpga_drops,host_lost,gps_search,limit_resource,limit
+hostcap.192k.b10,hostcap,hostramp,none,shared,none,0,0,,52.1,54,0,44.3,32.48,34.63,32.7,34.21,13,,,,0,0,0,ddcs,FPGA DDCs (13: the XC7A35T is ~97 % full)
+hostcap.192k.b12,hostcap,hostramp,none,shared,none,0,0,,59.6,60.55,0,50.6,38.13,41.22,38.4,40.67,13,,,,0,0,0,ddcs,FPGA DDCs (13: the XC7A35T is ~97 % full)
+hostcap.192k.b16,hostcap,hostramp,none,shared,none,0,0,,66.7,82.3,0,58,35.77,41.22,35.75,40.77,9,,,,0,0,0.4,spi,SPI link (McSPI at 48 MHz; kbridge budget spi_max)
+hostcap.192k.b8,hostcap,hostramp,none,shared,none,0,0,,46.9,48.55,0,38.7,26.73,27.92,26.92,27.67,13,,,,0,0,0,ddcs,FPGA DDCs (13: the XC7A35T is ~97 % full)
+hostcap.48k.b10,hostcap,hostramp,none,shared,none,0,0,,18.3,20.55,0,18.3,4.13,4.01,4.01,3.99,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.48k.b12,hostcap,hostramp,none,shared,none,0,0,,19.4,22.75,0,18.6,4.38,4.77,4.33,4.66,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.48k.b16,hostcap,hostramp,none,shared,none,0,0,,20.8,23,0,19.6,5.02,6.68,4.97,6.53,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.48k.b8,hostcap,hostramp,none,shared,none,0,0,,22.7,26.55,0,22,3.87,3.23,3.77,3.22,4,,,,0,0,1,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.96k.b10,hostcap,hostramp,none,shared,none,0,0,,22.4,24.55,0,20.4,5.26,7.39,5.18,7.22,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.96k.b12,hostcap,hostramp,none,shared,none,0,0,,21.8,25.1,0,21.2,8.66,5.87,8.43,5.82,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.96k.b16,hostcap,hostramp,none,shared,none,0,0,,27.6,31.2,0,22.8,11.01,8.21,10.68,8.12,4,,,,0,0,0,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)
+hostcap.96k.b8,hostcap,hostramp,none,shared,none,0,0,,25.8,31.75,0,24.2,4.78,5.96,4.72,5.81,4,,,,0,0,0.4,narrow,FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)

@@ -1,0 +1,24 @@
+# kiwi-offload-kweb.service: kweb, the web SDR (no privileges). Template: tools/install.sh fills in @KO_DIR@, @KO_USER@.
+# kweb follows kbridge's restarts by itself (shared memory instance id). Log: /run/kiwi-offload/kweb.log (RAM: emptied at
+# each start, capped at 1 MB by kweb; nothing on the eMMC). The directory and the file are made as root ('+'), the file
+# owned by @KO_USER@; the service's own shell then opens it as @KO_USER@.
+[Unit]
+Description=kiwi-offload kweb
+PartOf=kiwi-offload.target
+After=kiwi-offload-kbridge.service network-online.target
+StartLimitIntervalSec=300
+StartLimitBurst=10
+
+[Service]
+Type=simple
+User=@KO_USER@
+WorkingDirectory=@KO_DIR@
+ExecStartPre=+/usr/bin/install -d -m 0755 /run/kiwi-offload
+ExecStartPre=+/usr/bin/install -m 0644 -o @KO_USER@ /dev/null /run/kiwi-offload/kweb.log
+ExecStart=/bin/sh -c 'exec @KO_DIR@/kweb --config @KO_DIR@/kiwi-offload.conf > /run/kiwi-offload/kweb.log 2>&1'
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=10
+
+[Install]
+WantedBy=kiwi-offload.target

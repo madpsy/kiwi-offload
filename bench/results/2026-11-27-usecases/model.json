@@ -1,0 +1,21 @@
+{
+ "per_host": {
+  "hp10x192": {
+   "label": "HPSDR 10 × 192 kHz",
+   "idle": null,
+   "a": 61.37,
+   "per_listener": 4.84,
+   "from": "usecases.hp10x192.band40.usb-adpcm.hpsdr"
+  },
+  "none": {
+   "label": "no host",
+   "idle": null,
+   "a": 21.67,
+   "per_listener": 5.02,
+   "from": "usecases.none.shared.usb-adpcm.webonly"
+  }
+ },
+ "per_profile": {},
+ "sources": {},
+ "baseline_idle": null
+}

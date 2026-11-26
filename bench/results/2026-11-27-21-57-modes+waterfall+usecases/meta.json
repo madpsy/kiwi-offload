@@ -1,0 +1,45 @@
+{
+ "started": "2026-11-27T21:57:09.701Z",
+ "suites": [
+  "modes",
+  "waterfall",
+  "usecases"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "modes.none.band40.all",
+  "modes.none.band40.nosharp",
+  "waterfall.none.band40.usb-adpcm.u1.px800",
+  "waterfall.none.band40.usb-adpcm.u1.px1024",
+  "waterfall.none.band40.usb-adpcm.u1.px1920",
+  "waterfall.none.band40.usb-adpcm.u1.px3840",
+  "waterfall.none.band40.none.u1.px1024.noaudio",
+  "waterfall.none.band40.usb-adpcm.u1.classic.px800",
+  "waterfall.none.band40.usb-adpcm.u1.classic.px1024",
+  "waterfall.none.band40.usb-adpcm.u1.classic.px1920",
+  "waterfall.none.band40.usb-adpcm.u1.classic.px3840",
+  "usecases.none.shared.usb-adpcm.webonly",
+  "usecases.none.own.usb-adpcm.webonly.own104k",
+  "usecases.none.own.usb-adpcm.webonly.own417k",
+  "waterfall.s1x104.band40.usb-adpcm.u1.host",
+  "usecases.hp10x192.band40.usb-adpcm.hpsdr",
+  "usecases.hp10x192.band40.usb-adpcm-v2.hpsdr.2vfo",
+  "usecases.raw_skim12.skimmix.usb-adpcm.skim12",
+  "usecases.raw_skim12.free.usb-adpcm.skim12",
+  "usecases.raw_skim13.skim13mix.usb-adpcm.skim13",
+  "usecases.raw_ft8.ft8mix.usb-adpcm.ft8",
+  "usecases.raw_wide2.widemix.usb-adpcm.wide2"
+ ]
+}

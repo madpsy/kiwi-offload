@@ -1,0 +1,7 @@
+id,suite,kind,host,pattern,profile,requested,admitted,ramp_admitted,cpu_mean,cpu_p95,kweb_pct,kbridge_pct,spi_plan,lanes_plan,spi_meas,lanes_meas,ddcs,audio_missing_pct,audio_skipped_pct,audio_age_ms,fpga_drops,host_lost,gps_search,limit_resource,limit
+waterfall.none.band40.none.u1.px1024.noaudio,waterfall,fixed,none,band40,none,1,1,,31,33,15.07,9.37,8.9,0,8.76,0,1,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 33 %)
+waterfall.none.band40.usb-adpcm.u1.px1024,waterfall,fixed,none,band40,usb/adpcm,1,1,,25.23,27.55,14.47,9.1,8.9,0,8.81,0,1,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 27.6 %)
+waterfall.none.band40.usb-adpcm.u1.px1920,waterfall,fixed,none,band40,usb/adpcm,1,1,,21,23.55,14.57,9.13,8.9,0,8.95,0,1,,,,0,,0,none,no limit hit (nearest: FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped): 26.2 %)
+waterfall.none.band40.usb-adpcm.u1.px3840,waterfall,fixed,none,band40,usb/adpcm,1,1,,29.23,36.55,15.63,10.87,8.9,0,8.95,0,1,,,,0,,0.28,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 36.6 %)
+waterfall.none.band40.usb-adpcm.u1.px800,waterfall,fixed,none,band40,usb/adpcm,1,1,,24.6,31,14.43,11.83,8.9,0,8.86,0,1,,,,0,,0.44,none,no limit hit (nearest: FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped): 36.3 %)
+waterfall.s1x104.band40.usb-adpcm.u1.host,waterfall,fixed,s1x104,band40,usb/adpcm,1,1,,32.17,34.6,14.4,18.87,8.9,3.18,8.89,3.17,2,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 34.6 %)

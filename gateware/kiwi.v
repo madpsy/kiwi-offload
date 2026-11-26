@@ -1,0 +1,698 @@
+//////////////////////////////////////////////////////////////////////////
+// Homemade GPS Receiver
+// Copyright (C) 2013 Andrew Holme
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//
+// http://www.aholme.co.uk/GPS/Main.htm
+//////////////////////////////////////////////////////////////////////////
+
+// Copyright (c) 2014-2026 John Seamons, ZL4VO/KF6VO
+
+`timescale 1ns / 100ps
+
+// for compatibility with antenna switch extension
+// i.e. let Beagle drive these, not FPGA
+`include "kiwi.top.vh"      // kiwi-offload: written per mode by make_proj.tcl set_rx_cfg; stock modes `define ANTSW_BEAGLE_GPIO (P8 pins = FPGA inputs)
+
+module KiwiSDR
+    #(parameter _ADC_BITS = 14)
+    (
+        input  wire	signed [_ADC_BITS-1:0] ADC_DATA,
+        input  wire	ADC_OVFL,
+        input  wire	ADC_CLKIN,
+        output wire	ADC_CLKEN,
+        output wire	ADC_STENL,
+        output wire	ADC_STSIG,
+    
+        output wire	DA_DALE,
+        output wire	DA_DACLK,
+        output wire	DA_DADAT,
+    
+        input  wire GPS_TCXO,
+        input  wire GPS_ISGN,
+        input  wire GPS_IMAG,
+        input  wire GPS_QSGN,
+        input  wire GPS_QMAG,
+        output wire GPS_GSCS,
+        output wire GPS_GSCLK,
+        output wire GPS_GSDAT,
+    
+        input  wire	BBB_SCLK,       // P922
+        input  wire [1:0] BBB_CS_N, // 1=P916 0=P917
+        input  wire BBB_MOSI,       // P918
+        output wire BBB_MISO,       // P921
+    
+        output wire CMD_READY,  // P923, GPIO 1_17, ctrl[CTRL_CMD_READY]
+        output wire SND_INTR,   // P911, GPIO 0_30, ctrl[CTRL_SND_INTR]
+        output wire WF_INTR,    // P913, GPIO 0_31, ctrl[CTRL_WF_INTR]
+
+        input  wire P915,       // P915, GPIO 1_0-2_0, unused debug in
+        output wire P924,       // P924, GPIO 0_15, unused debug out
+        output wire P926,       // P926, GPIO 0_14, unused debug out
+
+    `ifdef ANTSW_BEAGLE_GPIO
+        input  wire P826,		// outside pin row
+        input  wire P819,
+        input  wire P817,
+        input  wire P818,		// outside pin row
+        input  wire P815,
+        input  wire P816,		// outside pin row
+        input  wire P813,
+        input  wire P814,		// outside pin row
+        input  wire P811,
+        input  wire P812,		// outside pin row
+    `else
+        output wire P826,		// outside pin row
+        output wire P819,
+        output wire P817,
+        output wire P818,		// outside pin row
+        output wire P815,
+        output wire P816,		// outside pin row
+        output wire P813,
+        output wire P814,		// outside pin row
+        inout  wire P811,       // kiwi-offload: inout so stream builds can tri-state it (LCLK from PRU0)
+        inout  wire P812,		// outside pin row; kiwi-offload: LREQ from PRU0 in stream builds
+    `endif
+
+        output wire EWP
+    );
+    
+`include "kiwi.gen.vh"
+`include "other.gen.vh"
+
+    initial $display("#################### kiwi.v RX_CFG=%d MODE_ID=%s ####################", RX_CFG, MODE_ID);
+
+    //////////////////////////////////////////////////////////////////////////
+    // a[9:0] = ant switch P8 GPIO(10)
+    // FP = FPGA(2)
+    // GP = GPIO(3)
+    // SP = SPI(5)
+    // EE = EEPROM(2)
+    // sy = system(3)
+    // JT = JTAG(4)
+    // pw = power(8)
+    // xx = no connection(15)
+    //////////////////////////////////////////////////////////////////////////
+    
+    // P9: 25 23 21 19 17 15 13 11 09 07 05 03 01   pcb top, outside row
+    //     xx sy SP EE SP GP sy sy xx pw pw pw pw
+    //
+    // P9: 26 24 22 20 18 16 14 12 10 08 06 04 02   pcb top, inside row
+    //     GP GP SP EE SP SP FP FP xx pw pw pw pw
+    
+    // P8: 25 23 21 19 17 15 13 11 09 07 05 03 01   pcb top, inside row
+    //     xx xx xx a8 a6 a4 a2 a0 JT JT xx xx xx
+    //
+    // P8: 26 24 22 20 18 16 14 12 10 08 06 04 02   pcb top, outside row
+    //     a9 xx xx xx a7 a5 a3 a1 JT JT xx xx xx
+    
+    wire [1:0] P9;
+`ifdef USE_STREAM
+    wire [2:0] lanes_out;
+`endif
+    
+    wire pps_out;               // v22: the GPS 1 PPS (receiver_stream)
+`ifdef USE_WB
+    wire awb_debug, rx_avail_wb_A, rx_avail_A;
+    assign P924 = awb_debug;
+    assign P926 = rx_avail_wb_A;
+    //assign P926 = rx_avail_A;
+`elsif USE_STREAM
+    assign P924 = lanes_out[2];     // kiwi-offload PRU lane 2 (PRU0 r31_16)
+    assign P926 = pps_out;      // v22: the GPS 1 PPS to the Beagle (GPIO0_14: pps-gpio)
+`else
+    assign P924 = P9[0];    // P924
+    assign P926 = P9[1];    // P926
+`endif
+
+    // P8: 25 23 21 19 17 15 13 11 09 07 05 03 01   pcb top, inside row
+    //              b8 b7 b6 b5 b4
+    //
+    // P8: 26 24 22 20 18 16 14 12 10 08 06 04 02   pcb top, outside row
+    //     b9          b3 b2 b1 b0
+    
+`ifdef ANTSW_BEAGLE_GPIO
+`else
+    wire [9:0] P8;
+    
+    assign P826 = P8[9];
+    assign P819 = P8[8];
+    assign P817 = P8[7];
+    assign P813 = P8[5];
+    assign P818 = P8[3];
+    assign P814 = P8[1];
+`ifdef USE_STREAM
+    // kiwi-offload PRU lanes: LCLK/LREQ are inputs from PRU0 (tri-stated here), lanes 0/1 out on P8_16/P8_15
+    assign P811 = 1'bz;
+    assign P812 = 1'bz;
+    assign P816 = lanes_out[0];
+    assign P815 = lanes_out[1];
+`else
+    assign P815 = P8[6];
+    assign P811 = P8[4];
+    assign P816 = P8[2];
+    assign P812 = P8[0];
+`endif
+`endif
+
+    
+    //////////////////////////////////////////////////////////////////////////
+    // clocks
+    //////////////////////////////////////////////////////////////////////////
+
+`ifdef USE_SDR
+    wire adc_clk;
+    IBUF xo_ibuf(.I(ADC_CLKIN), .O(adc_clk));
+
+    wire gps_tcxo_buf;
+    wire cpu_clk = gps_tcxo_buf;
+    wire gps_clk = gps_tcxo_buf;
+    
+    // KiwiSDR 2
+    //
+    // GPS_TCXO from MAX2769B (GCLK) does not start reliably at power-up.
+    // Workaround by using ADC_CLKIN/4 = 16.66665 MHz initially and then
+    // switch to GPS_TCXO after MAX2769B has been programmed via serial interface.
+
+    wire adc_div_4;
+    
+    BUFR #(.BUFR_DIVIDE("4")) BUFR_inst (
+        .CLR    (1'b0),
+        .I      (adc_clk),
+        .CE     (1'b1),
+        .O      (adc_div_4)
+    );
+    
+    BUFGMUX_CTRL BUFGMUX_CTRL_inst (
+        .I0     (adc_div_4),
+        .I1     (GPS_TCXO),
+        .S      (ctrl[CTRL_GPS_CLK_EN]),
+        .O      (gps_tcxo_buf)
+    );
+
+    //IBUF tcxo_ibuf(.I(GPS_TCXO), .O(gps_tcxo_buf));     // 16.368 MHz TCXO
+`endif
+
+`ifdef USE_SDR
+	reg signed [ADC_BITS-1:0] reg_adc_data, reg2_adc_data;
+    always @ (posedge adc_clk)
+    begin
+    	reg2_adc_data <= ADC_DATA;
+    	reg_adc_data  <= reg2_adc_data;
+    end
+`endif
+    
+    wire  [2:1] rst;
+
+	wire [15:0] op;
+    wire [31:0] tos;
+    reg  [15:0] par;
+    wire [2:0]  ser;
+    wire        rdBit0, rdBit1, rdBit2, rdReg, wrReg, wrReg2, wrEvt, wrEvt2, wrEvtL;
+
+    wire        boot_done, host_srq, mem_rd, gps_rd, ext_rd;
+    wire [15:0] host_dout, mem_dout, gps_dout, ext_dout;
+    
+    
+    //////////////////////////////////////////////////////////////////////////
+    // global control register
+    //////////////////////////////////////////////////////////////////////////
+
+    reg [15:0] ctrl;
+
+    always @ (posedge cpu_clk)
+    begin
+        if (wrReg & op[SET_CTRL]) ctrl <= tos[15:0];
+    end
+
+	assign ADC_CLKEN = !ctrl[CTRL_OSC_DIS];
+	assign ADC_STENL = !ctrl[CTRL_STEN];
+    wire [1:0] ser_sel = ctrl[1:0];
+
+    wire ser_attn = (ser_sel == CTRL_SER_ATTN);
+	assign DA_DALE = ser_attn && ctrl[CTRL_SER_LE_CSN];
+	assign DA_DACLK = ser_attn && ctrl[CTRL_SER_CLK];
+	assign DA_DADAT = ser_attn && ctrl[CTRL_SER_DATA];
+
+    wire ser_gps = (ser_sel == CTRL_SER_GPS);
+	assign GPS_GSCS = ser_gps && ctrl[CTRL_SER_LE_CSN];
+	assign GPS_GSCLK = ser_gps && ctrl[CTRL_SER_CLK];
+	assign GPS_GSDAT = ser_gps && ctrl[CTRL_SER_DATA];
+	
+    wire ser_dna = (ser_sel == CTRL_SER_DNA);
+	wire dna_read = ser_dna && ctrl[CTRL_SER_LE_CSN];
+	wire dna_clk = ser_dna && ctrl[CTRL_SER_CLK];
+	wire dna_shift = ser_dna && ctrl[CTRL_SER_DATA];
+
+	assign EWP = ctrl[CTRL_EEPROM_WP];
+	assign CMD_READY = ctrl[CTRL_CMD_READY];
+
+`ifdef USE_OTHER
+    wire dev_intr;
+`else
+    wire dev_intr = 1'b0;
+`endif
+	assign SND_INTR = ctrl[CTRL_SND_INTR] | dev_intr;
+	assign WF_INTR  = ctrl[CTRL_WF_INTR];
+    
+	// keep Vivado from complaining about unused inputs and outputs
+	assign P9[0] = ctrl[CTRL_UNUSED_OUT];
+	assign P9[1] = ctrl[CTRL_UNUSED_OUT];
+
+`ifdef ANTSW_BEAGLE_GPIO
+`else
+	assign P8[0] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[1] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[2] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[3] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[4] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[5] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[6] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[7] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[8] = ctrl[CTRL_UNUSED_OUT];
+	assign P8[9] = ctrl[CTRL_UNUSED_OUT];
+`endif
+    
+`ifdef USE_GPS
+    wire unused_inputs_gps;
+`endif
+
+	wire unused_inputs = P915
+`ifdef USE_OTHER
+        | unused_inputs_other
+`else
+`ifdef ANTSW_BEAGLE_GPIO
+        | P811 | P812 | P813 | P814 | P815 | P816 | P817 | P818 | P819 | P826
+`endif
+`ifdef USE_GPS
+        | unused_inputs_gps
+`else
+        | GPS_ISGN | GPS_IMAG | GPS_QSGN | GPS_QMAG
+`endif
+`endif
+        ;
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // device DNA
+    //////////////////////////////////////////////////////////////////////////
+    
+    // level to single pulse
+    localparam RISE = 2'b01;
+    reg [1:0] _dna_rd, _dna_sf;
+    wire dna_rd = (_dna_rd == RISE);
+    wire dna_sf = (_dna_sf == RISE);
+    wire dna_data;
+
+    always @ (posedge cpu_clk)
+        begin
+            _dna_rd <= {_dna_rd[0], dna_read && dna_clk};
+            _dna_sf <= {_dna_sf[0], dna_shift && dna_clk};
+        end
+
+    DNA_PORT dna(.CLK(cpu_clk), .READ(dna_rd), .SHIFT(dna_sf), .DIN(1'b1), .DOUT(dna_data));
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // receiver
+    //////////////////////////////////////////////////////////////////////////
+
+	wire rx_rd, wf_rd;
+	wire [15:0] rx_dout, wf_dout;
+    wire [3:0] wf_full_4;
+	wire [47:0] ticks_A;
+	
+`ifdef USE_SDR
+	wire rx_ovfl_C;
+    wire [31:0] adc_count;
+    
+	wire self_test;
+	assign ADC_STSIG = self_test;
+
+    wire [15:0] debug;
+
+`ifdef USE_STREAM
+    // kiwi-offload STREAM mode: wideband DDCs -> STREAM_SPI FIFO, read directly over SPI (CS1 only)
+    localparam STREAM_AW = 12;      // 4K words each (v17: room for the snapshot buffer) for the SPI and PRU-lanes FIFOs (PRUs drain them into DDR rings;
+                                    // 16K words used 32 of the 50 BRAMs)
+    wire        stream_wr_en, stream_flush, stream_drop, stream_ovfl;
+    wire [31:0] stream_wr_data;
+    wire [STREAM_AW:0] stream_level;
+    wire        lane_wr_en, lane_drop, lane_ovfl;
+    wire [31:0] lane_wr_data;
+    wire [STREAM_AW:0] lane_level;
+
+    // 200 MHz oversampling clock for the PRU lanes (VCO = 66.6666 MHz x 15 = 1 GHz, /5)
+    wire clk200_u, clk200, mmcm_fb, mmcm_locked;
+    MMCME2_BASE #(.CLKIN1_PERIOD(15.0), .CLKFBOUT_MULT_F(15.0), .DIVCLK_DIVIDE(1), .CLKOUT0_DIVIDE_F(5.0))
+    lane_mmcm (.CLKIN1(adc_clk), .CLKFBIN(mmcm_fb), .CLKFBOUT(mmcm_fb), .CLKOUT0(clk200_u),
+               .LOCKED(mmcm_locked), .PWRDWN(1'b0), .RST(1'b0),
+               .CLKFBOUTB(), .CLKOUT0B(), .CLKOUT1(), .CLKOUT1B(), .CLKOUT2(), .CLKOUT2B(),
+               .CLKOUT3(), .CLKOUT3B(), .CLKOUT4(), .CLKOUT5(), .CLKOUT6());
+    BUFG clk200_bufg (.I(clk200_u), .O(clk200));
+
+    LANE_TX #(.AW(STREAM_AW)) lane_tx (
+        .wr_clk(adc_clk), .wr_en(lane_wr_en), .wr_data(lane_wr_data), .wr_flush(stream_flush), .wr_drop(lane_drop),
+        .wr_ovfl(lane_ovfl), .wr_level(lane_level),
+        .clk_f(clk200), .lclk_pin(P811), .lreq_pin(P812), .lanes(lanes_out)
+    );
+
+    receiver_stream #(._ADC_BITS(ADC_BITS), .AW(STREAM_AW)) receiver_inst (
+        .stream_wr_en   (stream_wr_en),
+        .stream_wr_data (stream_wr_data),
+        .stream_flush   (stream_flush),
+        .stream_drop    (stream_drop),
+        .stream_level   (stream_level),
+        .lane_wr_en     (lane_wr_en),
+        .lane_wr_data   (lane_wr_data),
+        .lane_drop      (lane_drop),
+        .lane_level     (lane_level),
+`elsif USE_WB
+    receiver_wb #(._ADC_BITS(ADC_BITS)) receiver_inst (
+`else
+    receiver #(._ADC_BITS(ADC_BITS)) receiver_inst (
+`endif
+    	.adc_clk	    (adc_clk),
+    	.adc_data	    (reg_adc_data),
+    	.adc_ovfl       (ADC_OVFL),
+
+        .rx_rd_C	    (rx_rd),
+        .rx_dout_C	    (rx_dout),
+
+        .wf_rd_C	    (wf_rd),
+        .wf_dout_C	    (wf_dout),
+        .wf_full_C      (wf_full_4),
+
+        .ticks_A	    (ticks_A),
+`ifdef USE_STREAM
+        .pps_out        (pps_out),
+`endif
+        .adc_ovfl_C     (rx_ovfl_C),
+        .adc_count_C    (adc_count),
+        
+		.cpu_clk	    (cpu_clk),
+        .rx_ser		    (ser[1]),
+        .wf_ser		    (ser[2]),
+        .tos		    (tos),
+        .op_11          (op[10:0]),        
+        .rdReg          (rdReg),
+        .wrReg          (wrReg),
+        .wrReg2         (wrReg2),
+        .wrEvt2         (wrEvt2),
+        .wrEvtL         (wrEvtL),
+        
+        .use_gen_C      (ctrl[CTRL_USE_GEN]),
+        
+`ifdef USE_WB
+        // debug
+        .rx_avail_wb_A  (rx_avail_wb_A),
+        .rx_avail_A     (rx_avail_A),
+        .awb_debug      (awb_debug),
+`endif
+
+        .self_test_en_C (ctrl[CTRL_STEN]),
+        .self_test      (self_test),
+        .debug          (debug)
+    	);
+
+	wire rx_orst;
+	reg rx_overflow_C;
+	
+    always @ (posedge cpu_clk)
+    begin
+    	if (rx_orst) rx_overflow_C <= rx_ovfl_C; else
+    	rx_overflow_C <= rx_overflow_C | rx_ovfl_C;
+    end
+
+`else
+    assign rx_rd = 0;
+    assign rx_dout = 0;
+    assign wf_rd = 0;
+    assign wf_dout = 0;
+	wire rx_orst;
+	wire rx_overflow_C = 0;
+
+`ifdef USE_OTHER
+`else
+	assign ser[1] = 1'b0;
+	assign ser[2] = 1'b0;
+`endif
+`endif
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // global status register
+    //////////////////////////////////////////////////////////////////////////
+	
+`ifdef USE_OTHER
+    wire [9:0] other_flags;
+    wire [9:0] stat_10 = other_flags;
+`else
+    wire [9:0] stat_10 = { 6'b0, wf_full_4 };
+`endif
+
+    wire [2:0] fpga_id_3 = { FPGA_ID };
+    wire [15:0] status   = { rx_overflow_C, dna_data, unused_inputs, fpga_id_3, stat_10 };
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // CPU parallel port input mux
+    //////////////////////////////////////////////////////////////////////////
+	
+	wire [1:0] reg_no = op[7:6];
+	wire get_reg_misc = rdReg && op[GET_REG_MISC];
+	wire get_cpu_ctr  = rdReg && op[GET_CPU_CTR];
+	wire get_adc_ctr  = rdReg && op[GET_ADC_CTR];
+	
+`ifdef USE_CPU_CTR
+    wire [31:0] cpu_ctr[1:0];
+`endif
+
+    always @*
+    begin
+`ifdef USE_CPU_CTR
+		if (get_cpu_ctr && reg_no == 0 /* GET_CPU_CTR0 */) par = { cpu_ctr[1][ 7 -:8], cpu_ctr[0][ 7 -:8] }; else
+		if (get_cpu_ctr && reg_no == 1 /* GET_CPU_CTR1 */) par = { cpu_ctr[1][15 -:8], cpu_ctr[0][15 -:8] }; else
+		if (get_cpu_ctr && reg_no == 2 /* GET_CPU_CTR2 */) par = { cpu_ctr[1][23 -:8], cpu_ctr[0][23 -:8] }; else
+		if (get_cpu_ctr && reg_no == 3 /* GET_CPU_CTR3 */) par = { cpu_ctr[1][31 -:8], cpu_ctr[0][31 -:8] }; else
+`endif
+
+`ifdef USE_SDR
+		if (get_adc_ctr  && reg_no == 0 /* GET_ADC_CTR0 */) par = { adc_count[15: 0] }; else
+		if (get_adc_ctr  && reg_no == 1 /* GET_ADC_CTR1 */) par = { adc_count[31:16] }; else
+`endif
+
+		if (get_reg_misc && reg_no == 0 /* GET_STATUS   */) par = status; else
+		if (get_reg_misc && reg_no == 2 /* GET_DEBUG    */) par = debug; else
+		par = host_dout;
+	end
+	
+
+    //////////////////////////////////////////////////////////////////////////
+    // host SPI interface
+    //////////////////////////////////////////////////////////////////////////
+
+`ifdef USE_STREAM
+    wire host_miso, ha_clk, stream_miso;
+    wire stream_cs = (BBB_CS_N == 2'b01);      // CS1 asserted, CS0 not: STREAM (unused by stock host.v)
+    assign BBB_MISO = stream_cs ? stream_miso : host_miso;
+
+    STREAM_SPI #(.AW(STREAM_AW)) stream_spi (
+        .wr_clk     (adc_clk),
+        .wr_en      (stream_wr_en),
+        .wr_data    (stream_wr_data),
+        .wr_flush   (stream_flush),
+        .wr_drop    (stream_drop),
+        .wr_ovfl    (stream_ovfl),
+        .wr_level   (stream_level),
+        .ha_clk     (ha_clk),
+        .stream_cs  (stream_cs),
+        .miso       (stream_miso)
+    );
+`endif
+
+    HOST host (
+        .hb_clk		(cpu_clk),
+        .rst		(rst),
+        .spi_sclk   (BBB_SCLK),
+        .spi_cs		(~BBB_CS_N),
+        .spi_mosi   (BBB_MOSI),
+`ifdef USE_STREAM
+        .spi_miso   (host_miso),
+        .ha_clk_out (ha_clk),
+`else
+        .spi_miso   (BBB_MISO),
+        .ha_clk_out (),
+`endif
+        .host_srq   (host_srq),
+        
+        .gps_rd 	(gps_rd),
+        .gps_dout	(gps_dout),
+
+        .rx_rd		(rx_rd),
+        .rx_dout	(rx_dout),
+
+        .wf_rd		(wf_rd),
+        .wf_dout	(wf_dout),
+
+        .ext_rd 	(ext_rd),
+        .ext_dout	(ext_dout),
+
+        // NB: hb_clk = gps_clk = cpu_clk
+        .hb_ovfl	(rx_overflow_C),
+        .hb_orst	(rx_orst),
+
+        .host_dout  (host_dout),
+        .mem_rd     (mem_rd),
+        .mem_dout   (mem_dout),
+        .boot_done  (boot_done),
+
+        .tos        (tos[15:0]),
+        .op_4       (op[3:0]),
+        .rdReg      (rdReg),
+        .wrReg      (wrReg),
+        .wrEvt      (wrEvt),
+        .wrEvtL     (wrEvtL)
+        );
+
+
+    //////////////////////////////////////////////////////////////////////////
+    // CPU cycle counters
+    //////////////////////////////////////////////////////////////////////////
+
+`ifdef USE_CPU_CTR
+    reg cpu_ctr_ena;
+    wire sclr = wrEvt2 & op[CPU_CTR_CLR];
+    
+	ip_acc_u32b cpu_ctr0 (.clk(cpu_clk), .sclr(sclr), .b(1), .q(cpu_ctr[0]));
+	ip_acc_u32b cpu_ctr1 (.clk(cpu_clk), .sclr(sclr), .b({{31{1'b0}}, cpu_ctr_ena}), .q(cpu_ctr[1]));
+
+	always @ (posedge cpu_clk)
+	begin
+		if (wrEvt2 & op[CPU_CTR_ENA]) cpu_ctr_ena <= 1;
+		if (wrEvt2 & op[CPU_CTR_DIS]) cpu_ctr_ena <= 0;
+	end
+`endif
+
+    CPU cpu (
+        .clk        (cpu_clk),
+        .rst        (rst),
+        
+        .par        (par),
+        .ser        (ser),
+        .mem_rd     (mem_rd),
+        .mem_dout   (mem_dout),
+        .boot_done  (boot_done),
+        
+        .tos        (tos),
+        .op         (op),
+        .rdBit0     (rdBit0),
+        .rdBit1     (rdBit1),
+        .rdBit2     (rdBit2),
+        .rdReg      (rdReg),
+        .wrReg      (wrReg),
+        .wrReg2     (wrReg2),
+        .wrEvt      (wrEvt),
+        .wrEvt2     (wrEvt2),
+        .wrEvtL     (wrEvtL)
+        );
+
+
+`ifdef USE_GPS
+    GPS gps (
+        .clk            (gps_clk),
+        .adc_clk	    (adc_clk),
+        .host_srq       (host_srq),
+
+        .I_sign		    (GPS_ISGN),
+        .I_mag		    (GPS_IMAG),
+        .Q_sign		    (GPS_QSGN),
+        .Q_mag		    (GPS_QMAG),
+        .gps_rd 	    (gps_rd),
+        .gps_dout	    (gps_dout),
+        
+        .ticks_A	    (ticks_A),
+        
+        .ser		    (ser[0]),        
+        .tos		    (tos),      // no clk domain crossing because gps_clk = cpu_clk
+        .op_8           (op[7:0]),        
+        .rdBit          (rdBit0),
+        .rdReg          (rdReg),
+        .wrReg          (wrReg),
+        .wrEvt          (wrEvt),
+        .wrEvtL         (wrEvtL),
+        
+        // o
+        .unused_inputs  (unused_inputs_gps)
+        );
+`else
+
+	// if no GPS configured, still need to capture host_srq in the same way as GPS does.
+	assign ser[0] = srq_out;
+	reg srq_noted, srq_out;
+	
+    always @ (posedge cpu_clk)
+    begin
+        if (rdReg & op[GET_SRQ]) srq_noted <= host_srq;
+        else				     srq_noted <= host_srq | srq_noted;
+        if (rdReg & op[GET_SRQ]) srq_out   <= srq_noted;
+    end
+    
+    assign gps_rd = 0;
+    assign gps_dout = 0;
+`endif
+
+`ifdef USE_OTHER
+    wire cpu_clk, unused_inputs_other;
+    
+    other other (
+        .ADC_CLKIN      (ADC_CLKIN),
+        .GPS_TCXO       (GPS_TCXO),
+        // o
+        .cpu_clk        (cpu_clk),
+        
+        .ADC_DATA       (ADC_DATA),
+        .ADC_OVFL       (ADC_OVFL),
+        
+        .I_sign         (GPS_ISGN),
+        .I_mag          (GPS_IMAG),
+        .Q_sign         (GPS_QSGN),
+        .Q_mag          (GPS_QMAG),
+
+        .tos		    (tos[31:0]),
+        .op             (op),        
+        .wrReg          (wrReg),
+        .wrEvt          (wrEvt),
+        .rdBit_diag     (rdBit1),
+        // o
+        .diag_sout      (ser[1]),
+        .host_sout      (ser[2]),
+        .dev_intr       (dev_intr),
+        .rd             (ext_rd),
+        .dout           (ext_dout),
+
+        .ctrl           (ctrl),
+        // o
+        .flags          (other_flags),
+        
+        // o
+        .unused_inputs  (unused_inputs_other)
+        );
+`else
+    assign ext_rd = 0;
+    assign ext_dout = 0;
+`endif
+
+endmodule

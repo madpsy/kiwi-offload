@@ -1,0 +1,18 @@
+// kiwi-offload-pps: the GPS 1 PPS from the FPGA (stream v22, pin P9_26 = GPIO0_14) as a kernel PPS source (/dev/pps0),
+// for chrony's PPS refclock. kbridge loads it at start ([kbridge] gps_pps = on) through the device-tree overlay configfs
+// (no boot change): config-pin P9_26 gpio_pd first (its GPIO mode, pulled down) (cape-universal's pin mux), then this.
+//   dtc -@ -I dts -O dtb -o kiwi-offload-pps.dtbo kiwi-offload-pps.dts
+/dts-v1/;
+/plugin/;
+/ {
+    fragment@0 {
+        target-path = "/";
+        __overlay__ {
+            kiwi_offload_pps {
+                compatible = "pps-gpio";
+                gpios = <&gpio0 14 0>;      /* active high: the rising edge is the second */
+                status = "okay";
+            };
+        };
+    };
+};

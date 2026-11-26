@@ -1,0 +1,472 @@
+{
+ "id": "lanecost.hp4x192.band40.none.u0.spionly",
+ "suite": "lanecost",
+ "kind": "fixed",
+ "spec": {
+  "suite": "lanecost",
+  "kind": "fixed",
+  "host": "hp4x192",
+  "pattern": "band40",
+  "profile": "none",
+  "users": 0,
+  "id": "lanecost.hp4x192.band40.none.u0.spionly",
+  "measure": 40,
+  "patch": {
+   "kbridge": {
+    "lanes": "off"
+   }
+  },
+  "tag": "spionly"
+ },
+ "started": "2026-11-28T10:12:10.972Z",
+ "host_setup": "HPSDR 4 × 192 kHz",
+ "config": {
+  "host": {
+   "slices": null
+  },
+  "pool": {
+   "host_ddcs": 13,
+   "web_ddcs": 13
+  },
+  "kweb": {
+   "max_users": 64,
+   "vfo_per_user": 4,
+   "vfo_max": 64,
+   "max_sources": 3,
+   "own_max": 8,
+   "own_width": 104,
+   "linger": 0,
+   "free_window": "on",
+   "free_centre": 14175,
+   "free_width": 208,
+   "max_width": 417,
+   "show_host_slices": "on",
+   "default_source": "40m",
+   "cpu_reserve": 15,
+   "sharp_ssb_filters": "on",
+   "zoom_waterfall": "on",
+   "zoom_snapshots": "on"
+  },
+  "windows": [
+   {
+    "name": "40m",
+    "centre": 7100,
+    "width": 200
+   },
+   {
+    "name": "30m",
+    "centre": 10125,
+    "width": 50
+   },
+   {
+    "name": "20m",
+    "centre": 14175,
+    "width": 350
+   },
+   {
+    "name": "17m",
+    "centre": 18118,
+    "width": 104
+   },
+   {
+    "name": "15m",
+    "centre": 21225,
+    "width": 450
+   },
+   {
+    "name": "12m",
+    "centre": 24940,
+    "width": 104
+   },
+   {
+    "name": "10m",
+    "centre": 28250,
+    "width": 500
+   }
+  ],
+  "kbridge": {
+   "lanes": "off"
+  }
+ },
+ "host_grants": {
+  "requested": 4,
+  "created": 4,
+  "refused": 0,
+  "receivers": {
+   "0": {
+    "ok": true,
+    "khz": 7000,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 0
+   },
+   "1": {
+    "ok": true,
+    "khz": 7100,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 1
+   },
+   "2": {
+    "ok": true,
+    "khz": 7200,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 2
+   },
+   "3": {
+    "ok": true,
+    "khz": 7300,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 3
+   }
+  },
+  "reasons": []
+ },
+ "setup": {
+  "requested": 0,
+  "admitted": 0,
+  "failures": []
+ },
+ "failures": [],
+ "admin": {
+  "seconds": 40,
+  "cpu_busy": {
+   "mean": 29.98,
+   "min": 25,
+   "p50": 28,
+   "p95": 37.15,
+   "max": 41,
+   "n": 40
+  },
+  "cpu_free": {
+   "mean": 54.48,
+   "min": 48.4,
+   "p50": 55.15,
+   "p95": 58,
+   "max": 58.3,
+   "n": 40
+  },
+  "guard": true,
+  "reserve": 15,
+  "spi_meas": {
+   "mean": 26.53,
+   "min": 26.53,
+   "p50": 26.53,
+   "p95": 26.54,
+   "max": 26.54,
+   "n": 40
+  },
+  "lanes_meas": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 40
+  },
+  "spi_plan": {
+   "mean": 26.35,
+   "min": 26.35,
+   "p50": 26.35,
+   "p95": 26.35,
+   "max": 26.35,
+   "n": 40
+  },
+  "lanes_plan": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 40
+  },
+  "spi_max": 40,
+  "lanes_max": 0,
+  "ddcs": {
+   "host": 4,
+   "web": 0,
+   "own": 0,
+   "total": 4
+  },
+  "ddcs_max": 4,
+  "ddc_list": [
+   {
+    "ddc": 0,
+    "who": "host",
+    "name": "HPSDR rx 0, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 1,
+    "who": "host",
+    "name": "HPSDR rx 1, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 2,
+    "who": "host",
+    "name": "HPSDR rx 2, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 3,
+    "who": "host",
+    "name": "HPSDR rx 3, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   }
+  ],
+  "web_users": 1,
+  "external_users": 0,
+  "host_slices": 4,
+  "windows": [],
+  "gps": {
+   "fix": "tracking",
+   "fixes": 0,
+   "used": 0
+  },
+  "samples": 40,
+  "snap": {
+   "fps": {
+    "mean": 0,
+    "min": 0,
+    "p50": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 40
+   },
+   "views": {
+    "mean": 0,
+    "min": 0,
+    "p50": 0,
+    "p95": 0,
+    "max": 0,
+    "n": 40
+   },
+   "users": 0,
+   "ddc": -1,
+   "ask_fps": 10
+  },
+  "procs": {
+   "kbridge": 25.55,
+   "systemd": 0.03
+  },
+  "cpu_split": {
+   "us": 8.4,
+   "ni": 2.5,
+   "sy": 13.9,
+   "id": 69.9,
+   "wa": 0,
+   "hi": 0,
+   "si": 5.2,
+   "st": 0
+  },
+  "hist": {
+   "points": 6,
+   "step": 5,
+   "cpu": 30.55,
+   "cpu_max": 40.62,
+   "load": 0.39,
+   "drops_spi": 0,
+   "drops_lanes": 0,
+   "fifo_spi_max": 67.58,
+   "fifo_lanes_max": 0,
+   "net_rx": 0,
+   "net_tx": 25.06,
+   "net_tx_max": 25.23,
+   "gps_acq": 0.4,
+   "ecpu_acq": 13.09,
+   "ecpu_other": 11.26,
+   "events": []
+  }
+ },
+ "host_window": {
+  "lost": 0,
+  "ratio": 0.9992,
+  "sps": 191841
+ },
+ "users": [],
+ "quality": {
+  "listeners": 0,
+  "vfos": 0,
+  "worst_short_pct": null,
+  "worst_loss_pct": null,
+  "mean_fps": null,
+  "parked_vfos": 0,
+  "audio_age_ms_p50": null,
+  "audio_age_ms_p95": null,
+  "rows_wide_ps": null,
+  "rows_narrow_ps": null,
+  "kbps_per_listener": null,
+  "degraded": false
+ },
+ "last": {
+  "windows": [],
+  "hostTaps": [],
+  "vfos": [],
+  "users": 1
+ },
+ "host": {
+  "protocol": 2,
+  "rate_khz": 192,
+  "bits": 12,
+  "requested": 4,
+  "created": 4,
+  "refused": 0,
+  "receivers": {
+   "0": {
+    "ok": true,
+    "khz": 7000,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 0
+   },
+   "1": {
+    "ok": true,
+    "khz": 7100,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 1
+   },
+   "2": {
+    "ok": true,
+    "khz": 7200,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 2
+   },
+   "3": {
+    "ok": true,
+    "khz": 7300,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 3
+   }
+  },
+  "reasons": [],
+  "min_ratio": 0.9992,
+  "window": {
+   "lost": 0,
+   "ratio": 0.9992,
+   "sps": 191841
+  }
+ },
+ "limit": {
+  "hit": false,
+  "name": "no limit reached",
+  "nearest": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped): 67.6 %"
+ },
+ "evidence": [],
+ "utilisation": [
+  {
+   "res": "fifo",
+   "name": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped)",
+   "used": 67.58,
+   "max": 100,
+   "unit": "% full (max)",
+   "pct": 67.6,
+   "note": "groups dropped: SPI 0, lanes 0"
+  },
+  {
+   "res": "spi",
+   "name": "SPI link (McSPI at 48 MHz; kbridge budget spi_max)",
+   "used": 26.53,
+   "max": 40,
+   "unit": "Mbit/s",
+   "pct": 66.3,
+   "note": "planned 26.35, measured 26.53"
+  },
+  {
+   "res": "cpu",
+   "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+   "used": 37.15,
+   "max": 100,
+   "unit": "% (p95 of 1 s)",
+   "pct": 37.2,
+   "note": "the CPU guard admits up to 85 %"
+  },
+  {
+   "res": "ddcs",
+   "name": "FPGA DDCs (13: the XC7A35T is ~97 % full)",
+   "used": 4,
+   "max": 13,
+   "unit": "DDCs",
+   "pct": 30.8,
+   "note": "0:host 1:host 2:host 3:host"
+  },
+  {
+   "res": "total",
+   "name": "Ethernet (100 Mbit/s; kbridge budget 87 Mbit/s for both links)",
+   "used": 26.35,
+   "max": 87,
+   "unit": "Mbit/s",
+   "pct": 30.3
+  },
+  {
+   "res": "eth_tx",
+   "name": "Beagle Ethernet transmit (100 Mbit/s)",
+   "used": 25.23,
+   "max": 100,
+   "unit": "Mbit/s (max of 5 s)",
+   "pct": 25.2
+  },
+  {
+   "res": "fir",
+   "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+   "used": 0.97,
+   "max": 6.67,
+   "unit": "M outputs/s",
+   "pct": 14.5
+  },
+  {
+   "res": "narrow",
+   "name": "FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)",
+   "used": 0,
+   "max": 4,
+   "unit": "DDCs",
+   "pct": 0
+  }
+ ],
+ "cpu_breakdown": {
+  "kbridge: stream drain, decode of web groups, host forwarding, GPS": 25.55,
+  "other processes": 4.43
+ },
+ "limit_line": "no limit hit (nearest: FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped): 67.6 %)"
+}

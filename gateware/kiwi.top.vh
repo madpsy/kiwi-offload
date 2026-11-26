@@ -1,0 +1,1 @@
+`define ANTSW_BEAGLE_GPIO

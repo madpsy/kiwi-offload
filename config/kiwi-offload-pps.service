@@ -1,0 +1,28 @@
+# kiwi-offload-pps.service: the GPS 1 PPS input (stream gateware v24 and later drives P9_26) as /dev/pps0, before chrony starts,
+# and chrony's PPS refclock with it. chronyd exits if a PPS refclock's device is missing, so the refclock line lives in
+# its own file, written only once /dev/pps0 exists (and removed if it does not): chrony then never points at a missing
+# device. (kbridge also loads the overlay if it is missing, but starts after chrony.)
+# Template: tools/install.sh fills in @KO_DIR@. Runtime only: the device-tree overlay configfs, no boot-file change.
+[Unit]
+Description=kiwi-offload GPS 1 PPS input (pps-gpio on P9_26)
+Before=chrony.service
+After=local-fs.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=@KO_DIR@
+ExecStart=/bin/sh -c 'C=/etc/chrony/conf.d/kiwi-offload-pps.conf; \
+  if ! test -e /dev/pps0 && test -d /sys/kernel/config/device-tree/overlays; then \
+    config-pin P9_26 gpio_pd >/dev/null 2>&1; \
+    test -f kiwi-offload-pps.dtbo || dtc -@ -I dts -O dtb -o kiwi-offload-pps.dtbo kiwi-offload-pps.dts; \
+    mkdir -p /sys/kernel/config/device-tree/overlays/kiwi-offload-pps && \
+    cat kiwi-offload-pps.dtbo > /sys/kernel/config/device-tree/overlays/kiwi-offload-pps/dtbo; \
+    for i in 1 2 3 4 5 6 7 8 9 10; do test -e /dev/pps0 && break; sleep 0.2; done; fi; \
+  if test -e /dev/pps0; then \
+    printf "%%s\\n" "# written by kiwi-offload-pps.service: the GPS 1 PPS (stream gateware v24 and later, pps_gen.v), numbered by the GPS refclock" \
+      "refclock PPS /dev/pps0 lock GPS refid PPS poll 4 precision 1e-7 prefer" > $$C; \
+  else rm -f $$C; echo "no /dev/pps0: chrony uses GPS alone"; fi'
+
+[Install]
+WantedBy=multi-user.target

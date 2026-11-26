@@ -1,0 +1,1218 @@
+{
+ "id": "kiwilike12.none.ownrand.usb-adpcm.zoomhalf.r12.max",
+ "suite": "kiwilike12",
+ "kind": "ramp",
+ "spec": {
+  "suite": "kiwilike12",
+  "kind": "ramp",
+  "host": "none",
+  "pattern": "ownrand",
+  "profile": "usb/adpcm",
+  "id": "kiwilike12.none.ownrand.usb-adpcm.zoomhalf.r12.max",
+  "zoom": "half",
+  "patch": {
+   "pool": {
+    "host_ddcs": 1,
+    "web_ddcs": 12
+   },
+   "kweb": {
+    "max_users": 13,
+    "own_max": 13,
+    "own_width": 52,
+    "vfo_per_user": 1,
+    "zoom_windows": 0,
+    "default_source": "own",
+    "cpu_reserve": 12
+   }
+  },
+  "tag": "zoomhalf.r12.max"
+ },
+ "started": "2026-11-28T09:30:14.381Z",
+ "host_setup": "no host",
+ "config": {
+  "host": {
+   "slices": null
+  },
+  "pool": {
+   "host_ddcs": 1,
+   "web_ddcs": 12
+  },
+  "kweb": {
+   "max_users": 13,
+   "vfo_per_user": 1,
+   "vfo_max": 64,
+   "max_sources": 3,
+   "own_max": 13,
+   "own_width": 52,
+   "linger": 0,
+   "free_window": "on",
+   "free_centre": 14175,
+   "free_width": 208,
+   "max_width": 417,
+   "show_host_slices": "on",
+   "default_source": "own",
+   "cpu_reserve": 12,
+   "sharp_ssb_filters": "on",
+   "zoom_waterfall": "on",
+   "zoom_snapshots": "on",
+   "zoom_windows": 0
+  },
+  "windows": [
+   {
+    "name": "40m",
+    "centre": 7100,
+    "width": 200
+   },
+   {
+    "name": "30m",
+    "centre": 10125,
+    "width": 50
+   },
+   {
+    "name": "20m",
+    "centre": 14175,
+    "width": 350
+   },
+   {
+    "name": "17m",
+    "centre": 18118,
+    "width": 104
+   },
+   {
+    "name": "15m",
+    "centre": 21225,
+    "width": 450
+   },
+   {
+    "name": "12m",
+    "centre": 24940,
+    "width": 104
+   },
+   {
+    "name": "10m",
+    "centre": 28250,
+    "width": 500
+   }
+  ]
+ },
+ "host_grants": {
+  "requested": 0
+ },
+ "admin": {
+  "seconds": 10,
+  "cpu_busy": {
+   "mean": 84,
+   "min": 83,
+   "p50": 84,
+   "p95": 85.55,
+   "max": 86,
+   "n": 10
+  },
+  "cpu_free": {
+   "mean": 3.18,
+   "min": 2.8,
+   "p50": 3.15,
+   "p95": 3.56,
+   "max": 3.7,
+   "n": 10
+  },
+  "guard": true,
+  "reserve": 12,
+  "spi_meas": {
+   "mean": 29.12,
+   "min": 29.1,
+   "p50": 29.12,
+   "p95": 29.13,
+   "max": 29.13,
+   "n": 10
+  },
+  "lanes_meas": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 10
+  },
+  "spi_plan": {
+   "mean": 28.2,
+   "min": 28.2,
+   "p50": 28.2,
+   "p95": 28.2,
+   "max": 28.2,
+   "n": 10
+  },
+  "lanes_plan": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 10
+  },
+  "spi_max": 40,
+  "lanes_max": 45,
+  "ddcs": {
+   "host": 0,
+   "web": 0,
+   "own": 10,
+   "total": 10
+  },
+  "ddcs_max": 10,
+  "ddc_list": [
+   {
+    "ddc": 0,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 52.19,
+    "lane": "spi",
+    "R": 511,
+    "bits": 12,
+    "mbps": 1.59,
+    "users": 1
+   },
+   {
+    "ddc": 1,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 52.19,
+    "lane": "spi",
+    "R": 511,
+    "bits": 12,
+    "mbps": 1.59,
+    "users": 1
+   },
+   {
+    "ddc": 2,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 52.19,
+    "lane": "spi",
+    "R": 511,
+    "bits": 12,
+    "mbps": 1.59,
+    "users": 1
+   },
+   {
+    "ddc": 3,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 52.19,
+    "lane": "spi",
+    "R": 511,
+    "bits": 12,
+    "mbps": 1.59,
+    "users": 1
+   },
+   {
+    "ddc": 4,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   },
+   {
+    "ddc": 5,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   },
+   {
+    "ddc": 6,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   },
+   {
+    "ddc": 7,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   },
+   {
+    "ddc": 8,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   },
+   {
+    "ddc": 9,
+    "who": "own",
+    "name": "my receiver",
+    "khz": 104.17,
+    "lane": "spi",
+    "R": 256,
+    "bits": 12,
+    "mbps": 3.18,
+    "users": 1
+   }
+  ],
+  "web_users": 11,
+  "external_users": 0,
+  "host_slices": 0,
+  "windows": [
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 52.19,
+    "on": "DDC 0",
+    "cost": 2.2
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 52.19,
+    "on": "DDC 1",
+    "cost": 2.2
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 52.19,
+    "on": "DDC 2",
+    "cost": 2.2
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 52.19,
+    "on": "DDC 3",
+    "cost": 2.2
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 4",
+    "cost": 3.7
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 5",
+    "cost": 3.7
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 6",
+    "cost": 3.7
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 7",
+    "cost": 3.7
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 8",
+    "cost": 3.7
+   },
+   {
+    "name": "my receiver",
+    "state": "active",
+    "users": 1,
+    "width": 104.17,
+    "on": "DDC 9",
+    "cost": 3.7
+   }
+  ],
+  "gps": {
+   "fix": "tracking",
+   "fixes": 0,
+   "used": 1
+  },
+  "samples": 10,
+  "snap": {
+   "fps": {
+    "mean": 10.97,
+    "min": 9.9,
+    "p50": 10,
+    "p95": 14.9,
+    "max": 14.9,
+    "n": 10
+   },
+   "views": {
+    "mean": 5,
+    "min": 5,
+    "p50": 5,
+    "p95": 5,
+    "max": 5,
+    "n": 10
+   },
+   "users": 5,
+   "ddc": 12,
+   "ask_fps": 3
+  },
+  "procs": {
+   "kweb": 57.29,
+   "kbridge": 24.1
+  },
+  "cpu_split": {
+   "us": 66.3,
+   "ni": 3.4,
+   "sy": 11.6,
+   "id": 15.9,
+   "wa": 0,
+   "hi": 0,
+   "si": 2.8,
+   "st": 0
+  },
+  "hist": {
+   "points": 1,
+   "step": 5,
+   "cpu": 83.77,
+   "cpu_max": 84.69,
+   "load": 0.79,
+   "drops_spi": 0,
+   "drops_lanes": 0,
+   "fifo_spi_max": 27.34,
+   "fifo_lanes_max": 0,
+   "net_rx": 0.14,
+   "net_tx": 1.71,
+   "net_tx_max": 1.75,
+   "gps_acq": 0,
+   "ecpu_acq": 0,
+   "ecpu_other": 23.79,
+   "events": []
+  }
+ },
+ "host_window": null,
+ "users": [
+  {
+   "id": 2,
+   "src": -1000,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.88,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.25,
+     "muted_pct": 0,
+     "kbps": 106.93,
+     "age_ms": {
+      "mean": -4268.2,
+      "min": -4281.3,
+      "p50": -4279.67,
+      "p95": -4238.61,
+      "max": -4225.07,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 10.55,
+   "rows_narrow_ps": 0,
+   "kbps": 161.35,
+   "kbps_by": {
+    "wide_waterfall": 34.29,
+    "narrow_waterfall": 0,
+    "audio": 106.93,
+    "status_json": 20.13
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 3,
+   "src": -1001,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.87,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.25,
+     "muted_pct": 0,
+     "kbps": 106.93,
+     "age_ms": {
+      "mean": -4263.78,
+      "min": -4294.28,
+      "p50": -4253.19,
+      "p95": -4248.59,
+      "max": -4213.01,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 2.19,
+   "rows_narrow_ps": 0,
+   "kbps": 134.73,
+   "kbps_by": {
+    "wide_waterfall": 7.5,
+    "narrow_waterfall": 0,
+    "audio": 106.93,
+    "status_json": 20.29
+   },
+   "full_rows": {
+    "wide": 1,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 4,
+   "src": -1002,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 49.97,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.05,
+     "muted_pct": 0,
+     "kbps": 107.14,
+     "age_ms": {
+      "mean": -4262.85,
+      "min": -4295.3,
+      "p50": -4253.77,
+      "p95": -4249.4,
+      "max": -4213.37,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 10.65,
+   "rows_narrow_ps": 0,
+   "kbps": 161.04,
+   "kbps_by": {
+    "wide_waterfall": 33.74,
+    "narrow_waterfall": 0,
+    "audio": 107.14,
+    "status_json": 20.15
+   },
+   "full_rows": {
+    "wide": 3,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 5,
+   "src": -1003,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 49.97,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.05,
+     "muted_pct": 0,
+     "kbps": 107.14,
+     "age_ms": {
+      "mean": -4261.98,
+      "min": -4297.76,
+      "p50": -4256.11,
+      "p95": -4251.14,
+      "max": -4246.45,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 2.19,
+   "rows_narrow_ps": 0,
+   "kbps": 134.53,
+   "kbps_by": {
+    "wide_waterfall": 7.1,
+    "narrow_waterfall": 0,
+    "audio": 107.14,
+    "status_json": 20.29
+   },
+   "full_rows": {
+    "wide": 0,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 6,
+   "src": -1004,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 49.97,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.06,
+     "muted_pct": 0,
+     "kbps": 107.14,
+     "age_ms": {
+      "mean": -4276.09,
+      "min": -4291.15,
+      "p50": -4288.3,
+      "p95": -4246.41,
+      "max": -4241.86,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 10.65,
+   "rows_narrow_ps": 0,
+   "kbps": 166.99,
+   "kbps_by": {
+    "wide_waterfall": 39.63,
+    "narrow_waterfall": 0,
+    "audio": 107.14,
+    "status_json": 20.22
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 7,
+   "src": -1005,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.07,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.35,
+     "age_ms": {
+      "mean": -4275.69,
+      "min": -4314.48,
+      "p50": -4282.64,
+      "p95": -4238.97,
+      "max": -4236.98,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 2.19,
+   "rows_narrow_ps": 0,
+   "kbps": 134.8,
+   "kbps_by": {
+    "wide_waterfall": 7.13,
+    "narrow_waterfall": 0,
+    "audio": 107.35,
+    "status_json": 20.32
+   },
+   "full_rows": {
+    "wide": 0,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 8,
+   "src": -1006,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.07,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.35,
+     "age_ms": {
+      "mean": -4271.63,
+      "min": -4278.76,
+      "p50": -4276.47,
+      "p95": -4237.26,
+      "max": -4233.06,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 10.55,
+   "rows_narrow_ps": 0,
+   "kbps": 153.3,
+   "kbps_by": {
+    "wide_waterfall": 25.73,
+    "narrow_waterfall": 0,
+    "audio": 107.35,
+    "status_json": 20.21
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 9,
+   "src": -1007,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.07,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.35,
+     "age_ms": {
+      "mean": -4269.67,
+      "min": -4313.72,
+      "p50": -4273.46,
+      "p95": -4234.43,
+      "max": -4230.21,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 2.19,
+   "rows_narrow_ps": 0,
+   "kbps": 135.16,
+   "kbps_by": {
+    "wide_waterfall": 7.49,
+    "narrow_waterfall": 0,
+    "audio": 107.35,
+    "status_json": 20.31
+   },
+   "full_rows": {
+    "wide": 1,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 10,
+   "src": -1008,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 49.97,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.06,
+     "muted_pct": 0,
+     "kbps": 107.14,
+     "age_ms": {
+      "mean": -4276.21,
+      "min": -4300.63,
+      "p50": -4260.99,
+      "p95": -4255.41,
+      "max": -4221.99,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 10.65,
+   "rows_narrow_ps": 0,
+   "kbps": 152.71,
+   "kbps_by": {
+    "wide_waterfall": 25.44,
+    "narrow_waterfall": 0,
+    "audio": 107.14,
+    "status_json": 20.13
+   },
+   "full_rows": {
+    "wide": 3,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 11,
+   "src": -1009,
+   "own": true,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.87,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.26,
+     "muted_pct": 0,
+     "kbps": 106.92,
+     "age_ms": {
+      "mean": -4276.31,
+      "min": -4303.83,
+      "p50": -4262.34,
+      "p95": -4257.2,
+      "max": -4218.88,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 2.19,
+   "rows_narrow_ps": 0,
+   "kbps": 134.75,
+   "kbps_by": {
+    "wide_waterfall": 7.52,
+    "narrow_waterfall": 0,
+    "audio": 106.92,
+    "status_json": 20.31
+   },
+   "full_rows": {
+    "wide": 0,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  }
+ ],
+ "quality": {
+  "listeners": 10,
+  "vfos": 10,
+  "worst_short_pct": 0.26,
+  "worst_loss_pct": 0,
+  "mean_fps": 49.97,
+  "parked_vfos": 0,
+  "audio_age_ms_p50": -4268.69,
+  "audio_age_ms_p95": -4234.43,
+  "rows_wide_ps": 6.4,
+  "rows_narrow_ps": 0,
+  "kbps_per_listener": 146.94,
+  "degraded": false
+ },
+ "last": {
+  "windows": [
+   {
+    "name": "my receiver",
+    "width": 52.185199999999995
+   },
+   {
+    "name": "my receiver",
+    "width": 52.185199999999995
+   },
+   {
+    "name": "my receiver",
+    "width": 52.185199999999995
+   },
+   {
+    "name": "my receiver",
+    "width": 52.185199999999995
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   },
+   {
+    "name": "my receiver",
+    "width": 104.1666
+   }
+  ],
+  "hostTaps": [],
+  "vfos": [
+   {
+    "f": 4255000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 22549000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 11243000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 29537000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 15561000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 26868000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 25218000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 13912000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 2606000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 20899000,
+    "mode": "usb",
+    "codec": "adpcm"
+   }
+  ],
+  "users": 11
+ },
+ "ramp": {
+  "admitted": 10,
+  "stop": {
+   "at": 11,
+   "what": "source",
+   "reason": "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free",
+   "trail": [
+    "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free"
+   ],
+   "class": "cpu"
+  },
+  "steps": [
+   {
+    "n": 1,
+    "busy": 20.3,
+    "free": 66.6,
+    "spi": 4.4,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 2.02,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 2,
+    "busy": 30.3,
+    "free": 56.3,
+    "spi": 6,
+    "lanes": 0,
+    "ddcs": 2,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 3,
+    "busy": 34.7,
+    "free": 49.5,
+    "spi": 7.6,
+    "lanes": 0,
+    "ddcs": 3,
+    "worst_short_pct": 0.69,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 4,
+    "busy": 40.3,
+    "free": 44.2,
+    "spi": 8.6,
+    "lanes": 0,
+    "ddcs": 4,
+    "worst_short_pct": 0.68,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 5,
+    "busy": 52.7,
+    "free": 34.3,
+    "spi": 12.3,
+    "lanes": 0,
+    "ddcs": 5,
+    "worst_short_pct": 1.38,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 6,
+    "busy": 65,
+    "free": 22.8,
+    "spi": 15.5,
+    "lanes": 0,
+    "ddcs": 6,
+    "worst_short_pct": 0.68,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 7,
+    "busy": 73,
+    "free": 13.4,
+    "spi": 18.7,
+    "lanes": 0,
+    "ddcs": 7,
+    "worst_short_pct": 2,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 8,
+    "busy": 80.7,
+    "free": 5,
+    "spi": 21.9,
+    "lanes": 0,
+    "ddcs": 8,
+    "worst_short_pct": 0.66,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 9,
+    "busy": 79.3,
+    "free": 5.6,
+    "spi": 25,
+    "lanes": 0,
+    "ddcs": 9,
+    "worst_short_pct": 0.68,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 10,
+    "busy": 84.7,
+    "free": 0.9,
+    "spi": 28.2,
+    "lanes": 0,
+    "ddcs": 10,
+    "worst_short_pct": 0.71,
+    "worst_loss_pct": 0,
+    "degraded": false
+   }
+  ],
+  "degraded_while_admitting": []
+ },
+ "stop": {
+  "at": 11,
+  "what": "source",
+  "reason": "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free",
+  "trail": [
+   "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free"
+  ],
+  "class": "cpu"
+ },
+ "failures": [
+  {
+   "at": 11,
+   "what": "source",
+   "reason": "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free",
+   "trail": [
+    "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free"
+   ],
+   "class": "cpu"
+  }
+ ],
+ "limit": {
+  "hit": true,
+  "kind": "refused",
+  "resource": "cpu",
+  "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+  "detail": "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free",
+  "via": "kweb CPU guard (refused before overloading)",
+  "cap": null,
+  "component": "kweb demodulator: USB",
+  "also": [],
+  "cpu_top": "kweb demodulator: USB"
+ },
+ "evidence": [
+  {
+   "kind": "refused",
+   "what": "source",
+   "res": "cpu",
+   "via": "kweb CPU guard (refused before overloading)",
+   "detail": "the Beagle's CPU is busy: an own receiver needs ~7.9 %, 2.1 % is free"
+  }
+ ],
+ "utilisation": [
+  {
+   "res": "narrow",
+   "name": "FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)",
+   "used": 4,
+   "max": 4,
+   "unit": "DDCs",
+   "pct": 100
+  },
+  {
+   "res": "cpu",
+   "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+   "used": 85.55,
+   "max": 100,
+   "unit": "% (p95 of 1 s)",
+   "pct": 85.6,
+   "note": "the CPU guard admits up to 88 %"
+  },
+  {
+   "res": "ddcs",
+   "name": "FPGA DDCs (13: the XC7A35T is ~97 % full)",
+   "used": 10,
+   "max": 13,
+   "unit": "DDCs",
+   "pct": 76.9,
+   "note": "0:own 1:own 2:own 3:own 4:own 5:own 6:own 7:own 8:own 9:own"
+  },
+  {
+   "res": "spi",
+   "name": "SPI link (McSPI at 48 MHz; kbridge budget spi_max)",
+   "used": 29.12,
+   "max": 40,
+   "unit": "Mbit/s",
+   "pct": 72.8,
+   "note": "planned 28.2, measured 29.12"
+  },
+  {
+   "res": "total",
+   "name": "Ethernet (100 Mbit/s; kbridge budget 87 Mbit/s for both links)",
+   "used": 28.2,
+   "max": 87,
+   "unit": "Mbit/s",
+   "pct": 32.4
+  },
+  {
+   "res": "fifo",
+   "name": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped)",
+   "used": 27.34,
+   "max": 100,
+   "unit": "% full (max)",
+   "pct": 27.3,
+   "note": "groups dropped: SPI 0, lanes 0"
+  },
+  {
+   "res": "fir",
+   "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+   "used": 1.04,
+   "max": 6.67,
+   "unit": "M outputs/s",
+   "pct": 15.6
+  },
+  {
+   "res": "eth_tx",
+   "name": "Beagle Ethernet transmit (100 Mbit/s)",
+   "used": 1.75,
+   "max": 100,
+   "unit": "Mbit/s (max of 5 s)",
+   "pct": 1.8
+  },
+  {
+   "res": "lanes",
+   "name": "PRU lanes link (3 header pins sampled by the PRUs; kbridge budget lane_max)",
+   "used": 0,
+   "max": 45,
+   "unit": "Mbit/s",
+   "pct": 0,
+   "note": "planned 0, measured 0"
+  }
+ ],
+ "cpu_breakdown": {
+  "kweb demodulator: USB": 37.49,
+  "kbridge: stream drain, decode of web groups, host forwarding, GPS": 24.1,
+  "kweb users: networking, waterfall rows, status": 12.89,
+  "kweb sources: my receiver (104.2 kHz)": 4.33,
+  "other processes": 2.61,
+  "kweb sources: my receiver (52.2 kHz)": 2.58
+ },
+ "limit_line": "Beagle CPU (one 1 GHz Cortex-A8 core) - kweb demodulator: USB [kweb CPU guard (refused before overloading)]"
+}

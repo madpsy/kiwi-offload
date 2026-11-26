@@ -1,0 +1,542 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>kiwi-offload use cases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one readable column of use cases; each case = plain words, a diagram of the Kiwi's parts in use, and three short lists */
+:root {
+  --bg: #f7f8f6; --surface: #ffffff; --fg: #1c2321; --dim: #5d6a66; --line: #d8dedb;
+  --host: #13897b; --host-soft: #d3eee9; --web: #6c4fc4; --web-soft: #e6e0f7; --free: #b9c2be; --snap: #c98a2b;
+  --warn: #b4532a; --ok: #2f7d3b;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #111615; --surface: #182020; --fg: #e3e9e6; --dim: #95a39e; --line: #2c3634;
+  --host: #3cc2ae; --host-soft: #173a35; --web: #a690f0; --web-soft: #2a2544; --free: #4a5552; --snap: #e0a74e;
+  --warn: #f0976c; --ok: #7fcf8a; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #111615; --surface: #182020; --fg: #e3e9e6; --dim: #95a39e; --line: #2c3634;
+  --host: #3cc2ae; --host-soft: #173a35; --web: #a690f0; --web-soft: #2a2544; --free: #4a5552; --snap: #e0a74e;
+  --warn: #f0976c; --ok: #7fcf8a; color-scheme: dark }
+* { box-sizing: border-box }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 var(--font-body);
+       padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 24px 64px }
+main { max-width: 980px; margin: 0 auto; display: grid; gap: 28px }
+h1 { font-size: 1.9rem; line-height: 1.2; margin: 0; text-wrap: balance; font-weight: 600 }
+h2 { font-size: 1.35rem; margin: 0; text-wrap: balance; font-weight: 600 }
+h3 { font-size: 0.8rem; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); margin: 0 0 6px; font-weight: 600 }
+p { margin: 0; max-width: 68ch }
+code, .mono { font-family: var(--font-mono); font-size: .88em } code { white-space: nowrap }
+.lede { color: var(--dim); font-size: 1.05rem }
+.parts { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px }
+.part { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; min-width: 0 }
+.part b { display: block; margin-bottom: 2px }
+.part p { color: var(--dim); font-size: .92rem }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: .9rem; color: var(--dim) }
+.legend span { display: inline-flex; align-items: center; gap: 6px }
+.sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid var(--line) }
+.badge { display: inline-block; font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; padding: 1px 6px; border-radius: 3px;
+         border: 1px solid currentColor; vertical-align: 1px; margin-left: 4px; white-space: nowrap }
+.b-meas { color: var(--ok) } .b-rule { color: var(--host) }
+.case { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 20px; display: grid; gap: 14px; min-width: 0 }
+.case .who { color: var(--dim) }
+.diagram { overflow-x: auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 10px 0 }
+.diagram svg { display: block; width: 100%; min-width: 640px; height: auto }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px }
+.cols ul { margin: 0; padding-left: 18px } .cols li { margin: 2px 0 }
+details { font-size: .92rem } summary { cursor: pointer; color: var(--dim) }
+pre { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 10px; overflow-x: auto; font-size: .82rem; margin: 8px 0 0 }
+svg text { font-family: var(--font-body); fill: var(--fg) } svg .mono { font-family: var(--font-mono) } svg .dim { fill: var(--dim) }
+.foot { color: var(--dim); font-size: .88rem }
+.costwrap { overflow-x: auto }
+table.costs { border-collapse: collapse; font-variant-numeric: tabular-nums; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; min-width: 460px }
+table.costs th, table.costs td { padding: 7px 14px; text-align: right; border-bottom: 1px solid var(--line) }
+table.costs thead th { font-size: .78rem; letter-spacing: .05em; text-transform: uppercase; color: var(--dim); font-weight: 600 }
+table.costs tbody th, table.costs tfoot th { text-align: left; font-weight: 500 }
+table.costs thead th:first-child { text-align: left }
+table.costs td { font-family: var(--font-mono); background: color-mix(in srgb, var(--warn) calc(var(--t, 0) * 55%), transparent) }
+table.costs tfoot td, table.costs tfoot th { color: var(--dim); font-size: .88rem; background: transparent }
+table.costs tbody tr:last-child th, table.costs tbody tr:last-child td { border-bottom: 2px solid var(--line) }
+.chapter { border-top: 2px solid var(--line); padding-top: 22px; margin-top: 10px; display: grid; gap: 6px }
+.chapter-title { font-size: 1.6rem; color: var(--host) }
+a { color: var(--host) } a:focus-visible, summary:focus-visible { outline: 2px solid var(--web); outline-offset: 2px }
+</style>
+</head>
+<body>
+<main>
+<header style="display:grid;gap:10px">
+  <h1>What a Kiwi running kiwi-offload can do</h1>
+  <p class="lede">Practical set-ups, drawn out: what goes to a PC, what web listeners get, and which part of the Kiwi runs out first. Every diagram is the same picture of the board, so they can be compared.</p>
+</header>
+
+<section style="display:grid;gap:12px">
+  <h2>What a stock KiwiSDR does</h2>
+  <p>The KiwiSDR's own software (kiwid) is built for an open web SDR. The FPGA makes a fixed set of narrow receiver channels, and each listener, or each program such as kiwirecorder or wsprdaemon, takes one channel. The owner picks one of five FPGA modes on the admin page; they trade channels, audio bandwidth and waterfalls against each other.</p>
+  <div class="diagram" id="stock-modes"></div>
+  <ul style="margin:0;padding-left:18px;max-width:68ch">
+    <li>Each channel carries audio or I/Q of up to 12 kHz (20 kHz in the 3-channel mode) to one user.</li>
+    <li>Each user has their own 0–30 MHz waterfall that zooms in. In Full 8 channel mode the eight users take turns on three waterfall DDCs: a user's waterfall locks a free DDC, captures one frame and releases it, and the FFT runs on the CPU afterwards. Sharing limits the zoom to level 11 (instead of 14), and the frame rate falls as more users compete, most at high zoom.</li>
+    <li>In More receivers mode only channels 0 and 1 have a waterfall; channels 2–7 show an FFT of their own audio, which covers only their passband.</li>
+    <li>The number of channels is the number of users at once, so the capacity is fixed and known, which is what a public listing needs.</li>
+    <li>A Kiwi registered on kiwisdr.com that ran Kiwi classic or More receivers is switched once to Full 8 channel, so almost every public Kiwi runs that mode.</li>
+    <li>All five modes ship for both KiwiSDR boards; the 14-channel mode is offered only on multi-core BeagleBones (BeagleBone AI, AI-64).</li>
+  </ul>
+  <p>kiwi-offload uses the same board differently: 13 receivers of 52 kHz to 1.48 MHz each, shared by any number of listeners and a PC, within the board's limits.</p>
+  <div class="diagram" id="stock-vs"></div>
+  <p class="foot">From the KiwiSDR source (kiwid, September 2026): the modes in <code>main.cpp</code>, <code>kiwi.config</code> and the admin page; waterfall sharing in <code>rx/rx_waterfall.cpp</code>.</p>
+</section>
+
+<section style="display:grid;gap:12px">
+  <div class="chapter">
+    <h2 class="chapter-title">The same board with kiwi-offload</h2>
+    <p class="lede">The rest of this page is about a KiwiSDR running kiwi-offload: what its parts are, what a PC or a web listener can ask for, and seven set-ups drawn out.</p>
+  </div>
+  <div class="part"><b>Decoders run in the listener's browser, not on the Beagle</b><p>kiwi-offload's FT8, FT4, FT2 and WSPR decoders are WebAssembly builds of <code>jt9</code> and <code>wsprd</code> that run in each listener's own browser, as do the notch and noise reduction. They use the listener's computer, not the Beagle's one core, so however many listeners decode, the decoding itself adds nothing on the Beagle. It only demodulates the VFO as it does for anyone listening; a decoding VFO's audio is sent as 12 kS/s PCM, which costs about half a percent of the core more than ADPCM. The CPU figures on this page therefore hold whether or not listeners are decoding.</p></div>
+  <h2>The three things that get shared</h2>
+  <div class="parts">
+    <div class="part"><b>13 receivers (DDCs)</b><p>The FPGA has 13 receivers. Each one tunes a slice of the HF spectrum, from 52 kHz to 1.48 MHz wide. Only receivers 0–3 can go narrower than about 104 kHz, so very narrow bands (2200 m, 630 m, 60 m, 30 m) need one of those four. Receivers 9–12 have a second job: while one is not streaming, kbridge borrows it for the web listeners' zoomed waterfalls, and a listener or the PC can take it back at any moment.</p></div>
+    <div class="part"><b>Two links to the Beagle</b><p>Receivers send their samples over SPI (budget 40 Mbit/s) or the PRU lanes (45 Mbit/s), at most 87 Mbit/s together, the Ethernet's room. Wider slices and more bits per sample cost more. The full-band waterfall's snapshots use 2.8 Mbit/s of SPI; the zoomed waterfall's frames up to 7 more, at the lowest priority and outside the budget.</p></div>
+    <div class="part"><b>The Beagle's one CPU core</b><p>It forwards streams to a PC (kbridge: about half the core at 70 Mbit/s, two thirds at 85) and runs every web listener (about 4 % each with USB and ADPCM, plus the window they listen to). kweb keeps 15 % free and refuses what would not fit.</p></div>
+  </div>
+  <h2 style="margin-top:8px">What each kind of client can ask for</h2>
+  <div class="parts">
+    <div class="part"><b>A PC, with kiwi-offload's own protocol</b><p>Any usable width from 52 kHz to 1.48 MHz (the receiver's decimation R from 511 down to 18), centred anywhere from 0 to 33.3 MHz; 8, 10, 12, 14 or 16 bits per sample (12 by default); SPI, the lanes or either; a gain step from 0 to 8. Up to 13 slices, one per receiver.</p></div>
+    <div class="part"><b>A PC, as HPSDR software</b><p>Through kiwi-hpsdr-bridge: 48, 96, 192 or 384 kHz per receiver, up to 10 receivers (HPSDR protocol 2) or 1 (protocol 1), delivered as 24-bit samples. The bridge's <code>--bits</code> (8–16) sets what crosses the Kiwi's links.</p></div>
+    <div class="part"><b>A web listener</b><p>The free-tuning window and own receivers: 52, 104, 208, 306 or 417 kHz wide (up to <code>max_width</code>); band windows: as wide as the configuration sets. Up to 4 VFOs each, each a ±12 kHz audio channel at 24 kS/s, in USB, LSB, CW, AM, narrow AM, SAM (also its upper, lower and stereo forms), NFM or IQ; audio as ADPCM (96 kbit/s, the default), PCM at 12 kS/s, Opus (32 kbit/s) or Opus HQ (48 kbit/s).</p></div>
+  </div>
+  <h2 style="margin-top:8px">What one web listener costs <span class="badge b-meas">measured</span></h2>
+  <p>What each listener costs the Beagle, as a percentage of its one core, by mode and audio codec: their networking, waterfall and status, the demodulator and the codec. USB with ADPCM is kweb's cost model, fitted to 271 measurements (the whole system's CPU, as kweb's guard counts it); every other cell adds that mode's and codec's difference, measured side by side on one 200 kHz window; darker cells cost more. On a lightly loaded Beagle a listener costs less than this (USB with ADPCM: 2.9 %); listeners added to a busy one cost about this much (4.1 % each, measured to 14 listeners).</p>
+  <div class="costwrap">
+  <table class="costs">
+    <thead><tr><th scope="col">Mode</th><th scope="col">ADPCM</th><th scope="col">PCM 12k</th><th scope="col">Opus</th><th scope="col">Opus HQ</th></tr></thead>
+    <tbody>
+<tr><th scope="row">AM narrow</th><td style="--t:0.02">3.8</td><td style="--t:0.10">4.3</td><td style="--t:0.41">6.2</td><td style="--t:0.45">6.5</td></tr>
+<tr><th scope="row">AM</th><td style="--t:0.01">3.7</td><td style="--t:0.10">4.3</td><td style="--t:0.42">6.3</td><td style="--t:0.44">6.4</td></tr>
+<tr><th scope="row">IQ</th><td style="--t:0.00">3.7</td><td style="--t:0.18">4.8</td><td style="--t:0.54">7.0</td><td style="--t:0.59">7.3</td></tr>
+<tr><th scope="row">NFM</th><td style="--t:0.17">4.7</td><td style="--t:0.25">5.2</td><td style="--t:0.52">6.9</td><td style="--t:0.55">7.0</td></tr>
+<tr><th scope="row">LSB</th><td style="--t:0.08">4.1</td><td style="--t:0.17">4.7</td><td style="--t:0.44">6.4</td><td style="--t:0.47">6.6</td></tr>
+<tr><th scope="row">USB</th><td style="--t:0.09">4.2</td><td style="--t:0.18">4.8</td><td style="--t:0.44">6.4</td><td style="--t:0.46">6.5</td></tr>
+<tr><th scope="row">CW</th><td style="--t:0.13">4.5</td><td style="--t:0.22">5.0</td><td style="--t:0.48">6.6</td><td style="--t:0.51">6.8</td></tr>
+<tr><th scope="row">SAM</th><td style="--t:0.36">5.9</td><td style="--t:0.43">6.3</td><td style="--t:0.75">8.3</td><td style="--t:0.78">8.4</td></tr>
+<tr><th scope="row">SAM upper</th><td style="--t:0.35">5.8</td><td style="--t:0.44">6.4</td><td style="--t:0.75">8.3</td><td style="--t:0.77">8.4</td></tr>
+<tr><th scope="row">SAM lower</th><td style="--t:0.36">5.9</td><td style="--t:0.44">6.4</td><td style="--t:0.75">8.3</td><td style="--t:0.78">8.5</td></tr>
+<tr><th scope="row">SAM stereo</th><td style="--t:0.39">6.0</td><td style="--t:0.58">7.3</td><td style="--t:0.93">9.4</td><td style="--t:1.00">9.8</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><th scope="row">kbit/s, mono</th><td>176</td><td>271</td><td>111</td><td>126</td></tr>
+      <tr><th scope="row">kbit/s, stereo (IQ)</th><td>273</td><td>463</td><td>127</td><td>150</td></tr>
+    </tfoot>
+  </table>
+  </div>
+  <ul style="margin:0;padding-left:18px;max-width:68ch">
+    <li>IQ with ADPCM is as cheap as AM: no demodulator and no AGC. It is stereo, so its codec costs twice as much, and with Opus it costs more than USB.</li>
+    <li>ADPCM is the cheapest codec on the CPU; Opus adds about 2 % per listener and uses the least network. The kbit/s rows are everything a listener receives: audio, the waterfall (the full band on a 1024 px screen) and status.</li>
+    <li>Each extra VFO costs about 2.6 %; the noise blanker 0.5 %.</li>
+    <li>On windows wider than about 150 kHz, USB, LSB and CW add a second, sharper filter: about 0.7 % per listener on this 200 kHz window, up to about 1.7 % on the widest; <code>sharp_ssb_filters = off</code> removes it.</li>
+  </ul>
+  <h2 style="margin-top:8px">The waterfalls</h2>
+  <div class="part" style="display:grid;gap:8px">
+    <h3>The full band</h3>
+    <p>Besides the 13 receivers, the FPGA sends short raw snapshots of the whole band, 0–33.3 MHz: 16 384 ADC samples, about 246 µs of signal each. kbridge turns each snapshot into one waterfall row of 8192 points, 4.07 kHz apart. It needs no receiver, every web listener sees it, and a PC can have the rows too. It is on in every set-up below except the widest view, which moves the snapshots to the lanes: kbridge builds the waterfall only from snapshots that arrive on SPI <span class="badge b-rule">rules</span>.</p>
+    <p>Set in <code>[kbridge]</code>:</p>
+    <ul style="margin:0;padding-left:18px">
+      <li><code>snapshots = 100</code>: a snapshot every 100 ms, 10 rows a second, 2.8 Mbit/s of SPI <span class="badge b-meas">measured</span>. Each snapshot is 280 kbit, so 200 ms halves the rows and the link cost and 50 ms doubles them <span class="badge b-rule">rules</span>.</li>
+      <li><code>snapshots = 100:L</code>: the snapshots go over the lanes, which frees SPI but leaves no full-band waterfall <span class="badge b-rule">rules</span>.</li>
+      <li>No <code>snapshots</code> line: no snapshots, no full-band waterfall. (<code>snapshots = 0</code> does not turn them off: kbridge reads anything under 1 ms as 100.) <span class="badge b-rule">rules</span></li>
+    </ul>
+    <p class="foot" style="margin:0">A snapshot covers about 246 µs every 100 ms, so the waterfall samples the band rather than watching it; the receivers' own waterfalls and the audio see everything.</p>
+    <h3 style="margin-top:8px">Zoomed in: dual-purpose receivers</h3>
+    <p>With <code>[kweb] zoom_waterfall = on</code>, as the example configuration ships, each listener has one waterfall that zooms from all of 0–33.3 MHz down to 2 kHz across. Zoomed in, the detail comes from a receiver that is already running there (that window's own rows, or finer FFTs of its samples), and elsewhere from <strong>DDC snapshots</strong>: kbridge retunes a free receiver of 9–12 to each listener's view in turn and captures one frame of 1024 points across the view. A listener or the PC that wants that receiver takes it at once, and the snapshots move to the next free one; with all four streaming, zoomed views fall back to the full band's 4 kHz rows <span class="badge b-rule">rules</span>.</p>
+    <ul style="margin:0;padding-left:18px">
+      <li>Up to 10 frames a second per view (<code>zoom_fps</code>) and 100 in all; 20 in all while the slices on SPI take more than 33 Mbit/s <span class="badge b-rule">rules</span>.</li>
+      <li>A frame is 70 kbit on SPI, at the lowest priority and outside the link budget: 7 Mbit/s at 100 frames a second. It needs the full-band snapshots on SPI too, so <code>snapshots = 100:L</code> turns it off <span class="badge b-rule">rules</span>.</li>
+      <li>One receiver serves every view in turn: ten listeners zoomed in at once, each somewhere different, got 8.3 rows a second each. Listeners looking at the same stretch of band share frames <span class="badge b-meas">measured</span>.</li>
+      <li>It is worth having only with CPU to spare (kbridge about 0.26 % per frame a second), so kweb lowers the frame rate whenever its CPU guard is short, and to 2 a second at once for a listener who would not fit otherwise <span class="badge b-meas">measured</span>.</li>
+      <li><code>zoom_waterfall = off</code> gives the classic layout instead: the full band plus the narrow waterfall of the window the listener is in, 20 rows a second.</li>
+    </ul>
+    <h3 style="margin-top:8px">Each listener can turn it off</h3>
+    <p>The page's "waterfall" box stops every row for that listener; kweb then holds nothing for their view. The "audio" box does the opposite: the waterfall alone, with no VFO. The browser remembers both. What it saves, measured with ten listeners who each also listen to 40 m (USB, ADPCM):</p>
+    <div class="costwrap">
+    <table class="costs">
+      <thead><tr><th scope="col">Each listener's waterfall</th><th scope="col">kweb %</th><th scope="col">kbridge %</th><th scope="col">Rows/s each</th><th scope="col">kbit/s each</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">off</th><td style="--t:0.00">38.9</td><td style="--t:0.00">12.0</td><td>0</td><td>0</td></tr>
+        <tr><th scope="row">the full band</th><td style="--t:0.10">41.9</td><td style="--t:0.00">11.8</td><td>10</td><td>71</td></tr>
+        <tr><th scope="row">zoomed in, inside their own window</th><td style="--t:0.17">44.0</td><td style="--t:0.00">12.0</td><td>10.2</td><td>26</td></tr>
+        <tr><th scope="row">zoomed in elsewhere: DDC snapshots</th><td style="--t:0.27">46.7</td><td style="--t:0.73">34.1</td><td>8.3</td><td>41</td></tr>
+        <tr><th scope="row">classic: full band and narrow</th><td style="--t:0.27">46.8</td><td style="--t:0.04">13.1</td><td>30.3</td><td>119</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="foot" style="margin:0">% of the core per process, ten listeners <span class="badge b-meas">measured</span>. Turning the waterfall off saves each listener about 0.3 % of the core on the full band, 0.5 % zoomed into their own window, 0.8 % in the classic layout and about 3 % on DDC snapshots (plus 0.6 Mbit/s of SPI), and 26 to 119 kbit/s of their connection. Ten listeners with the waterfall alone, on snapshots and with no audio, took kweb 17.7 % and kbridge 33 %.</p>
+    <h3 style="margin-top:8px">How it is sent</h3>
+    <p>Each point is one byte, 0.5 dB per step. kweb shrinks every row to the listener's own screen width (keeping the strongest point under each pixel) and then sends either the whole row or only what changed: a 1-bit-per-pixel mask plus one byte for each pixel that moved by 3 dB or more (<code>min_diff_db</code>). A whole row goes every 50 rows, after a zoom or pan, and whenever the change list would not be smaller. The full band comes one row per snapshot, 10 a second; the classic layout's narrow waterfall 20 a second. A PC gets kbridge's full 8192-point rows in its stream, coded the same way.</p>
+    <div class="costwrap">
+    <table class="costs">
+      <thead><tr><th scope="col">Screen width</th><th scope="col">Zoomable: full band</th><th scope="col">All a listener gets</th><th scope="col">Classic: full band</th><th scope="col">Narrow</th><th scope="col">All a listener gets</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">800 px</th><td>36</td><td>163</td><td>36</td><td>27</td><td>190</td></tr>
+        <tr><th scope="row">1024 px</th><td>48</td><td>175</td><td>48</td><td>35</td><td>210</td></tr>
+        <tr><th scope="row">1920 px</th><td>99</td><td>226</td><td>99</td><td>61</td><td>287</td></tr>
+        <tr><th scope="row">3840 px</th><td>216</td><td>343</td><td>217</td><td>122</td><td>465</td></tr>
+      </tbody>
+      <tfoot><tr><th scope="row">A PC (8192 points)</th><td>195</td><td>–</td><td>–</td><td>–</td><td>–</td></tr></tfoot>
+    </table>
+    </div>
+    <p class="foot" style="margin:0">kbit/s per listener <span class="badge b-meas">measured</span>, one listener on 40 m; "all a listener gets" includes ADPCM audio (107 kbit/s) and status (20). The change lists cut the full band to about 60 % of whole rows and the narrow waterfall to about 20 %. Less activity on the band means smaller change lists, so the same layout measures differently at different times (the ten-listener table above was a busier moment).</p>
+  </div>
+  <div class="legend" aria-label="Diagram legend">
+    <span><i class="sw" style="background:var(--host)"></i>to a PC (I/Q stream)</span>
+    <span><i class="sw" style="background:var(--web)"></i>for web listeners</span>
+    <span><i class="sw" style="background:var(--snap)"></i>full-band waterfall</span>
+    <span><i class="sw" style="background:var(--snap);opacity:.4"></i>zoomed-waterfall frames, outside the link budget</span>
+    <span><i class="sw" style="background:var(--free)"></i>unused</span>
+    <span><span class="badge b-meas">measured</span> on a real Kiwi</span>
+    <span><span class="badge b-rule">rules</span> kbridge's allocation rules</span>
+  </div>
+  <p class="foot">A web listener is anyone listening in a browser. Listeners on the same band share one window (one receiver between them). A listener can also hear any slice the PC is getting, without using a receiver of their own.</p>
+</section>
+
+<div id="cases" style="display:grid;gap:28px"></div>
+
+<p class="foot">Figures marked <span class="badge b-meas">measured</span> come from the benchmark in <code>bench/</code>, run on a KiwiSDR on 2026-11-27 and 28 (results in <code>bench/results/2026-11-27-21-57-modes+waterfall+usecases</code> and, for the set-ups below, <code>bench/results/2026-11-28-usecases-guard2</code>, <code>2026-11-28-kiwilike</code>, <code>2026-11-28-kiwilike-r12</code> and <code>2026-11-28-kiwilike-r15</code>), with web listeners in USB and ADPCM audio, the cheapest kind. <span class="badge b-rule">rules</span> figures are kbridge's own allocation rules (receivers, links, the FPGA's shared filter); every host test the benchmark ran matched them exactly. Costlier modes and codecs (AM, FM, SAM, Opus audio) leave room for fewer listeners.</p>
+</main>
+
+<script>
+// Each case: the 13 receivers (what each carries), the two links (Mbit/s by use), the CPU (% by use), the PC side and the web side.
+const CASES = [
+{
+  id: 'kiwi', zoom: { ddc: 12, fps: 8, label: 'zoomed detail: receiver 12, ~8 frames/s (as the CPU allows)' },
+  title: 'Like a KiwiSDR: nine listeners anywhere in 0–30 MHz, each with a zoomable waterfall, and an HPSDR receiver for a PC',
+  who: 'For people used to a KiwiSDR: each listener tunes anywhere on their own, as on a KiwiSDR channel, while a PC skims or listens through HPSDR software. The stock Full 8 channel mode gives eight users a 12 kHz channel each; here nine get a receiver of 52 or 104 kHz each.',
+  ddcs: [['HPSDR', 'host', '192'], ['user 1', 'web', '52'], ['user 2', 'web', '52'], ['user 3', 'web', '52'], ['user 4', 'web', '104'], ['user 5', 'web', '104'], ['user 6', 'web', '104'],
+         ['user 7', 'web', '104'], ['user 8', 'web', '104'], ['user 9', 'web', '104'], ['', 'free', ''], ['', 'free', ''], ['', 'free', '']],
+  links: { spi: [['snap', 2.8], ['web', 23.8]], lanes: [['host', 5.9]] },
+  cpu: [['base', 1, 'Linux'], ['host', 31, 'kbridge: receivers, PC stream, snapshots'], ['web', 7, '9 receivers'], ['web2', 45, '9 listeners']],
+  pc: ['1 HPSDR receiver × 192 kHz (or 96)', '5.9 Mbit/s, 0 packets lost'],
+  web: ['9 listeners, each on their own receiver anywhere in 0–30 MHz', 'one VFO each, a zoomable waterfall each'],
+  get: ['Nine listeners, each on their own receiver, which moves to wherever they tune from 0 to 30 MHz (unless a band window already open covers it: they join that instead): the first four 52 kHz wide (receivers 0–3 go that narrow), the rest 104 kHz <span class="badge b-meas">measured</span>',
+        'Each has a waterfall that zooms from all of 0–30 MHz down to 2 kHz across. Zoomed in around where they listen: their receiver\'s own rows, 10.6 a second, in 32 or 64 Hz bins. Zoomed in elsewhere: DDC snapshots from receiver 12, about 2 rows a second each beside the PC\'s stream, 3 to 6 without it <span class="badge b-meas">measured</span>',
+        'Beside them, one HPSDR receiver of 192 kHz for a PC (a skimmer, Thetis, SparkSDR): 0 packets lost; 96 kHz measured the same <span class="badge b-meas">measured</span>',
+        'All nine with clean audio (USB, ADPCM): at most 0.2 % of frames late, none lost, with the core about 84 % busy <span class="badge b-meas">measured</span>'],
+  left: ['Receivers 10–12 free; the zoomed detail borrows 12, and gives it back to a listener or the PC that needs it <span class="badge b-rule">rules</span>',
+         'Link to spare: SPI 26.6 of 40, lanes 5.9 of 45 <span class="badge b-meas">measured</span>; the CPU, not the link, sets the number',
+         'Without the PC: the same nine at 74–82 % with the default reserve, zoomed detail elsewhere at 3 to 6 rows a second; 10 fit with <code>cpu_reserve = 12</code> <span class="badge b-meas">measured</span>'],
+  limit: ['<b>The CPU</b>: nine listeners and the PC\'s stream take the core to about 84 %, just inside kweb\'s 85 % line, so the ninth listener is the last one that fits. <code>cpu_reserve = 12</code> (refusing above 88 %) leaves a little more room <span class="badge b-meas">measured</span>',
+          'What gives way is the zoomed detail away from listeners\' own receivers: kweb slows the snapshots (to 2 frames a second for each view) before it refuses anyone. When all nine zoomed in elsewhere at once, the last to join waited a few seconds for their receiver <span class="badge b-meas">measured</span>',
+          'One VFO each (<code>vfo_per_user = 1</code>), like a KiwiSDR channel: SAM, FM, Opus audio or a second VFO cost more and can be refused'],
+  conf: `[pool]
+host_ddcs = 1            ; the PC: one receiver
+web_ddcs = 12
+[kweb]
+max_users = 9
+vfo_per_user = 1
+own_max = 9
+own_width = 52           ; 52 kHz on receivers 0-3, then 104 kHz
+default_source = own     ; each listener starts on their own receiver
+zoom_waterfall = on
+zoom_snapshots = on
+# on the PC (192 kHz set in the HPSDR software):
+kiwi-hpsdr-bridge --kiwi <kiwi> --receivers 1`,
+},
+{
+  id: 'skim', zoom: { ddc: -1, why: 'no spare receiver' },
+  title: 'Skim every band from 2200 m to 10 m, and keep one receiver for a web listener',
+  who: 'For a skimmer or decoder on the PC (CW Skimmer, SparkSDR, RBN or PSKreporter feeds), with friends listening in a browser.',
+  ddcs: [['2200 m', 'host', '52'], ['630 m', 'host', '52'], ['60 m', 'host', '52'], ['30 m', 'host', '52'], ['15 m', 'host', '452'], ['20 m', 'host', '351'], ['80 m', 'host', '303'],
+         ['40 m', 'host', '200'], ['10 m|CW dig', 'host', '200'], ['160 m', 'host', '190'], ['17 m', 'host', '104'], ['12 m', 'host', '104'], ['free|tuning', 'web', '208']],
+  links: { spi: [['host', 30.5], ['snap', 2.8], ['web', 6.3]], lanes: [['host', 33.9]] },
+  cpu: [['base', 4, 'Linux'], ['host', 50, 'kbridge: forwarding 69 Mbit/s'], ['web', 7, 'free window'], ['web2', 18, '4 listeners']],
+  pc: ['12 slices, one per band, each as wide as the band', '10 m: its CW and digital part, 28.0–28.2 MHz', '69 Mbit/s of I/Q'],
+  web: ['4 listeners on the free-tuning window', 'or 2: one there, one inside a skimmed band'],
+  get: ['Every amateur band from 2200 m to 10 m at once, each as wide as the band (Region 1); 10 m as its CW and digital part, 28.000–28.200 MHz <span class="badge b-meas">measured</span>',
+        'The PC receives 69 Mbit/s; links SPI 39.6 of 40 (with the web window), lanes 33.9 of 45 <span class="badge b-meas">measured</span>',
+        'The bands narrower than 104 kHz (2200 m, 630 m, 60 m, 30 m) take receivers 0–3 exactly <span class="badge b-meas">measured</span>'],
+  left: ['One receiver: the free-tuning web window, 208 kHz wide <span class="badge b-meas">measured</span>; at 306 kHz the FPGA\'s shared filter could not serve it in time <span class="badge b-rule">rules</span>',
+         'Web listeners can also listen inside any skimmed band, without a receiver of their own; up to 3 different bands or windows at a time (<code>max_sources</code>)',
+         'No free receiver of 9–12, so no DDC snapshots: zoomed in, the waterfall shows detail only inside a band someone is listening to, elsewhere the full band <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The CPU</b>: 4 web listeners on the free window, with the core 79 % busy and no audio lost; the 5th is refused <span class="badge b-meas">measured</span>',
+          'Listening inside a skimmed band costs more: kweb then decodes that band and runs its FFT (about 7 % for 20 m). One listener on the free window and one on 20 m took the core to 83 %, and a third band was refused <span class="badge b-meas">measured</span>',
+          'kbridge forwarding the 69 Mbit/s uses about half the core <span class="badge b-meas">measured</span>'],
+  conf: `[host]
+slices = 136.75:511:4:L 475.5:511:4:L 5359:511:4 10125:511:4:L 21225:59:4:L 14175:76:4
+slices = 3650:88:4 7100:133:4:L 28100:133:4:L 1905:140:4 18118:256:4:L 24940:256:4
+[pool]
+host_ddcs = 12
+web_ddcs = 1
+[kweb]
+max_width = 208`,
+},
+{
+  id: 'skim13', zoom: { ddc: -1, why: 'no spare receiver' },
+  title: 'Or give the 13th receiver to more of 10 m',
+  who: 'The same skim with the 10 m SSB part as well (28.3–28.8 MHz). Web listeners can still listen to any skimmed band; there is no receiver left for a free-tuning window.',
+  ddcs: [['2200 m', 'host', '52'], ['630 m', 'host', '52'], ['60 m', 'host', '52'], ['30 m', 'host', '52'], ['10 m|SSB', 'host', '503'], ['15 m', 'host', '452'], ['20 m', 'host', '351'],
+         ['80 m', 'host', '303'], ['40 m', 'host', '200'], ['10 m|CW dig', 'host', '200'], ['160 m', 'host', '190'], ['17 m', 'host', '104'], ['12 m', 'host', '104']],
+  links: { spi: [['host', 35.2], ['snap', 2.8]], lanes: [['host', 44.6]] },
+  cpu: [['base', 3, 'Linux'], ['host', 63, 'kbridge: forwarding 85 Mbit/s'], ['web', 11, '1 skimmed band'], ['web2', 5, '1 listener']],
+  pc: ['13 slices: every band', 'and 10 m from 28.0–28.2 and 28.3–28.8 MHz', '85 Mbit/s of I/Q'],
+  web: ['1 listener inside a skimmed band, at the limit', 'no free-tuning window'],
+  get: ['Every band plus the busy part of 10 m SSB; the PC receives 85 Mbit/s <span class="badge b-meas">measured</span>',
+        'It fits at 12 bits with the links split by hand: the lanes carry 10 m SSB, 15 m, 20 m, 17 m and 2200 m (44.6 of 45), SPI the rest and the waterfall (38.0 of 40) <span class="badge b-meas">measured</span>',
+        'At 10 bits per sample: 67 Mbit/s and room on both links <span class="badge b-rule">rules</span>'],
+  left: ['No receiver for the web: listeners hear what the PC gets, up to 3 bands at a time',
+         'Almost no link: SPI and lanes are both nearly full <span class="badge b-meas">measured</span>',
+         'All 13 receivers stream, so no DDC snapshots: zoomed detail only inside a band someone is listening to <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The links and the receivers</b>: all 13 receivers, both links nearly full <span class="badge b-meas">measured</span>',
+          '<b>The CPU</b>: kbridge forwarding 85 Mbit/s uses about two thirds of the core; one listener on a skimmed band took it to 83 %, and a second band (6.5 % for its FFT) was refused. This set-up is for the PC <span class="badge b-meas">measured</span>'],
+  conf: `[host]
+slices = 136.75:511:4:L 475.5:511:4 5359:511:4 10125:511:4 28550:53:4:L 21225:59:4:L
+slices = 14175:76:4:L 3650:88:4 7100:133:4 28100:133:4 1905:140:4 18118:256:4:L 24940:256:4
+[pool]
+host_ddcs = 13
+web_ddcs = 0`,
+},
+{
+  id: 'hpsdr', zoom: { ddc: 12, fps: 20 },
+  title: 'Ten HPSDR receivers at 192 kHz, with web listeners beside them',
+  who: 'For Thetis, SparkSDR, piHPSDR or any HPSDR software on a PC, through kiwi-hpsdr-bridge, with the web SDR still open to listeners.',
+  ddcs: [['rx 0', 'host', '192'], ['rx 1', 'host', '192'], ['rx 2', 'host', '192'], ['rx 3', 'host', '192'], ['rx 4', 'host', '192'], ['rx 5', 'host', '192'], ['rx 6', 'host', '192'],
+         ['rx 7', 'host', '192'], ['rx 8', 'host', '192'], ['rx 9', 'host', '192'], ['40 m', 'web', '200'], ['', 'free', ''], ['', 'free', '']],
+  links: { spi: [['host', 29.4], ['snap', 2.8], ['web', 6.1]], lanes: [['host', 29.4]] },
+  cpu: [['base', 4, 'Linux'], ['host', 50, 'kbridge: forwarding 59 Mbit/s'], ['web', 6, '40 m window'], ['web2', 22, '5 listeners']],
+  pc: ['10 receivers × 192 kHz', 'HPSDR protocol 2, 24-bit, resampled on the PC', '59 Mbit/s from the Kiwi, 0 packets lost'],
+  web: ['5 listeners on a 40 m window', 'or inside any of the 10 receivers\' ranges'],
+  get: ['Ten receivers at 192 kHz, each at 99.9 % of its rate, no packets lost <span class="badge b-meas">measured</span>', 'Links: SPI 32.2 (with the full-band waterfall), lanes 29.4 Mbit/s for the receivers <span class="badge b-meas">measured</span>'],
+  left: ['Three receivers. A 200 kHz web window fits beside them, taking SPI to 38.3 of 40 <span class="badge b-meas">measured</span>', 'While the PC uses the lanes, kweb\'s receivers use SPI only, so SPI is the web\'s budget: a 350 kHz window (10.7 Mbit/s) does not fit beside the 40 m one, and neither does an own receiver. Without the 40 m window, two own receivers of 104 kHz fit (SPI 38.6); 52 kHz ones would need receivers 0–3, which the PC holds <span class="badge b-rule">rules</span>', 'Receiver 12 stays free, so zoomed waterfalls get DDC snapshots from it: up to 20 frames a second in all, as SPI is past 33 Mbit/s <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The CPU</b>: 5 web listeners on a shared 40 m window, the core 82 % busy, no audio lost; the 6th is refused <span class="badge b-meas">measured</span>', 'kbridge forwarding the 59 Mbit/s uses half the core (50 %) <span class="badge b-meas">measured</span>'],
+  conf: `[pool]
+host_ddcs = 10
+web_ddcs = 3
+# on the PC:
+kiwi-hpsdr-bridge --kiwi <kiwi> --receivers 10`,
+},
+{
+  id: 'web', zoom: { ddc: 12, fps: 100 },
+  title: 'A web SDR only, no PC',
+  who: 'For a club or a group of friends listening in browsers, on your own network or a VPN.',
+  ddcs: [['20 m', 'web', '351'], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''],
+         ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', '']],
+  links: { spi: [['snap', 2.8], ['web', 10.7]], lanes: [] },
+  cpu: [['base', 15, 'Linux, kbridge, GPS'], ['web', 10, '20 m window'], ['web2', 54, '14 listeners']],
+  pc: ['nothing'],
+  web: ['14 listeners sharing one 20 m window', 'or 9 on own receivers (104 kHz)', 'or 3 on own receivers (417 kHz)'],
+  get: ['14 web listeners sharing one 350 kHz window before kweb refuses the next; the core 79 % busy <span class="badge b-meas">measured</span>',
+        '9 listeners each on their own 104 kHz receiver (the core 78 % busy), or 3 each on their own 417 kHz receiver (68 %) <span class="badge b-meas">measured</span>',
+        'All 13 receivers are available to web windows and own receivers'],
+  left: ['Plenty of receivers and link: one shared window uses 1 receiver and 10.7 Mbit/s <span class="badge b-meas">measured</span>; the shipped band windows would fit ten at once (73.3 Mbit/s) <span class="badge b-rule">rules</span>',
+         'Listeners on the same band share its window, so a busy band costs one receiver, not one per listener',
+         'Receivers 9–12 are free, so zoomed waterfalls get DDC snapshots at up to 100 frames a second in all <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The CPU</b>: about 4 % per listener, plus each open window (about 10 % for a 350 kHz window) <span class="badge b-meas">measured</span>',
+          'An own receiver costs its own window: at 417 kHz, about 14 % of the core each before anyone listens <span class="badge b-meas">measured</span>',
+          'Spreading listeners over many bands costs more than sharing a few'],
+  conf: `[pool]
+host_ddcs = 0
+web_ddcs = 13
+[kweb]
+own_max = 9`,
+},
+{
+  id: 'ft8', zoom: { ddc: -1, why: 'no spare receiver' },
+  title: 'FT8 on ten bands for a decoder, three receivers for the web',
+  who: 'For WSJT-X, jt9 or a PSKreporter feed on a PC, decoding all day, while people listen in browsers.',
+  ddcs: [['160 FT8', 'host', '52'], ['80 FT8', 'host', '52'], ['60 FT8', 'host', '52'], ['30 FT8', 'host', '52'], ['40 FT8', 'host', '104'], ['20 FT8', 'host', '104'], ['17 FT8', 'host', '104'],
+         ['15 FT8', 'host', '104'], ['12 FT8', 'host', '104'], ['10 FT8', 'host', '104'], ['free|tuning', 'web', '208'], ['20 m', 'web', '351'], ['40 m', 'web', '200']],
+  links: { spi: [['host', 25.4], ['snap', 2.8], ['web', 6.3]], lanes: [['web', 16.8]] },
+  cpu: [['base', 2, 'Linux'], ['host', 43, 'kbridge: forwarding 26 Mbit/s'], ['web', 21, 'three windows'], ['web2', 20, '5 listeners']],
+  pc: ['10 narrow slices on the FT8 frequencies', '26 Mbit/s of I/Q'],
+  web: ['5 listeners over the free window, 20 m and 40 m', 'and any FT8 slice'],
+  get: ['Ten FT8 sub-bands, 52 or 104 kHz each; the PC receives 26 Mbit/s <span class="badge b-meas">measured</span>', 'Three web windows open at once: SPI 34.6 of 40, lanes 16.8 of 45 <span class="badge b-meas">measured</span>'],
+  left: ['No receiver left once the three windows are open, so no DDC snapshots: zoomed detail only inside a window or slice someone is listening to <span class="badge b-rule">rules</span>', 'Order matters, once: the fast 20 m window is refused only if it opens last, after both the free window and 40 m; then the FPGA\'s shared filter cannot serve it in time. In any other order all three fit <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The CPU</b>: 5 listeners spread over the three windows, the core 86 % busy, no audio lost; the 6th is refused <span class="badge b-meas">measured</span>',
+          'The three open windows cost about a fifth of the core between them (21 %) <span class="badge b-meas">measured</span>'],
+  conf: `[host]
+slices = 1840:511:4 3573:511:4 5357:511:4 10136:511:4 7074:256:4 14074:256:4
+slices = 18100:256:4 21074:256:4 24915:256:4 28074:256:4
+[pool]
+host_ddcs = 10
+web_ddcs = 3`,
+},
+{
+  id: 'wide', zoom: { ddc: -1, why: 'off (snapshots on the lanes)' },
+  title: 'The widest view: two slices of 1.48 MHz',
+  who: 'For wideband recording, a panadapter or a skimmer that wants continuous spectrum, about 3 MHz of it.',
+  ddcs: [['6.56–|8.04', 'host', '1480'], ['9.01–|10.49', 'host', '1480'], ['20 m', 'host', '104'], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''],
+         ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', ''], ['', 'free', '']],
+  links: { spi: [['host', 37.9]], lanes: [['host', 41.1], ['snap', 2.8]] },
+  cpu: [['host', 58, 'kbridge: forwarding 87 Mbit/s'], ['web', 39, 'one listener in a wide slice']],
+  pc: ['2 × 1.48 MHz at 10 bits, one on each link', 'plus 104 kHz of 20 m', '87 Mbit/s of I/Q'],
+  web: ['no listener fits cleanly', 'no full-band waterfall, no zoomed detail'],
+  get: ['6.56–8.04 MHz and 9.01–10.49 MHz continuously, plus 20 m; the PC receives 87 Mbit/s <span class="badge b-meas">measured</span>', 'At 12 bits one 1.48 MHz slice alone (45.1 Mbit/s) is more than either link, so these run at 10 bits <span class="badge b-meas">measured</span>'],
+  left: ['Receivers, but almost no link: only a 52 kHz slice still fits, on receiver 3 and SPI (39.5 of 40); 104 kHz, even at 8 bits, takes either link past its budget <span class="badge b-rule">rules</span>', 'The full-band snapshots move to the lanes, so there is no full-band waterfall and no DDC snapshots; zoomed into a slice someone is listening to, the waterfall still shows that slice\'s own rows <span class="badge b-rule">rules</span>'],
+  limit: ['<b>The links</b>: SPI 37.9 of 40, lanes 43.9 of 45 <span class="badge b-meas">measured</span>', '<b>The CPU</b>: kbridge forwarding 87 Mbit/s uses 58 % of the core; one listener inside a 1.48 MHz slice needs another 35 % for its FFT. One got in as the PC\'s stream was starting, before kweb could see its load, and lost about 5 % of its audio frames. This set-up is for the PC only <span class="badge b-meas">measured</span>'],
+  conf: `[kbridge]
+snapshots = 100:L
+[host]
+slices = 7300:18:4:b10 9750:18:4:L:b10 14175:256:4:L`,
+},
+];
+
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs = {}, text) => { const e = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v); if (text != null) e.textContent = text; return e; };
+const COL = { host: 'var(--host)', web: 'var(--web)', web2: 'var(--web)', snap: 'var(--snap)', free: 'var(--free)', base: 'var(--dim)' };
+const SOFT = { host: 'var(--host-soft)', web: 'var(--web-soft)', free: 'transparent' };
+
+function diagram(c) {
+  const W = 940, H = 380, svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `Diagram: ${c.title}` });
+  // the Kiwi
+  svg.append(el('rect', { x: 10, y: 10, width: 600, height: 360, rx: 8, fill: 'none', stroke: 'var(--line)', 'stroke-width': 1.5 }));
+  svg.append(el('text', { x: 24, y: 34, 'font-weight': 600 }, 'KiwiSDR'));
+  svg.append(el('text', { x: 92, y: 34, class: 'dim', 'font-size': 13 }, 'antenna → ADC, all of 0–30 MHz → FPGA'));
+  const wfOn = [...c.links.spi].some(x => x[0] === 'snap');            // the waterfall needs the snapshots on SPI
+  svg.append(el('text', { x: 596, y: 34, 'text-anchor': 'end', 'font-size': 12, 'font-weight': 600, fill: wfOn ? 'var(--snap)' : 'var(--dim)', style: `fill:${wfOn ? 'var(--snap)' : 'var(--dim)'}` },
+                wfOn ? 'full-band waterfall: on' : 'full-band waterfall: off'));
+  const zt = c.zoom.label || (c.zoom.ddc < 0 ? `zoomed detail: ${c.zoom.why}` : `zoomed detail: receiver ${c.zoom.ddc}, up to ${c.zoom.fps} frames/s`);
+  svg.append(el('text', { x: 596, y: 50, 'text-anchor': 'end', 'font-size': 12, fill: c.zoom.ddc < 0 ? 'var(--dim)' : 'var(--snap)', style: `fill:${c.zoom.ddc < 0 ? 'var(--dim)' : 'var(--snap)'}` }, zt));
+  // 13 DDC tiles
+  svg.append(el('text', { x: 24, y: 62, 'font-size': 13, class: 'dim' }, 'FPGA: 13 receivers (DDCs)'));
+  const tw = 42, th = 74, gx = 2;
+  c.ddcs.forEach(([label, kind, khz], i) => {
+    const x = 24 + i * (tw + gx), y = 70;
+    const zs = kind === 'free' && i === c.zoom.ddc;      // the free receiver the zoomed waterfall's snapshots borrow
+    svg.append(el('rect', { x, y, width: tw, height: th, rx: 4, fill: kind === 'free' ? 'transparent' : SOFT[kind], stroke: zs ? 'var(--snap)' : kind === 'free' ? 'var(--free)' : COL[kind],
+                            'stroke-width': kind === 'free' && !zs ? 1 : 2, 'stroke-dasharray': kind === 'free' ? '3 3' : 'none' }));
+    if (zs) { label = 'zoom|detail'; }
+    svg.append(el('text', { x: x + tw / 2, y: y + 14, 'text-anchor': 'middle', 'font-size': 10, class: 'mono dim' }, String(i)));
+    const t = el('text', { x: x + tw / 2, y: y + 34, 'text-anchor': 'middle', 'font-size': 10, 'font-weight': 500 });
+    const parts = label.split('|');                     // '|' marks a line break
+    if (parts.length > 1) parts.forEach((p, k) => t.append(el('tspan', { x: x + tw / 2, dy: k ? 11 : 0 }, p)));
+    else t.textContent = label;
+    svg.append(t);
+    if (khz) svg.append(el('text', { x: x + tw / 2, y: y + 66, 'text-anchor': 'middle', 'font-size': 10, class: 'mono dim' }, `${khz}k`));
+  });
+  // receivers 0-3: narrow-capable
+  svg.append(el('line', { x1: 24, x2: 24 + 4 * (tw + gx) - gx, y1: 150, y2: 150, stroke: 'var(--dim)', 'stroke-width': 1 }));
+  svg.append(el('text', { x: 24, y: 164, 'font-size': 11, class: 'dim' }, '0–3: can go narrower than 104 kHz'));
+  svg.append(el('line', { x1: 24 + 9 * (tw + gx), x2: 24 + 13 * (tw + gx) - gx, y1: 150, y2: 150, stroke: 'var(--snap)', 'stroke-width': 1 }));
+  svg.append(el('text', { x: 24 + 13 * (tw + gx) - gx, y: 164, 'font-size': 11, 'text-anchor': 'end', fill: 'var(--snap)', style: 'fill:var(--snap)' }, '9–12: when free, also the zoomed waterfall'));
+  // the links
+  const bar = (y, name, budget, segs) => {
+    const x0 = 24, bw = 470, scale = bw / 50;           // 50 Mbit/s full scale
+    svg.append(el('text', { x: x0, y: y - 6, 'font-size': 13 }, name));
+    svg.append(el('rect', { x: x0, y, width: bw, height: 18, rx: 3, fill: 'transparent', stroke: 'var(--line)' }));
+    let x = x0, tot = 0;
+    for (const [k, v] of segs) { svg.append(el('rect', { x, y: y + 1, width: Math.max(0, v * scale), height: 16, fill: COL[k] })); x += v * scale; tot += v; }
+    const extra = name === 'SPI' && c.zoom.ddc >= 0 ? c.zoom.fps * 0.07 : 0;   // DDC snapshots: 70 kbit a frame, outside the budget
+    if (extra) svg.append(el('rect', { x, y: y + 1, width: extra * scale, height: 16, fill: COL.snap, 'fill-opacity': 0.4 }));
+    svg.append(el('line', { x1: x0 + budget * scale, x2: x0 + budget * scale, y1: y - 4, y2: y + 22, stroke: 'var(--fg)', 'stroke-width': 1.5 }));
+    svg.append(el('text', { x: x0 + bw + 8, y: y + 14, 'font-size': 12, class: 'mono' }, `${tot.toFixed(1)} / ${budget}`));
+  };
+  svg.append(el('text', { x: 24, y: 196, 'font-size': 13, class: 'dim' }, 'Links to the Beagle (Mbit/s; the tick is the budget)'));
+  bar(222, 'SPI', 40, c.links.spi);
+  bar(266, 'PRU lanes', 45, c.links.lanes);
+  // the CPU
+  svg.append(el('text', { x: 24, y: 312, 'font-size': 13, class: 'dim' }, `Beagle CPU, one core, measured (%; the tick is ${100 - (c.reserve ?? 15)} %, where kweb starts refusing)`));
+  { const x0 = 24, bw = 470, y = 320; let x = x0;
+    svg.append(el('rect', { x: x0, y, width: bw, height: 18, rx: 3, fill: 'transparent', stroke: 'var(--line)' }));
+    for (const [k, v, lbl] of c.cpu) { const w = v / 100 * bw;
+      const seg = el('rect', { x, y: y + 1, width: w, height: 16, fill: COL[k], 'fill-opacity': k === 'web2' ? 0.55 : 1 });
+      seg.append(el('title', {}, `${lbl}: ${v} %`)); svg.append(seg);
+      if (w > 30) svg.append(el('text', { x: x + 4, y: y + 13, 'font-size': 10, fill: 'var(--surface)', style: 'fill:var(--surface)' }, lbl.length * 5.6 < w - 6 ? lbl : `${v} %`));
+      x += w; }
+    const lim = (100 - (c.reserve ?? 15)) / 100;
+    svg.append(el('line', { x1: x0 + lim * bw, x2: x0 + lim * bw, y1: y - 4, y2: y + 22, stroke: 'var(--fg)', 'stroke-width': 1.5 }));
+    svg.append(el('text', { x: x0 + bw + 8, y: y + 14, 'font-size': 12, class: 'mono' }, `${Math.min(100, c.cpu.reduce((s, x) => s + x[1], 0))} %`));
+  }
+  // Ethernet out: PC and browsers
+  const box = (y, h, title, lines, kind) => {
+    svg.append(el('rect', { x: 680, y, width: 250, height: h, rx: 8, fill: kind === 'none' ? 'transparent' : SOFT[kind], stroke: kind === 'none' ? 'var(--free)' : COL[kind], 'stroke-width': 1.5,
+                            'stroke-dasharray': kind === 'none' ? '4 4' : 'none' }));
+    svg.append(el('text', { x: 694, y: y + 22, 'font-weight': 600, 'font-size': 14 }, title));
+    const wrapped = lines.flatMap(l => { const out = []; let cur = '';            // about 36 characters fit the box
+      for (const w of l.split(' ')) { if ((cur + ' ' + w).trim().length > 36) { out.push(cur); cur = w; } else cur = (cur + ' ' + w).trim(); }
+      return [...out, cur]; });
+    wrapped.slice(0, 6).forEach((l, i) => svg.append(el('text', { x: 694, y: y + 42 + i * 16, 'font-size': 12 }, l)));
+    svg.append(el('line', { x1: 610, x2: 678, y1: y + h / 2, y2: y + h / 2, stroke: kind === 'none' ? 'var(--free)' : COL[kind], 'stroke-width': 2, 'marker-end': `url(#arr-${c.id}-${kind})` }));
+  };
+  const defs = el('defs');
+  for (const k of ['host', 'web', 'none']) { const m = el('marker', { id: `arr-${c.id}-${k}`, viewBox: '0 0 10 10', refX: 9, refY: 5, markerWidth: 7, markerHeight: 7, orient: 'auto' });
+    m.append(el('path', { d: 'M0,0 L10,5 L0,10 z', fill: k === 'none' ? 'var(--free)' : COL[k] })); defs.append(m); }
+  svg.prepend(defs);
+  const pcNone = c.pc.length === 1 && c.pc[0] === 'nothing';
+  box(40, 140, pcNone ? 'No PC' : 'PC on the network', pcNone ? ['every receiver is for the web'] : c.pc, pcNone ? 'none' : 'host');
+  box(210, 140, 'Web listeners (browsers)', c.web, 'web');
+  svg.append(el('text', { x: 622, y: 200, 'font-size': 11, class: 'dim', transform: 'rotate(-90 622 200)', 'text-anchor': 'middle' }, 'Ethernet'));
+  return svg;
+}
+
+// the stock KiwiSDR's FPGA modes: channels (each 12 or 20 kHz, one user), waterfalls
+(function stockModes() {
+  const modes = [
+    ['Full 8 channel', 'rx8.wf3', 8, 12, '8 waterfalls taking turns on 3 DDCs'],
+    ['Kiwi classic', 'rx4.wf4', 4, 12, '4 waterfalls, one DDC each'],
+    ['More receivers', 'rx8.wf2', 8, 12, '2 waterfalls; rx2–7: audio FFT'],
+    ['More bandwidth', 'rx3.wf3', 3, 20, '3 waterfalls, one DDC each'],
+    ['Max channels', 'rx14.wf0', 14, 12, 'no waterfalls (multi-core boards)'],
+  ];
+  const W = 940, rowH = 46, H = 30 + modes.length * rowH, svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'Stock KiwiSDR FPGA modes: channels and waterfalls' });
+  svg.append(el('text', { x: 10, y: 18, 'font-size': 12, class: 'dim' }, 'mode'));
+  svg.append(el('text', { x: 190, y: 18, 'font-size': 12, class: 'dim' }, 'receiver channels: one listener or program each'));
+  svg.append(el('text', { x: 930, y: 18, 'font-size': 12, class: 'dim', 'text-anchor': 'end' }, 'waterfalls'));
+  modes.forEach(([name, id, n, khz, wf], r) => {
+    const y = 30 + r * rowH;
+    svg.append(el('text', { x: 10, y: y + 18, 'font-size': 13, 'font-weight': 600 }, name));
+    svg.append(el('text', { x: 10, y: y + 34, 'font-size': 11, class: 'mono dim' }, id));
+    for (let k = 0; k < n; k++) {
+      const x = 190 + k * 37;
+      svg.append(el('rect', { x, y: y + 4, width: 33, height: 34, rx: 4, fill: 'var(--web-soft)', stroke: 'var(--web)', 'stroke-width': 1.5 }));
+      svg.append(el('text', { x: x + 16.5, y: y + 19, 'text-anchor': 'middle', 'font-size': 10, class: 'mono' }, `${khz}k`));
+      svg.append(el('text', { x: x + 16.5, y: y + 32, 'text-anchor': 'middle', 'font-size': 9, class: 'dim' }, '1 user'));
+    }
+    svg.append(el('text', { x: 930, y: y + 24, 'text-anchor': 'end', 'font-size': 12 }, wf));
+  });
+  document.getElementById('stock-modes').append(svg);
+})();
+// one stock channel next to one kiwi-offload receiver (widths to scale: 12 kHz against up to 1480 kHz)
+(function stockVs() {
+  const W = 940, H = 250, svg = el('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': 'A stock channel compared with a kiwi-offload receiver' });
+  const col = (x, title, sub) => { svg.append(el('text', { x, y: 20, 'font-size': 14, 'font-weight': 600 }, title)); svg.append(el('text', { x, y: 38, 'font-size': 12, class: 'dim' }, sub)); };
+  col(10, 'Stock KiwiSDR channel', 'up to 12 kHz (20 kHz), to one user');
+  col(480, 'kiwi-offload receiver', '52 kHz to 1.48 MHz, shared');
+  // spectrum scale: 0..1480 kHz across 420 px
+  const sc = 420 / 1480;
+  const band = (x0, y, khz, fill, stroke, label) => {
+    svg.append(el('rect', { x: x0, y, width: Math.max(3, khz * sc), height: 26, rx: 3, fill, stroke, 'stroke-width': 1.5 }));
+    svg.append(el('text', { x: x0 + Math.max(3, khz * sc) + 6, y: y + 17, 'font-size': 12 }, label));
+  };
+  svg.append(el('text', { x: 10, y: 66, 'font-size': 11, class: 'dim' }, 'spectrum width, to scale'));
+  band(10, 74, 12, 'var(--web-soft)', 'var(--web)', '12 kHz');
+  band(10, 108, 20, 'var(--web-soft)', 'var(--web)', '20 kHz (3-channel mode)');
+  svg.append(el('text', { x: 480, y: 66, 'font-size': 11, class: 'dim' }, 'spectrum width, to scale'));
+  band(480, 74, 52, 'var(--host-soft)', 'var(--host)', '52 kHz (narrowest)');
+  band(480, 108, 208, 'var(--host-soft)', 'var(--host)', '208 kHz (a web window)');
+  band(480, 142, 1480, 'var(--host-soft)', 'var(--host)', '');
+  svg.append(el('text', { x: 486, y: 159, 'font-size': 12, style: 'fill:var(--fg)' }, '1.48 MHz (widest)'));
+  // who uses it
+  svg.append(el('text', { x: 10, y: 196, 'font-size': 12 }, 'one channel = one listener or program'));
+  svg.append(el('text', { x: 10, y: 214, 'font-size': 12, class: 'dim' }, '8 channels (Full 8 channel mode) = 8 users at once'));
+  svg.append(el('text', { x: 480, y: 196, 'font-size': 12 }, 'one receiver = a PC stream, or a band window for any number of listeners'));
+  svg.append(el('text', { x: 480, y: 214, 'font-size': 12, class: 'dim' }, '13 receivers; listeners limited by the CPU and links (see below)'));
+  svg.append(el('line', { x1: 465, x2: 465, y1: 8, y2: 238, stroke: 'var(--line)' }));
+  document.getElementById('stock-vs').append(svg);
+})();
+const root = document.getElementById('cases');
+for (const c of CASES) {
+  const s = document.createElement('section'); s.className = 'case'; s.id = c.id;
+  s.innerHTML = `<div style="display:grid;gap:6px"><h2>${c.title}</h2><p class="who">${c.who}</p></div><div class="diagram"></div>
+    <div class="cols"><div><h3>What you get</h3><ul>${c.get.map(x => `<li>${x}</li>`).join('')}</ul></div>
+    <div><h3>What's left</h3><ul>${c.left.map(x => `<li>${x}</li>`).join('')}</ul></div>
+    <div><h3>What runs out first</h3><ul>${c.limit.map(x => `<li>${x}</li>`).join('')}</ul></div></div>
+    <details><summary>The configuration</summary><pre></pre></details>`;
+  s.querySelector('.diagram').append(diagram(c));
+  s.querySelector('pre').textContent = c.conf;
+  root.append(s);
+}
+</script>
+</body>
+</html>

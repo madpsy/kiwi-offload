@@ -1,0 +1,8 @@
+# kiwi-offload.target: kbridge + kweb at boot (tools/install.sh installs it with the two services).
+#   systemctl start|stop|restart kiwi-offload.target      (tools/kiwi-offload.sh start|stop does the same)
+[Unit]
+Description=kiwi-offload: kbridge (FPGA/PRU bridge) and kweb (web SDR)
+Wants=kiwi-offload-kbridge.service kiwi-offload-kweb.service
+
+[Install]
+WantedBy=multi-user.target

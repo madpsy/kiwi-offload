@@ -1,0 +1,729 @@
+{
+ "id": "quick.hp10x192.shared.usb-adpcm",
+ "suite": "quick",
+ "kind": "ramp",
+ "spec": {
+  "suite": "quick",
+  "kind": "ramp",
+  "host": "hp10x192",
+  "pattern": "shared",
+  "profile": "usb/adpcm",
+  "id": "quick.hp10x192.shared.usb-adpcm"
+ },
+ "started": "2026-11-27T12:23:06.286Z",
+ "host_setup": "HPSDR 10 × 192 kHz",
+ "config": {
+  "host": {
+   "slices": null
+  },
+  "pool": {
+   "host_ddcs": 13,
+   "web_ddcs": 13
+  },
+  "kweb": {
+   "max_users": 64,
+   "vfo_per_user": 4,
+   "vfo_max": 64,
+   "max_sources": 3,
+   "own_max": 8,
+   "own_width": 104,
+   "linger": 0,
+   "free_window": "on",
+   "free_centre": 14175,
+   "free_width": 208,
+   "max_width": 417,
+   "show_host_slices": "on",
+   "default_source": "40m",
+   "cpu_reserve": 15,
+   "sharp_ssb_filters": "on"
+  },
+  "windows": [
+   {
+    "name": "40m",
+    "centre": 7100,
+    "width": 200
+   },
+   {
+    "name": "30m",
+    "centre": 10125,
+    "width": 50
+   },
+   {
+    "name": "20m",
+    "centre": 14175,
+    "width": 350
+   },
+   {
+    "name": "17m",
+    "centre": 18118,
+    "width": 104
+   },
+   {
+    "name": "15m",
+    "centre": 21225,
+    "width": 450
+   },
+   {
+    "name": "12m",
+    "centre": 24940,
+    "width": 104
+   },
+   {
+    "name": "10m",
+    "centre": 28250,
+    "width": 500
+   }
+  ]
+ },
+ "host_grants": {
+  "requested": 10,
+  "created": 10,
+  "refused": 0,
+  "receivers": {
+   "0": {
+    "ok": true,
+    "khz": 7000,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 0
+   },
+   "1": {
+    "ok": true,
+    "khz": 7100,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 1
+   },
+   "2": {
+    "ok": true,
+    "khz": 7200,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 2
+   },
+   "3": {
+    "ok": true,
+    "khz": 7300,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 3
+   },
+   "4": {
+    "ok": true,
+    "khz": 7400,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 4
+   },
+   "5": {
+    "ok": true,
+    "khz": 7500,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 5
+   },
+   "6": {
+    "ok": true,
+    "khz": 7600,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 6
+   },
+   "7": {
+    "ok": true,
+    "khz": 7700,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 7
+   },
+   "8": {
+    "ok": true,
+    "khz": 7800,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 8
+   },
+   "9": {
+    "ok": true,
+    "khz": 7900,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 9
+   }
+  },
+  "reasons": []
+ },
+ "admin": {
+  "seconds": 30,
+  "cpu_busy": {
+   "mean": 48.9,
+   "min": 47,
+   "p50": 49,
+   "p95": 51,
+   "max": 52,
+   "n": 29
+  },
+  "cpu_free": {
+   "mean": 40.31,
+   "min": 37,
+   "p50": 39.1,
+   "p95": 45.36,
+   "max": 45.5,
+   "n": 29
+  },
+  "guard": true,
+  "reserve": 15,
+  "spi_meas": {
+   "mean": 32.6,
+   "min": 32.43,
+   "p50": 32.49,
+   "p95": 33.4,
+   "max": 33.4,
+   "n": 29
+  },
+  "lanes_meas": {
+   "mean": 29.67,
+   "min": 29.67,
+   "p50": 29.67,
+   "p95": 29.68,
+   "max": 29.68,
+   "n": 29
+  },
+  "spi_plan": {
+   "mean": 32.24,
+   "min": 32.24,
+   "p50": 32.24,
+   "p95": 32.24,
+   "max": 32.24,
+   "n": 29
+  },
+  "lanes_plan": {
+   "mean": 29.45,
+   "min": 29.45,
+   "p50": 29.45,
+   "p95": 29.45,
+   "max": 29.45,
+   "n": 29
+  },
+  "spi_max": 40,
+  "lanes_max": 45,
+  "ddcs": {
+   "host": 10,
+   "web": 0,
+   "own": 0,
+   "total": 10
+  },
+  "ddcs_max": 10,
+  "ddc_list": [
+   {
+    "ddc": 0,
+    "who": "host",
+    "name": "HPSDR rx 0, local",
+    "khz": 193.24,
+    "lane": "lanes",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 1,
+    "who": "host",
+    "name": "HPSDR rx 1, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 2,
+    "who": "host",
+    "name": "HPSDR rx 2, local",
+    "khz": 193.24,
+    "lane": "lanes",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 3,
+    "who": "host",
+    "name": "HPSDR rx 3, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 4,
+    "who": "host",
+    "name": "HPSDR rx 4, local",
+    "khz": 193.24,
+    "lane": "lanes",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 5,
+    "who": "host",
+    "name": "HPSDR rx 5, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 6,
+    "who": "host",
+    "name": "HPSDR rx 6, local",
+    "khz": 193.24,
+    "lane": "lanes",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 7,
+    "who": "host",
+    "name": "HPSDR rx 7, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 8,
+    "who": "host",
+    "name": "HPSDR rx 8, local",
+    "khz": 193.24,
+    "lane": "lanes",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   },
+   {
+    "ddc": 9,
+    "who": "host",
+    "name": "HPSDR rx 9, local",
+    "khz": 193.24,
+    "lane": "spi",
+    "R": 138,
+    "bits": 12,
+    "mbps": 5.89,
+    "users": 0
+   }
+  ],
+  "web_users": 2,
+  "external_users": 0,
+  "host_slices": 10,
+  "windows": [],
+  "gps": {
+   "fix": "searching",
+   "fixes": 0,
+   "used": 0
+  },
+  "samples": 29,
+  "procs": {
+   "kbridge": 41.2,
+   "kweb": 2.8,
+   "sshd": 0.03
+  },
+  "cpu_split": {
+   "us": 10.1,
+   "ni": 3.6,
+   "sy": 26.4,
+   "id": 51,
+   "wa": 0,
+   "hi": 0,
+   "si": 9,
+   "st": 0
+  },
+  "hist": {
+   "points": 5,
+   "step": 5,
+   "cpu": 48.8,
+   "cpu_max": 50.53,
+   "load": 0.87,
+   "drops_spi": 0,
+   "drops_lanes": 0,
+   "fifo_spi_max": 26.56,
+   "fifo_lanes_max": 26.56,
+   "net_rx": 0.01,
+   "net_tx": 64.42,
+   "net_tx_max": 64.79,
+   "gps_acq": 0,
+   "ecpu_acq": 0,
+   "ecpu_other": 9.25,
+   "events": []
+  }
+ },
+ "host_window": null,
+ "users": [],
+ "quality": {
+  "listeners": 0,
+  "vfos": 0,
+  "worst_short_pct": null,
+  "worst_loss_pct": null,
+  "mean_fps": null,
+  "parked_vfos": 0,
+  "audio_age_ms_p50": null,
+  "audio_age_ms_p95": null,
+  "rows_wide_ps": null,
+  "rows_narrow_ps": null,
+  "kbps_per_listener": null,
+  "degraded": false
+ },
+ "last": {
+  "windows": [],
+  "hostTaps": [],
+  "vfos": [],
+  "users": 2
+ },
+ "ramp": {
+  "admitted": 0,
+  "stop": {
+   "at": 1,
+   "what": "source",
+   "reason": "20m can't start now (the shared FIR can't serve another DDC at this rate): back on 40m",
+   "class": "other"
+  },
+  "steps": [],
+  "degraded_while_admitting": []
+ },
+ "stop": {
+  "at": 1,
+  "what": "source",
+  "reason": "20m can't start now (the shared FIR can't serve another DDC at this rate): back on 40m",
+  "class": "other"
+ },
+ "failures": [
+  {
+   "at": 1,
+   "what": "source",
+   "reason": "20m can't start now (the shared FIR can't serve another DDC at this rate): back on 40m",
+   "class": "other"
+  }
+ ],
+ "host": {
+  "protocol": 2,
+  "rate_khz": 192,
+  "bits": 12,
+  "requested": 10,
+  "created": 10,
+  "refused": 0,
+  "receivers": {
+   "0": {
+    "ok": true,
+    "khz": 7000,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 0
+   },
+   "1": {
+    "ok": true,
+    "khz": 7100,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 1
+   },
+   "2": {
+    "ok": true,
+    "khz": 7200,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 2
+   },
+   "3": {
+    "ok": true,
+    "khz": 7300,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 3
+   },
+   "4": {
+    "ok": true,
+    "khz": 7400,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 4
+   },
+   "5": {
+    "ok": true,
+    "khz": 7500,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 5
+   },
+   "6": {
+    "ok": true,
+    "khz": 7600,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 6
+   },
+   "7": {
+    "ok": true,
+    "khz": 7700,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 7
+   },
+   "8": {
+    "ok": true,
+    "khz": 7800,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "lanes",
+    "ddc": 8
+   },
+   "9": {
+    "ok": true,
+    "khz": 7900,
+    "ksps": 241.5,
+    "R": 138,
+    "bits": 12,
+    "link": "SPI",
+    "ddc": 9
+   }
+  },
+  "reasons": [],
+  "seconds": 38.3,
+  "lost": 0,
+  "packets": 308856,
+  "min_ratio": 1,
+  "per_receiver": [
+   {
+    "ddc": 0,
+    "mhz": 7,
+    "packets": 30890,
+    "sps": 191802,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 1,
+    "mhz": 7.1,
+    "packets": 30889,
+    "sps": 191795,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 2,
+    "mhz": 7.2,
+    "packets": 30888,
+    "sps": 191789,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 3,
+    "mhz": 7.3,
+    "packets": 30887,
+    "sps": 191783,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 4,
+    "mhz": 7.4,
+    "packets": 30887,
+    "sps": 191783,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 5,
+    "mhz": 7.5,
+    "packets": 30885,
+    "sps": 191771,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 6,
+    "mhz": 7.6,
+    "packets": 30884,
+    "sps": 191764,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 7,
+    "mhz": 7.7,
+    "packets": 30883,
+    "sps": 191758,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 8,
+    "mhz": 7.8,
+    "packets": 30883,
+    "sps": 191758,
+    "lost": 0,
+    "ratio": 1
+   },
+   {
+    "ddc": 9,
+    "mhz": 7.9,
+    "packets": 30880,
+    "sps": 191739,
+    "lost": 0,
+    "ratio": 1
+   }
+  ]
+ },
+ "limit": {
+  "hit": true,
+  "kind": "refused",
+  "resource": "fir",
+  "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+  "detail": "20m can't start now (the shared FIR can't serve another DDC at this rate): back on 40m",
+  "via": null,
+  "cap": null
+ },
+ "evidence": [
+  {
+   "kind": "refused",
+   "what": "source",
+   "res": "fir",
+   "detail": "20m can't start now (the shared FIR can't serve another DDC at this rate): back on 40m"
+  }
+ ],
+ "utilisation": [
+  {
+   "res": "spi",
+   "name": "SPI link (McSPI at 48 MHz; kbridge budget spi_max)",
+   "used": 32.6,
+   "max": 40,
+   "unit": "Mbit/s",
+   "pct": 81.5,
+   "note": "planned 32.24, measured 32.6"
+  },
+  {
+   "res": "ddcs",
+   "name": "FPGA DDCs (13: the XC7A35T is ~97 % full)",
+   "used": 10,
+   "max": 13,
+   "unit": "DDCs",
+   "pct": 76.9,
+   "note": "0:host 1:host 2:host 3:host 4:host 5:host 6:host 7:host 8:host 9:host"
+  },
+  {
+   "res": "total",
+   "name": "Ethernet (100 Mbit/s; kbridge budget 87 Mbit/s for both links)",
+   "used": 61.69,
+   "max": 87,
+   "unit": "Mbit/s",
+   "pct": 70.9
+  },
+  {
+   "res": "lanes",
+   "name": "PRU lanes link (3 header pins sampled by the PRUs; kbridge budget lane_max)",
+   "used": 29.67,
+   "max": 45,
+   "unit": "Mbit/s",
+   "pct": 65.9,
+   "note": "planned 29.45, measured 29.67"
+  },
+  {
+   "res": "eth_tx",
+   "name": "Beagle Ethernet transmit (100 Mbit/s)",
+   "used": 64.79,
+   "max": 100,
+   "unit": "Mbit/s (max of 5 s)",
+   "pct": 64.8
+  },
+  {
+   "res": "cpu",
+   "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+   "used": 51,
+   "max": 100,
+   "unit": "% (p95 of 1 s)",
+   "pct": 51,
+   "note": "the CPU guard admits up to 85 %"
+  },
+  {
+   "res": "fir",
+   "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+   "used": 2.42,
+   "max": 6.67,
+   "unit": "M outputs/s",
+   "pct": 36.2
+  },
+  {
+   "res": "fifo",
+   "name": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped)",
+   "used": 26.56,
+   "max": 100,
+   "unit": "% full (max)",
+   "pct": 26.6,
+   "note": "groups dropped: SPI 0, lanes 0"
+  },
+  {
+   "res": "narrow",
+   "name": "FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)",
+   "used": 0,
+   "max": 4,
+   "unit": "DDCs",
+   "pct": 0
+  }
+ ],
+ "cpu_breakdown": {
+  "kbridge: stream drain, decode of web groups, host forwarding, GPS": 41.2,
+  "other processes": 4.9,
+  "kweb users: networking, waterfall rows, status": 2.8
+ },
+ "limit_line": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)"
+}

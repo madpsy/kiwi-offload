@@ -1,0 +1,14 @@
+.secrets/
+build/
+vendor/
+kmod/*.ko
+kmod/*.o
+kmod/*.mod*
+kmod/.*.cmd
+kmod/Module.symvers
+kmod/modules.order
+
+docs/reference/ti/
+bench/results/*/logs/
+plans/
+scratch/

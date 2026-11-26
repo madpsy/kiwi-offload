@@ -1,0 +1,5 @@
+id,suite,kind,host,pattern,profile,requested,admitted,ramp_admitted,cpu_mean,cpu_p95,kweb_pct,kbridge_pct,spi_plan,lanes_plan,spi_meas,lanes_meas,ddcs,audio_missing_pct,audio_skipped_pct,audio_age_ms,fpga_drops,host_lost,gps_search,limit_resource,limit
+costmodel.none.band40.band40,costmodel,sweep,none,band40,usb/adpcm,5,0,,41.8,44,32.33,9.2,8.9,0,8.96,0,1,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 44 %)
+costmodel.none.free.sources,costmodel,sweep,none,free,usb/adpcm,3,0,,42.36,43.35,24.33,10.73,15.49,0,15.59,0,1,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 43.4 %)
+costmodel.s1x417lanes.hostslices.tap.lanes,costmodel,sweep,s1x417lanes,hostslices,usb/adpcm,3,0,,56.57,58,27.33,23.8,2.79,12.9,2.79,13,1,,,,0,,0,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 58 %)
+costmodel.s1x417spi.hostslices.tap.spi,costmodel,sweep,s1x417spi,hostslices,usb/adpcm,3,0,,52.64,58.7,27.2,24.27,15.69,0,15.8,0,1,,,,0,,0.2,none,no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 58.7 %)

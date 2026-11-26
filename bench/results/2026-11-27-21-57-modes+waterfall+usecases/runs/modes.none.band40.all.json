@@ -1,0 +1,2798 @@
+{
+ "id": "modes.none.band40.all",
+ "suite": "modes",
+ "kind": "sweep",
+ "spec": {
+  "suite": "modes",
+  "kind": "sweep",
+  "host": "none",
+  "pattern": "band40",
+  "profile": "usb/adpcm",
+  "steps": [
+   {
+    "label": "idle",
+    "users": 0
+   },
+   {
+    "label": "source only",
+    "users": 1,
+    "profile": "none"
+   },
+   {
+    "label": "usb/adpcm",
+    "users": 4,
+    "profile": "usb/adpcm"
+   },
+   {
+    "label": "usb/pcm12",
+    "users": 4,
+    "profile": "usb/pcm12"
+   },
+   {
+    "label": "usb/opus",
+    "users": 4,
+    "profile": "usb/opus"
+   },
+   {
+    "label": "usb/opus_hq",
+    "users": 4,
+    "profile": "usb/opus_hq"
+   },
+   {
+    "label": "lsb/adpcm",
+    "users": 4,
+    "profile": "lsb/adpcm"
+   },
+   {
+    "label": "lsb/pcm12",
+    "users": 4,
+    "profile": "lsb/pcm12"
+   },
+   {
+    "label": "lsb/opus",
+    "users": 4,
+    "profile": "lsb/opus"
+   },
+   {
+    "label": "lsb/opus_hq",
+    "users": 4,
+    "profile": "lsb/opus_hq"
+   },
+   {
+    "label": "cw/adpcm",
+    "users": 4,
+    "profile": "cw/adpcm"
+   },
+   {
+    "label": "cw/pcm12",
+    "users": 4,
+    "profile": "cw/pcm12"
+   },
+   {
+    "label": "cw/opus",
+    "users": 4,
+    "profile": "cw/opus"
+   },
+   {
+    "label": "cw/opus_hq",
+    "users": 4,
+    "profile": "cw/opus_hq"
+   },
+   {
+    "label": "am/adpcm",
+    "users": 4,
+    "profile": "am/adpcm"
+   },
+   {
+    "label": "am/pcm12",
+    "users": 4,
+    "profile": "am/pcm12"
+   },
+   {
+    "label": "am/opus",
+    "users": 4,
+    "profile": "am/opus"
+   },
+   {
+    "label": "am/opus_hq",
+    "users": 4,
+    "profile": "am/opus_hq"
+   },
+   {
+    "label": "amn/adpcm",
+    "users": 4,
+    "profile": "amn/adpcm"
+   },
+   {
+    "label": "amn/pcm12",
+    "users": 4,
+    "profile": "amn/pcm12"
+   },
+   {
+    "label": "amn/opus",
+    "users": 4,
+    "profile": "amn/opus"
+   },
+   {
+    "label": "amn/opus_hq",
+    "users": 4,
+    "profile": "amn/opus_hq"
+   },
+   {
+    "label": "sam/adpcm",
+    "users": 4,
+    "profile": "sam/adpcm"
+   },
+   {
+    "label": "sam/pcm12",
+    "users": 4,
+    "profile": "sam/pcm12"
+   },
+   {
+    "label": "sam/opus",
+    "users": 4,
+    "profile": "sam/opus"
+   },
+   {
+    "label": "sam/opus_hq",
+    "users": 4,
+    "profile": "sam/opus_hq"
+   },
+   {
+    "label": "sau/adpcm",
+    "users": 4,
+    "profile": "sau/adpcm"
+   },
+   {
+    "label": "sau/pcm12",
+    "users": 4,
+    "profile": "sau/pcm12"
+   },
+   {
+    "label": "sau/opus",
+    "users": 4,
+    "profile": "sau/opus"
+   },
+   {
+    "label": "sau/opus_hq",
+    "users": 4,
+    "profile": "sau/opus_hq"
+   },
+   {
+    "label": "sal/adpcm",
+    "users": 4,
+    "profile": "sal/adpcm"
+   },
+   {
+    "label": "sal/pcm12",
+    "users": 4,
+    "profile": "sal/pcm12"
+   },
+   {
+    "label": "sal/opus",
+    "users": 4,
+    "profile": "sal/opus"
+   },
+   {
+    "label": "sal/opus_hq",
+    "users": 4,
+    "profile": "sal/opus_hq"
+   },
+   {
+    "label": "sas/adpcm",
+    "users": 4,
+    "profile": "sas/adpcm"
+   },
+   {
+    "label": "sas/pcm12",
+    "users": 4,
+    "profile": "sas/pcm12"
+   },
+   {
+    "label": "sas/opus",
+    "users": 4,
+    "profile": "sas/opus"
+   },
+   {
+    "label": "sas/opus_hq",
+    "users": 4,
+    "profile": "sas/opus_hq"
+   },
+   {
+    "label": "nfm/adpcm",
+    "users": 4,
+    "profile": "nfm/adpcm"
+   },
+   {
+    "label": "nfm/pcm12",
+    "users": 4,
+    "profile": "nfm/pcm12"
+   },
+   {
+    "label": "nfm/opus",
+    "users": 4,
+    "profile": "nfm/opus"
+   },
+   {
+    "label": "nfm/opus_hq",
+    "users": 4,
+    "profile": "nfm/opus_hq"
+   },
+   {
+    "label": "iq/adpcm",
+    "users": 4,
+    "profile": "iq/adpcm"
+   },
+   {
+    "label": "iq/pcm12",
+    "users": 4,
+    "profile": "iq/pcm12"
+   },
+   {
+    "label": "iq/opus",
+    "users": 4,
+    "profile": "iq/opus"
+   },
+   {
+    "label": "iq/opus_hq",
+    "users": 4,
+    "profile": "iq/opus_hq"
+   },
+   {
+    "label": "usb/adpcm/v2",
+    "users": 4,
+    "profile": "usb/adpcm/v2"
+   },
+   {
+    "label": "usb/adpcm/v4",
+    "users": 4,
+    "profile": "usb/adpcm/v4"
+   },
+   {
+    "label": "usb/adpcm/nb",
+    "users": 4,
+    "profile": "usb/adpcm/nb"
+   }
+  ],
+  "id": "modes.none.band40.all",
+  "patch": {
+   "kweb": {
+    "cpu_reserve": 0
+   }
+  },
+  "tag": "all"
+ },
+ "started": "2026-11-27T21:57:09.703Z",
+ "host_setup": "no host",
+ "config": {
+  "host": {
+   "slices": null
+  },
+  "pool": {
+   "host_ddcs": 13,
+   "web_ddcs": 13
+  },
+  "kweb": {
+   "max_users": 64,
+   "vfo_per_user": 4,
+   "vfo_max": 64,
+   "max_sources": 3,
+   "own_max": 8,
+   "own_width": 104,
+   "linger": 0,
+   "free_window": "on",
+   "free_centre": 14175,
+   "free_width": 208,
+   "max_width": 417,
+   "show_host_slices": "on",
+   "default_source": "40m",
+   "cpu_reserve": 0,
+   "sharp_ssb_filters": "on",
+   "zoom_waterfall": "on",
+   "zoom_snapshots": "on"
+  },
+  "windows": [
+   {
+    "name": "40m",
+    "centre": 7100,
+    "width": 200
+   },
+   {
+    "name": "30m",
+    "centre": 10125,
+    "width": 50
+   },
+   {
+    "name": "20m",
+    "centre": 14175,
+    "width": 350
+   },
+   {
+    "name": "17m",
+    "centre": 18118,
+    "width": 104
+   },
+   {
+    "name": "15m",
+    "centre": 21225,
+    "width": 450
+   },
+   {
+    "name": "12m",
+    "centre": 24940,
+    "width": 104
+   },
+   {
+    "name": "10m",
+    "centre": 28250,
+    "width": 500
+   }
+  ]
+ },
+ "host_grants": {
+  "requested": 0
+ },
+ "admin": {
+  "seconds": 8,
+  "cpu_busy": {
+   "mean": 34.63,
+   "min": 34,
+   "p50": 34,
+   "p95": 36,
+   "max": 36,
+   "n": 8
+  },
+  "cpu_free": {
+   "mean": 52.98,
+   "min": 47.9,
+   "p50": 53.3,
+   "p95": 56.79,
+   "max": 57.1,
+   "n": 8
+  },
+  "guard": false,
+  "reserve": 0,
+  "spi_meas": {
+   "mean": 8.96,
+   "min": 8.95,
+   "p50": 8.96,
+   "p95": 8.97,
+   "max": 8.97,
+   "n": 8
+  },
+  "lanes_meas": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 8
+  },
+  "spi_plan": {
+   "mean": 8.9,
+   "min": 8.9,
+   "p50": 8.9,
+   "p95": 8.9,
+   "max": 8.9,
+   "n": 8
+  },
+  "lanes_plan": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 8
+  },
+  "spi_max": 40,
+  "lanes_max": 45,
+  "ddcs": {
+   "host": 0,
+   "web": 1,
+   "own": 0,
+   "total": 1
+  },
+  "ddcs_max": 1,
+  "ddc_list": [
+   {
+    "ddc": 0,
+    "who": "web",
+    "name": "40m",
+    "khz": 200.5,
+    "lane": "spi",
+    "R": 133,
+    "bits": 12,
+    "mbps": 6.11,
+    "users": 4
+   }
+  ],
+  "web_users": 5,
+  "external_users": 0,
+  "host_slices": 0,
+  "windows": [
+   {
+    "name": "40m",
+    "state": "active",
+    "users": 4,
+    "width": 200.5,
+    "on": "DDC 0",
+    "cost": 6.5
+   }
+  ],
+  "gps": {
+   "fix": "tracking",
+   "fixes": 0,
+   "used": 1
+  },
+  "samples": 8,
+  "procs": {
+   "kweb": 23.37,
+   "kbridge": 10.12,
+   "rcu_preempt": 1.5
+  },
+  "cpu_split": {
+   "us": 26.6,
+   "ni": 2.2,
+   "sy": 5.9,
+   "id": 65.3,
+   "wa": 0,
+   "hi": 0,
+   "si": 0,
+   "st": 0
+  },
+  "hist": {
+   "points": 1,
+   "step": 5,
+   "cpu": 34.4,
+   "cpu_max": 35.79,
+   "load": 0.57,
+   "drops_spi": 0,
+   "drops_lanes": 0,
+   "fifo_spi_max": 26.17,
+   "fifo_lanes_max": 0,
+   "net_rx": 0.06,
+   "net_tx": 0.82,
+   "net_tx_max": 0.84,
+   "gps_acq": 0,
+   "ecpu_acq": 0,
+   "ecpu_other": 9.02,
+   "events": []
+  }
+ },
+ "host_window": null,
+ "users": [
+  {
+   "id": 2,
+   "src": -2,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 402,
+     "fps": 50.11,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.44,
+     "age_ms": {
+      "mean": -2777.58,
+      "min": -2781.18,
+      "p50": -2778.97,
+      "p95": -2775.62,
+      "max": -2738.53,
+      "n": 100
+     }
+    }
+   ],
+   "rows_wide_ps": 9.97,
+   "rows_narrow_ps": 0,
+   "kbps": 176.51,
+   "kbps_by": {
+    "wide_waterfall": 48.8,
+    "narrow_waterfall": 0,
+    "audio": 107.44,
+    "status_json": 20.27
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 3,
+   "src": -2,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 402,
+     "fps": 50.11,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.44,
+     "age_ms": {
+      "mean": -2778.69,
+      "min": -2781.13,
+      "p50": -2778.91,
+      "p95": -2776.74,
+      "max": -2738.76,
+      "n": 100
+     }
+    }
+   ],
+   "rows_wide_ps": 9.97,
+   "rows_narrow_ps": 0,
+   "kbps": 176.58,
+   "kbps_by": {
+    "wide_waterfall": 48.86,
+    "narrow_waterfall": 0,
+    "audio": 107.44,
+    "status_json": 20.28
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 4,
+   "src": -2,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 402,
+     "fps": 50.11,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.44,
+     "age_ms": {
+      "mean": -2778.17,
+      "min": -2781.07,
+      "p50": -2778.81,
+      "p95": -2776.22,
+      "max": -2738.68,
+      "n": 100
+     }
+    }
+   ],
+   "rows_wide_ps": 9.97,
+   "rows_narrow_ps": 0,
+   "kbps": 176.6,
+   "kbps_by": {
+    "wide_waterfall": 48.88,
+    "narrow_waterfall": 0,
+    "audio": 107.44,
+    "status_json": 20.28
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 5,
+   "src": -2,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 402,
+     "fps": 50.11,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.44,
+     "age_ms": {
+      "mean": -2777.3,
+      "min": -2781.04,
+      "p50": -2778.76,
+      "p95": -2774.22,
+      "max": -2738.31,
+      "n": 100
+     }
+    }
+   ],
+   "rows_wide_ps": 9.97,
+   "rows_narrow_ps": 0,
+   "kbps": 176.54,
+   "kbps_by": {
+    "wide_waterfall": 48.82,
+    "narrow_waterfall": 0,
+    "audio": 107.44,
+    "status_json": 20.28
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  }
+ ],
+ "quality": {
+  "listeners": 4,
+  "vfos": 4,
+  "worst_short_pct": 0,
+  "worst_loss_pct": 0,
+  "mean_fps": 50.11,
+  "parked_vfos": 0,
+  "audio_age_ms_p50": -2778.86,
+  "audio_age_ms_p95": -2774.22,
+  "rows_wide_ps": 9.97,
+  "rows_narrow_ps": 0,
+  "kbps_per_listener": 176.56,
+  "degraded": false
+ },
+ "last": {
+  "windows": [
+   {
+    "name": "40m",
+    "width": 200.5011
+   }
+  ],
+  "hostTaps": [],
+  "vfos": [
+   {
+    "f": 7029825,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 7116566,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 7062957,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 7149698,
+    "mode": "usb",
+    "codec": "adpcm"
+   }
+  ],
+  "users": 5
+ },
+ "sweep": [
+  {
+   "label": "idle",
+   "users": 0,
+   "admitted": 0,
+   "failures": [],
+   "cpu": {
+    "mean": 11.13,
+    "min": 9,
+    "p50": 11,
+    "p95": 13.95,
+    "max": 15,
+    "n": 8
+   },
+   "procs": {
+    "kbridge": 8.62,
+    "systemd-resolve": 0.25,
+    "systemd-network": 0.12
+   },
+   "spi": 2.79,
+   "lanes": 0,
+   "ddcs": [],
+   "quality": {
+    "listeners": 0,
+    "vfos": 0,
+    "worst_short_pct": null,
+    "worst_loss_pct": null,
+    "mean_fps": null,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": null,
+    "audio_age_ms_p95": null,
+    "rows_wide_ps": null,
+    "rows_narrow_ps": null,
+    "kbps_per_listener": null,
+    "degraded": false
+   }
+  },
+  {
+   "label": "source only",
+   "users": 1,
+   "admitted": 1,
+   "failures": [],
+   "cpu": {
+    "mean": 23.38,
+    "min": 19,
+    "p50": 22,
+    "p95": 29.6,
+    "max": 31,
+    "n": 8
+   },
+   "procs": {
+    "kbridge": 13.12,
+    "kweb": 9.75,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 1,
+    "vfos": 0,
+    "worst_short_pct": null,
+    "worst_loss_pct": null,
+    "mean_fps": null,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": null,
+    "audio_age_ms_p95": null,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 62.48,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 35.13,
+    "min": 30,
+    "p50": 33,
+    "p95": 45.2,
+    "max": 48,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 21.37,
+    "kbridge": 12.5,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.1,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.07,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2769.11,
+    "audio_age_ms_p95": -2749.56,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.82,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 35.63,
+    "min": 34,
+    "p50": 35.5,
+    "p95": 37.65,
+    "max": 38,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 23.75,
+    "kbridge": 10.62,
+    "rcu_preempt": 1.5,
+    "systemd": 0.12
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.37,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.91,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2761.48,
+    "audio_age_ms_p95": -2752.46,
+    "rows_wide_ps": 10.09,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 270.64,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 42.38,
+    "min": 41,
+    "p50": 42.5,
+    "p95": 43.65,
+    "max": 44,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30,
+    "kbridge": 10.75,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.08,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2778.13,
+    "audio_age_ms_p95": -2740.05,
+    "rows_wide_ps": 9.95,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.89,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 43,
+    "min": 41,
+    "p50": 42.5,
+    "p95": 47.25,
+    "max": 49,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30.62,
+    "kbridge": 11.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.14,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2777.03,
+    "audio_age_ms_p95": -2738.83,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.33,
+    "degraded": false
+   }
+  },
+  {
+   "label": "lsb/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 31.63,
+    "min": 29,
+    "p50": 32,
+    "p95": 33.3,
+    "max": 34,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 21.12,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.13,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2779.07,
+    "audio_age_ms_p95": -2741.36,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.54,
+    "degraded": false
+   }
+  },
+  {
+   "label": "lsb/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 35.38,
+    "min": 32,
+    "p50": 34.5,
+    "p95": 41.25,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 23.37,
+    "kbridge": 11,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.38,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.93,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2762.32,
+    "audio_age_ms_p95": -2751.55,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 270.15,
+    "degraded": false
+   }
+  },
+  {
+   "label": "lsb/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 41.5,
+    "min": 40,
+    "p50": 41.5,
+    "p95": 43,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.31,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.91,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2764.2,
+    "audio_age_ms_p95": -2740.59,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.67,
+    "degraded": false
+   }
+  },
+  {
+   "label": "lsb/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 42.38,
+    "min": 41,
+    "p50": 42,
+    "p95": 44.65,
+    "max": 45,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30.87,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.08,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2774.6,
+    "audio_age_ms_p95": -2740.97,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.25,
+    "degraded": false
+   }
+  },
+  {
+   "label": "cw/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 32.63,
+    "min": 30,
+    "p50": 32.5,
+    "p95": 34,
+    "max": 34,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 22.5,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.08,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.99,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2762.47,
+    "audio_age_ms_p95": -2753.01,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.56,
+    "degraded": false
+   }
+  },
+  {
+   "label": "cw/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 35.38,
+    "min": 33,
+    "p50": 36,
+    "p95": 36.65,
+    "max": 37,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 24.62,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.6,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.8,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2783.69,
+    "audio_age_ms_p95": -2740.74,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 268.71,
+    "degraded": false
+   }
+  },
+  {
+   "label": "cw/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 46.13,
+    "min": 41,
+    "p50": 47,
+    "p95": 49.65,
+    "max": 50,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 31.12,
+    "kbridge": 13.37,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.08,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.06,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2774.94,
+    "audio_age_ms_p95": -2740.9,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.05,
+    "degraded": false
+   }
+  },
+  {
+   "label": "cw/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 44,
+    "min": 41,
+    "p50": 43,
+    "p95": 49.55,
+    "max": 52,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 31.75,
+    "kbridge": 10.13,
+    "rcu_preempt": 1.38
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.07,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2778.03,
+    "audio_age_ms_p95": -2739.59,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.65,
+    "degraded": false
+   }
+  },
+  {
+   "label": "am/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 29.88,
+    "min": 28,
+    "p50": 29.5,
+    "p95": 31.65,
+    "max": 32,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 19.5,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.12,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.97,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2800.56,
+    "audio_age_ms_p95": -2762.04,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.79,
+    "degraded": false
+   }
+  },
+  {
+   "label": "am/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 32.38,
+    "min": 31,
+    "p50": 32,
+    "p95": 34,
+    "max": 34,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 21.75,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.08,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.99,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2799.73,
+    "audio_age_ms_p95": -2746.12,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 271.96,
+    "degraded": false
+   }
+  },
+  {
+   "label": "am/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 41.25,
+    "min": 40,
+    "p50": 41,
+    "p95": 42.65,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 29.62,
+    "kbridge": 10.37,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.55,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.76,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2791.24,
+    "audio_age_ms_p95": -2761.77,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.46,
+    "degraded": false
+   }
+  },
+  {
+   "label": "am/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 42.13,
+    "min": 41,
+    "p50": 42,
+    "p95": 43,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30.12,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.09,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2785.92,
+    "audio_age_ms_p95": -2781.35,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.54,
+    "degraded": false
+   }
+  },
+  {
+   "label": "amn/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 30.88,
+    "min": 28,
+    "p50": 30,
+    "p95": 35.25,
+    "max": 37,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 19.62,
+    "kbridge": 10.87,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.08,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2795.89,
+    "audio_age_ms_p95": -2762.41,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.87,
+    "degraded": false
+   }
+  },
+  {
+   "label": "amn/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 32.63,
+    "min": 30,
+    "p50": 32.5,
+    "p95": 34.65,
+    "max": 35,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 21.62,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.42,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.01,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2800.98,
+    "audio_age_ms_p95": -2765.82,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 270.22,
+    "degraded": false
+   }
+  },
+  {
+   "label": "amn/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 40.88,
+    "min": 40,
+    "p50": 40.5,
+    "p95": 42.65,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 29.37,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2796.11,
+    "audio_age_ms_p95": -2762.68,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.78,
+    "degraded": false
+   }
+  },
+  {
+   "label": "amn/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 42.38,
+    "min": 40,
+    "p50": 41.5,
+    "p95": 45.65,
+    "max": 46,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30.38,
+    "kbridge": 10.88,
+    "rcu_preempt": 1.38
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.2,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2786.13,
+    "audio_age_ms_p95": -2781.6,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 127.2,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sam/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 39.13,
+    "min": 38,
+    "p50": 39,
+    "p95": 40,
+    "max": 40,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 28,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.5,
+    "systemd-resolve": 0.12
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.11,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2795.57,
+    "audio_age_ms_p95": -2761.5,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.77,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sam/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 41.5,
+    "min": 40,
+    "p50": 41,
+    "p95": 43.3,
+    "max": 44,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 29.87,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.4,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.86,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2785.32,
+    "audio_age_ms_p95": -2761.57,
+    "rows_wide_ps": 9.84,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 268.72,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sam/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 49.75,
+    "min": 48,
+    "p50": 50,
+    "p95": 50.65,
+    "max": 51,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 37.62,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.13,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2780.88,
+    "audio_age_ms_p95": -2762.17,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.76,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sam/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 50.38,
+    "min": 49,
+    "p50": 50,
+    "p95": 51.65,
+    "max": 52,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 38.37,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.39,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.81,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2785.68,
+    "audio_age_ms_p95": -2761.95,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.79,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sau/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 38.63,
+    "min": 36,
+    "p50": 38,
+    "p95": 42.3,
+    "max": 43,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 27.75,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.07,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2792.22,
+    "audio_age_ms_p95": -2781.45,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 176.39,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sau/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 42.25,
+    "min": 40,
+    "p50": 42.5,
+    "p95": 44.65,
+    "max": 45,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5,
+    "systemd-resolve": 0.25,
+    "systemd": 0.12,
+    "systemd-journal": 0.12,
+    "systemd-network": 0.12,
+    "systemd-logind": 0.12
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.05,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.07,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2798.54,
+    "audio_age_ms_p95": -2760.53,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 270.67,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sau/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 49.38,
+    "min": 47,
+    "p50": 49,
+    "p95": 51.65,
+    "max": 52,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 37.62,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.26,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.97,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2783.47,
+    "audio_age_ms_p95": -2759.68,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.43,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sau/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 50,
+    "min": 48,
+    "p50": 50,
+    "p95": 51.65,
+    "max": 52,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 38.12,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.07,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2780.49,
+    "audio_age_ms_p95": -2775.01,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.66,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sal/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 39.25,
+    "min": 37,
+    "p50": 39.5,
+    "p95": 41,
+    "max": 41,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 28.12,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.09,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2792.44,
+    "audio_age_ms_p95": -2759.41,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 176.26,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sal/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 41.88,
+    "min": 40,
+    "p50": 42,
+    "p95": 43.65,
+    "max": 44,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 30.12,
+    "kbridge": 10,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.43,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.78,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2798.29,
+    "audio_age_ms_p95": -2760.05,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 269.08,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sal/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 49.38,
+    "min": 48,
+    "p50": 49,
+    "p95": 50.65,
+    "max": 51,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 37.75,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.42,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.79,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2793.4,
+    "audio_age_ms_p95": -2759.94,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.14,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sal/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 50.63,
+    "min": 48,
+    "p50": 51,
+    "p95": 52.95,
+    "max": 54,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 38.5,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.12,
+    "worst_loss_pct": 0,
+    "mean_fps": 50,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2788.75,
+    "audio_age_ms_p95": -2760.05,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.71,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sas/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 44.5,
+    "min": 40,
+    "p50": 45.5,
+    "p95": 47.65,
+    "max": 48,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 28.75,
+    "kbridge": 13.62,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.06,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2789.32,
+    "audio_age_ms_p95": -2786.39,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 273.28,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sas/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 44.88,
+    "min": 43,
+    "p50": 45,
+    "p95": 46.65,
+    "max": 47,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 33.62,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.02,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.99,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2767.21,
+    "audio_age_ms_p95": -2764.96,
+    "rows_wide_ps": 9.95,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 461.79,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sas/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 54.43,
+    "min": 53,
+    "p50": 55,
+    "p95": 55.7,
+    "max": 56,
+    "n": 7
+   },
+   "procs": {
+    "kweb": 42.24,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.03,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.99,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2787.6,
+    "audio_age_ms_p95": -2785.25,
+    "rows_wide_ps": 9.95,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.81,
+    "degraded": false
+   }
+  },
+  {
+   "label": "sas/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 55.71,
+    "min": 54,
+    "p50": 56,
+    "p95": 56.7,
+    "max": 57,
+    "n": 7
+   },
+   "procs": {
+    "kweb": 43.87,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2787.8,
+    "audio_age_ms_p95": -2784.73,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 148.8,
+    "degraded": false
+   }
+  },
+  {
+   "label": "nfm/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 34.25,
+    "min": 34,
+    "p50": 34,
+    "p95": 35,
+    "max": 35,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 23.38,
+    "kbridge": 10.13,
+    "rcu_preempt": 1.38,
+    "systemd-resolve": 0.13
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.23,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.88,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2798.64,
+    "audio_age_ms_p95": -2797.05,
+    "rows_wide_ps": 9.85,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 175.22,
+    "degraded": false
+   }
+  },
+  {
+   "label": "nfm/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 38,
+    "min": 36,
+    "p50": 37.5,
+    "p95": 40.3,
+    "max": 41,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 25.5,
+    "kbridge": 10.87,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.03,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2798.93,
+    "audio_age_ms_p95": -2797.26,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 269.96,
+    "degraded": false
+   }
+  },
+  {
+   "label": "nfm/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 43.88,
+    "min": 41,
+    "p50": 44,
+    "p95": 46.65,
+    "max": 47,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 32,
+    "kbridge": 10,
+    "rcu_preempt": 1.37,
+    "systemd-resolve": 0.25,
+    "systemd-network": 0.12
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.35,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.82,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2799.03,
+    "audio_age_ms_p95": -2756.97,
+    "rows_wide_ps": 9.96,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 110.26,
+    "degraded": false
+   }
+  },
+  {
+   "label": "nfm/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 44.25,
+    "min": 42,
+    "p50": 44.5,
+    "p95": 45.65,
+    "max": 46,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 32.75,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.01,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2799.15,
+    "audio_age_ms_p95": -2759.13,
+    "rows_wide_ps": 10.08,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.4,
+    "degraded": false
+   }
+  },
+  {
+   "label": "iq/adpcm",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 30.25,
+    "min": 28,
+    "p50": 30,
+    "p95": 32.65,
+    "max": 33,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 19.25,
+    "kbridge": 10.25,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.27,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.87,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2796.97,
+    "audio_age_ms_p95": -2794.36,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 272.87,
+    "degraded": false
+   }
+  },
+  {
+   "label": "iq/pcm12",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 35.75,
+    "min": 33,
+    "p50": 35.5,
+    "p95": 40.6,
+    "max": 42,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 23.75,
+    "kbridge": 10.87,
+    "rcu_preempt": 1.37
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.08,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2797.06,
+    "audio_age_ms_p95": -2795.2,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 462.97,
+    "degraded": false
+   }
+  },
+  {
+   "label": "iq/opus",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 44.38,
+    "min": 43,
+    "p50": 44.5,
+    "p95": 45,
+    "max": 45,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 32.62,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.11,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2797.37,
+    "audio_age_ms_p95": -2757.51,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 126.71,
+    "degraded": false
+   }
+  },
+  {
+   "label": "iq/opus_hq",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 45.75,
+    "min": 45,
+    "p50": 46,
+    "p95": 46.65,
+    "max": 47,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 33.75,
+    "kbridge": 10.13,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0.34,
+    "worst_loss_pct": 0,
+    "mean_fps": 49.83,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2797.48,
+    "audio_age_ms_p95": -2758.12,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 150.22,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/adpcm/v2",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 43.75,
+    "min": 42,
+    "p50": 44,
+    "p95": 45.3,
+    "max": 46,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 31.75,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 8,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.09,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2774.24,
+    "audio_age_ms_p95": -2737.87,
+    "rows_wide_ps": 10,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 288.72,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/adpcm/v4",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 64.75,
+    "min": 64,
+    "p50": 64.5,
+    "p95": 66.3,
+    "max": 67,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 52.11,
+    "kbridge": 10.37,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 16,
+    "worst_short_pct": 0.06,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.04,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2765.39,
+    "audio_age_ms_p95": -2732.43,
+    "rows_wide_ps": 10.07,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 514.81,
+    "degraded": false
+   }
+  },
+  {
+   "label": "usb/adpcm/nb",
+   "users": 4,
+   "admitted": 4,
+   "failures": [],
+   "cpu": {
+    "mean": 34.63,
+    "min": 34,
+    "p50": 34,
+    "p95": 36,
+    "max": 36,
+    "n": 8
+   },
+   "procs": {
+    "kweb": 23.37,
+    "kbridge": 10.12,
+    "rcu_preempt": 1.5
+   },
+   "spi": 8.9,
+   "lanes": 0,
+   "ddcs": [
+    {
+     "khz": 200.5,
+     "R": 133
+    }
+   ],
+   "quality": {
+    "listeners": 4,
+    "vfos": 4,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "mean_fps": 50.11,
+    "parked_vfos": 0,
+    "audio_age_ms_p50": -2778.86,
+    "audio_age_ms_p95": -2774.22,
+    "rows_wide_ps": 9.97,
+    "rows_narrow_ps": 0,
+    "kbps_per_listener": 176.56,
+    "degraded": false
+   }
+  }
+ ],
+ "failures": [],
+ "setup": {
+  "requested": 4,
+  "admitted": 0,
+  "failures": []
+ },
+ "limit": {
+  "hit": false,
+  "name": "no limit reached",
+  "nearest": "Beagle CPU (one 1 GHz Cortex-A8 core): 36 %"
+ },
+ "evidence": [],
+ "utilisation": [
+  {
+   "res": "cpu",
+   "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+   "used": 36,
+   "max": 100,
+   "unit": "% (p95 of 1 s)",
+   "pct": 36,
+   "note": "CPU guard off"
+  },
+  {
+   "res": "fifo",
+   "name": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped)",
+   "used": 26.17,
+   "max": 100,
+   "unit": "% full (max)",
+   "pct": 26.2,
+   "note": "groups dropped: SPI 0, lanes 0"
+  },
+  {
+   "res": "spi",
+   "name": "SPI link (McSPI at 48 MHz; kbridge budget spi_max)",
+   "used": 8.96,
+   "max": 40,
+   "unit": "Mbit/s",
+   "pct": 22.4,
+   "note": "planned 8.9, measured 8.96"
+  },
+  {
+   "res": "total",
+   "name": "Ethernet (100 Mbit/s; kbridge budget 87 Mbit/s for both links)",
+   "used": 8.9,
+   "max": 87,
+   "unit": "Mbit/s",
+   "pct": 10.2
+  },
+  {
+   "res": "ddcs",
+   "name": "FPGA DDCs (13: the XC7A35T is ~97 % full)",
+   "used": 1,
+   "max": 13,
+   "unit": "DDCs",
+   "pct": 7.7,
+   "note": "0:web"
+  },
+  {
+   "res": "fir",
+   "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+   "used": 0.25,
+   "max": 6.67,
+   "unit": "M outputs/s",
+   "pct": 3.8
+  },
+  {
+   "res": "eth_tx",
+   "name": "Beagle Ethernet transmit (100 Mbit/s)",
+   "used": 0.84,
+   "max": 100,
+   "unit": "Mbit/s (max of 5 s)",
+   "pct": 0.8
+  },
+  {
+   "res": "lanes",
+   "name": "PRU lanes link (3 header pins sampled by the PRUs; kbridge budget lane_max)",
+   "used": 0,
+   "max": 45,
+   "unit": "Mbit/s",
+   "pct": 0,
+   "note": "planned 0, measured 0"
+  },
+  {
+   "res": "narrow",
+   "name": "FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)",
+   "used": 0,
+   "max": 4,
+   "unit": "DDCs",
+   "pct": 0
+  }
+ ],
+ "cpu_breakdown": {
+  "kweb demodulator: USB": 12.33,
+  "kbridge: stream drain, decode of web groups, host forwarding, GPS": 10.12,
+  "kweb sources: 40m (200.5 kHz)": 6.23,
+  "kweb users: networking, waterfall rows, status": 4.82,
+  "other processes": 1.14
+ },
+ "limit_line": "no limit hit (nearest: Beagle CPU (one 1 GHz Cortex-A8 core): 36 %)"
+}

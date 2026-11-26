@@ -1,0 +1,174 @@
+# kiwi-offload.conf: the ONE configuration file. kbridge and kweb both read all of it (bridge/kconf.h), so each knows
+# what the other is set to. Copy to the Beagle (e.g. /home/debian/ko/kiwi-offload.conf) and use tools/kiwi-offload.sh
+# (start | stop | restart | status), which runs:
+#   kbridge load --config <file>; kbridge wb2 --config <file>; kweb --config <file>
+# A KB_* environment variable overrides its [kbridge] key; a kweb --option overrides its [kweb] key.
+# Widths are usable kHz (a DDC carries ~80 % of its rate); kweb's CPU guard decides what can run at the same time.
+
+[kbridge]
+bitstream = stream_v25_13_lanes.bit    ; FPGA image, loaded by 'kbridge load --config'
+aout = KiwiSDR.rx8.wf3.aout            ; eCPU code
+fpga_id = 7
+nddc = 13                  ; DDCs in the bitstream
+pack = on                  ; packed groups (variable bits per sample)
+ddr = on                   ; DDR rings (kodma)
+lanes = on                 ; the PRU lanes link as well as SPI (off: SPI only, still on a PRU)
+# pru = on                 ; the SPI stream on a PRU (off: the kernel's SPI driver from the ARM: debugging only)
+snapshots = 100            ; ms between full-band snapshots (the waterfall): 2.8 Mbit/s of SPI at 100. 100:L sends them on
+                           ; the lanes instead: no full-band waterfall then, and no DDC snapshots ([kweb] zoom_snapshots)
+gps = on                   ; GPS in kbridge: time, position, the ADC clock measurement (tuning corrected with it);
+                           ; off = no GPS work at all (no CPU)
+# gps_search_cpu = 10      ; % of a core the satellite search may use on average (only while a channel is free)
+# gps_location = 51.48, 0.0, 45   ; known antenna position: lat, lon[, ground elevation in m above sea level, as
+                           ; maps give it]: precise time from a single satellite. Without the ground elevation the
+                           ; survey's height is used once it has 300 fixes (until then sea level: each 30 m off
+                           ; moves the time by up to 0.1 us). Without gps_location: the survey (the mean of this
+                           ; receiver's own fixes, kept in gps_survey) once it has any.
+# gps_antenna_height = 10  ; the antenna's height above the ground (m), added to gps_location's ground elevation
+# gps_chrony = on          ; post precise GPS time to chrony (NTP shared memory unit 0; config/chrony-kiwi-offload.conf)
+# gps_pps = on             ; the GPS 1 PPS: the FPGA (gateware v24 and later) pulses P9_26 on each GPS second while GPS has
+                           ; time; Linux sees it as /dev/pps0 (kiwi-offload-pps.service) and chrony disciplines the
+                           ; clock to it (~1 us, against ~0.1 ms from GPS time alone). off: no pulses
+# realtime = on            ; kbridge's drain loop at real-time priority (SCHED_FIFO 40): it must empty the PRUs' DDR
+#                          ; rings (~1 s of stream) whatever else runs; off: normal priority
+# mailbox_clkd = 1         ; the eCPU mailbox's clock for long transfers (GPS samples): 1 = 24 MHz, 2 = 12 MHz. The SPI
+#                          ; stream pauses during each one; at 12 MHz they overflowed the FPGA's 4K-word SPI FIFO
+# rf_attn = 0              ; the RF step attenuator (PE4312, KiwiSDR 2) at start, dB 0..31.5 in 0.5 dB steps; changed
+                           ; at run time on kweb's admin page only
+# rf_attn_fitted = auto     ; yes | no: whether the board has one (auto: as kiwid, a KiwiSDR 2 with serial 20000..22999)
+# leds = brightest         ; the Beagle's 4 user LEDs as a status display: usr0 stream (on: clean, blinking: an
+                           ; error in the last 10 s), usr1 GPS (on: GPS time, blinking: tracking), usr2 a host client
+                           ; attached, usr3 kweb in use; a failed FPGA load shows its code in binary.
+                           ; brightest | medium | dimmer | dimmest (the dimmer ones blink a lit LED as crude PWM, as
+                           ; kiwid does) | off | system (left to Linux: heartbeat, SD, CPU, eMMC activity)
+ext_clock = off            ; ADC clock from the external clock input (e.g. a GPSDO) instead of the on-board oscillator
+# ext_clock_hz = 66666600  ; the external clock's nominal frequency (the tuning assumes it)
+# ext_clock_gps = off      ; with ext_clock: GPS also corrects the tuning (off: it only measures and shows the offset)
+# spi_max = 40             ; Mbit/s the allocator may put on SPI / the lanes
+# lane_max = 45
+
+# The host's slices (I/Q to the processing host): <kHz>:<R>[:<gain>][:L = lanes][:b<bits>]; several 'slices =' lines
+# are joined. R: 18..511 (rate 66.6666 MHz / 2R; > 256 only on DDCs 0..3). Leave out for a web-only Kiwi.
+[host]
+slices = 136.75:511:4:b10 475.5:511:4:b10 10125:400:4 1905:140:4 3650:87:4 5332:180:4:b10 7100:133:4
+slices = 18118:256:4 24940:256:4:b10 14175:76:4:L:b10 21225:59:4:L:b10 28250:53:4:L:b10 28700:83:4:L:b10
+
+# How the 13 DDCs are shared. host_ddcs + web_ddcs <= 13: a fixed split, each side always has its DDCs. More than 13:
+# they overlap and the host wins (it takes back web DDCs when it needs them). Either way, a host request refused for
+# link or FIR budget takes back kweb's DDCs and is tried again. kbridge and kweb both honour this.
+[pool]
+host_ddcs = 13
+web_ddcs = 13
+
+[kweb]
+port = 8073
+www = kweb-www             ; the web page's directory (next to the binaries)
+# password =               ; owner password ("" = the first user to connect is the owner of the free window)
+# admin_password =         ; the admin page http://<beagle>:8073/admin.html (status, edit this file); unset = off
+max_users = 10             ; web listeners at once (admin pages don't count); the next is told it's full and retries
+vfo_per_user = 4           ; VFOs one listener may open
+vfo_max = 20               ; VFOs across all listeners (each costs ~4 % of the CPU; the CPU guard also refuses)
+cpu_reserve = 15           ; % of the CPU kept free; new sources/VFOs must fit above it. 0: no CPU guard at all
+onair = on                 ; the "On air" list (the users pill on the page): every listener's frequency and mode (as
+                           ; "listener N": never an address or name), the PC's streams, the board; and "listen along"
+                           ; (hear another listener's VFO, see their waterfall: no demodulator of your own, ~1 % of
+                           ; the CPU). on | owner (the owner and admin only) | off
+# along_max = 0            ; listeners along per VFO (0: no limit)
+
+# the free-tuning window: one DDC shared by its users, moved by the owner
+free_window = on
+free_centre = 7100         ; kHz
+free_width = 208           ; kHz
+max_width = 417            ; widest the owner may choose
+
+# own receivers: a DDC per user ("my own receiver"); 52 kHz needs DDCs 0..3, else 104 kHz is used
+own_max = 4
+own_width = 52
+
+linger = 30                ; s a shared window keeps its DDC after its last listener (band hopping)
+show_host_slices = off     ; also list the host's slices as "other ranges" (bands and "go to" use them anyway)
+gps_position = rounded     ; GPS position for listeners: full | rounded (~1 km) | grid (locator) | off (owner/admin: full)
+sharp_ssb_filters = on     ; SSB/CW on sources above ~190 kS/s get a second, sharp channel filter (the other sideband
+                           ; > 160 dB down even 700 Hz from the edge; without it 13-30 dB): ~0.7 % CPU per such VFO on
+                           ; the 40 m window (~250 kS/s, measured), up to ~1.7 % on the widest sources
+default_source = 40m       ; where a new user starts (a window name; "" = the first one; own: their own receiver at
+                           ; free_centre, like a KiwiSDR channel, or the first window if none can start)
+zoom_waterfall = on        ; one main waterfall per user, zoomable from all of 0-33.3 MHz down to 2 kHz across, in place of
+                           ; two (the full band + the narrow waterfall of the user's window: off, or no line). Zoomed in
+                           ; (finer than 2 kHz per pixel) it shows, in this order: a running receiver's own rows where one
+                           ; covers the view; captures (below) zoomed past that receiver's bins; DDC snapshots (below)
+                           ; where no receiver covers it; the full band's 4 kHz bins around and behind all of them
+zoom_capture = on          ; zoom_waterfall zoomed in finer than a running receiver's own bins (fs / 2048): FFTs of its
+                           ; newest I/Q (4096-16384 points, e.g. 15 Hz bins on 40 m), shared by every viewer, admitted by
+                           ; the CPU guard (~0.85 % at 4096 points .. ~7.2 % at 16384, at 10/s) and the first thing dropped
+                           ; when short. Zoom windows (below) always use them, whatever this says (2048-16384 points: bins
+                           ; no wider than the view's pixels, ~0.4 % at 2048)
+zoom_fps = 10              ; those FFTs per second (1-10); also each view's DDC snapshot rate (below)
+zoom_snapshots = on        ; the zoomed waterfall's detail where no receiver runs: frames of the view's own span (4.1 kHz-
+                           ; 1.96 MHz across, 1024 bins per row) from DDC snapshots (stream gateware v25 and later, raw
+                           ; snapshots on SPI): a spare DDC of 9..12, one no listener or host is using, is retuned to each
+                           ; view in turn. Up to zoom_fps frames/s per view and 100 frames/s in all (7 Mbit/s of SPI at
+                           ; the lowest priority, outside the link budget); 20 frames/s in all while the slices on SPI
+                           ; take more than 33 Mbit/s. A frame lasts about 1024 / span seconds (1 ms at 1 MHz across,
+                           ; 16 ms at 65 kHz), so narrow views use the DDC longest. CPU: kbridge ~0.26 % per frame/s
+                           ; (measured: 10 views at ~8.4/s took it from 12 % to 34 %), kweb ~0.5 % per view; the CPU
+                           ; guard lowers the rate when short, and a listener or the host taking the DDC always wins.
+                           ; off: such views show the full band's 4 kHz bins (or a zoom window, if any)
+zoom_windows = 0           ; zoom_waterfall zoomed in where no receiver runs, before DDC snapshots: at most this many
+                           ; streaming "spare receivers" (0 = none: the snapshots replace them). kweb DDCs of 104 kHz-
+                           ; 1.48 MHz (the narrowest that fills the view; one per view, so a view wider than 1.48 MHz
+                           ; shows the full band alone), centred on such views, shared by every view inside one, on spare
+                           ; DDCs only (never 0-3). Waterfall only: 8-bit samples (16.5 bit/sample on the links: 2.2 Mbit/s
+                           ; at 104 kHz .. 30.6 at 1.48 MHz, asked for only when kbridge's link budget has room) and no
+                           ; audio engine: ~1 % CPU (kbridge) at 104 kHz .. ~11 % at 1.48 MHz, plus their views' FFTs
+                           ; (above). They give way first to any listener or the host, and stop 10 s after their last
+                           ; viewer
+zoom_keep_free = 1         ; ... started only while more than this many DDCs stay free (for listeners and the host)
+# Each web user can turn their own waterfall off (the page's "waterfall" box: kweb then sends them no rows and holds
+# nothing for their view) or their audio (the "audio" box: waterfall only, no VFO); the browser remembers both
+
+# fixed shared windows, started when the first user picks one and stopped after the last one leaves (+ linger).
+# Region 1 HF bands; CPU while in use (the guard's model) ~0.7 + 2.3 % per 100 kS/s, plus ~4.2 % per listener (USB, ADPCM).
+[window 160m]
+centre = 1905
+width = 190
+
+[window 80m]
+centre = 3650
+width = 300
+
+[window 60m]
+centre = 5359
+width = 20                 ; -> 52 kHz (the narrowest DDC; DDCs 0..3)
+
+[window 40m]
+centre = 7100
+width = 200
+
+[window 30m]
+centre = 10125
+width = 50                 ; -> 52 kHz (DDCs 0..3)
+
+[window 20m]
+centre = 14175
+width = 350
+
+[window 17m]
+centre = 18118
+width = 104                ; (100 would need a narrow-capable DDC: R 266 > 256)
+
+[window 15m]
+centre = 21225
+width = 450
+
+[window 12m]
+centre = 24940
+width = 104
+
+[window 10m]
+centre = 28250
+width = 500                ; 28.0-28.5 MHz (all of 10 m in one DDC would cost ~35-40 % of the CPU)
+
+[window 10m upper]
+centre = 28750
+width = 500                ; 28.5-29.0 MHz

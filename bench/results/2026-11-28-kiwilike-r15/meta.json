@@ -1,0 +1,22 @@
+{
+ "started": "2026-11-28T10:15:16.797Z",
+ "suites": [
+  "kiwilike"
+ ],
+ "options": {
+  "measure": 15,
+  "settle": 5,
+  "hold": 10,
+  "dwell": 3,
+  "dwellQ": 8,
+  "dwellHost": 3,
+  "settleStep": 3,
+  "measureStep": 8,
+  "kbSettle": 45,
+  "px": 1024
+ },
+ "kiwi_version": "d4393d5",
+ "runs": [
+  "kiwilike.hp1x192.ownrand.usb-adpcm.u9.zoomhalf"
+ ]
+}

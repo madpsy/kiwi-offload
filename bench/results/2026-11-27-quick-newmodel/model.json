@@ -1,0 +1,14 @@
+{
+ "per_host": {
+  "none": {
+   "label": "no host",
+   "idle": null,
+   "a": 21.57,
+   "per_listener": 4.57,
+   "from": "quick.none.band40.usb-adpcm"
+  }
+ },
+ "per_profile": {},
+ "sources": {},
+ "baseline_idle": null
+}

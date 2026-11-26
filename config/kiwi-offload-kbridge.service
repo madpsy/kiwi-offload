@@ -1,0 +1,32 @@
+# kiwi-offload-kbridge.service: kbridge (root: FPGA, eCPU, PRUs, DDR rings). Template: tools/install.sh fills in @KO_DIR@.
+# Every start loads the FPGA image and eCPU code first ('kbridge load'), so a restart after a crash starts clean.
+# Log: /run/kiwi-offload/kwb.log (RAM: emptied at each start, capped at 4 MB by kbridge; nothing on the eMMC).
+# /run/kiwi-offload also holds kbridge's runtime state (FPGA epoch counts, bitstream name, SPI mode, lock).
+[Unit]
+Description=kiwi-offload kbridge
+PartOf=kiwi-offload.target
+After=systemd-modules-load.service network-online.target chrony.service
+Wants=network-online.target
+# the stock KiwiSDR server drives the same FPGA and SPI: never both
+Conflicts=kiwid.service
+After=kiwid.service
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+[Service]
+Type=simple
+WorkingDirectory=@KO_DIR@
+RuntimeDirectory=kiwi-offload
+RuntimeDirectoryMode=0755
+RuntimeDirectoryPreserve=yes
+ExecStartPre=/sbin/modprobe kodma
+ExecStartPre=@KO_DIR@/kbridge load --config @KO_DIR@/kiwi-offload.conf
+# (the log opened by the service's shell, as kweb's is: see kiwi-offload-kweb.service)
+ExecStart=/bin/sh -c 'exec @KO_DIR@/kbridge wb2 --config @KO_DIR@/kiwi-offload.conf > /run/kiwi-offload/kwb.log 2>&1'
+Restart=on-failure
+RestartSec=5
+TimeoutStartSec=120
+TimeoutStopSec=20
+
+[Install]
+WantedBy=kiwi-offload.target

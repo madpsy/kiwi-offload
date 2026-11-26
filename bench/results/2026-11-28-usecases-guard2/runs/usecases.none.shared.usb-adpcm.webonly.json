@@ -1,0 +1,1199 @@
+{
+ "id": "usecases.none.shared.usb-adpcm.webonly",
+ "suite": "usecases",
+ "kind": "ramp",
+ "spec": {
+  "suite": "usecases",
+  "kind": "ramp",
+  "host": "none",
+  "pattern": "shared",
+  "profile": "usb/adpcm",
+  "id": "usecases.none.shared.usb-adpcm.webonly",
+  "tag": "webonly"
+ },
+ "started": "2026-11-28T08:37:46.842Z",
+ "host_setup": "no host",
+ "config": {
+  "host": {
+   "slices": null
+  },
+  "pool": {
+   "host_ddcs": 13,
+   "web_ddcs": 13
+  },
+  "kweb": {
+   "max_users": 64,
+   "vfo_per_user": 4,
+   "vfo_max": 64,
+   "max_sources": 3,
+   "own_max": 8,
+   "own_width": 104,
+   "linger": 0,
+   "free_window": "on",
+   "free_centre": 14175,
+   "free_width": 208,
+   "max_width": 417,
+   "show_host_slices": "on",
+   "default_source": "40m",
+   "cpu_reserve": 15,
+   "sharp_ssb_filters": "on",
+   "zoom_waterfall": "on",
+   "zoom_snapshots": "on"
+  },
+  "windows": [
+   {
+    "name": "40m",
+    "centre": 7100,
+    "width": 200
+   },
+   {
+    "name": "30m",
+    "centre": 10125,
+    "width": 50
+   },
+   {
+    "name": "20m",
+    "centre": 14175,
+    "width": 350
+   },
+   {
+    "name": "17m",
+    "centre": 18118,
+    "width": 104
+   },
+   {
+    "name": "15m",
+    "centre": 21225,
+    "width": 450
+   },
+   {
+    "name": "12m",
+    "centre": 24940,
+    "width": 104
+   },
+   {
+    "name": "10m",
+    "centre": 28250,
+    "width": 500
+   }
+  ]
+ },
+ "host_grants": {
+  "requested": 0
+ },
+ "admin": {
+  "seconds": 10,
+  "cpu_busy": {
+   "mean": 79.3,
+   "min": 78,
+   "p50": 79,
+   "p95": 80.55,
+   "max": 81,
+   "n": 10
+  },
+  "cpu_free": {
+   "mean": 5.01,
+   "min": 4.4,
+   "p50": 5,
+   "p95": 5.51,
+   "max": 5.6,
+   "n": 10
+  },
+  "guard": true,
+  "reserve": 15,
+  "spi_meas": {
+   "mean": 13.56,
+   "min": 13.56,
+   "p50": 13.56,
+   "p95": 13.56,
+   "max": 13.56,
+   "n": 10
+  },
+  "lanes_meas": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 10
+  },
+  "spi_plan": {
+   "mean": 13.49,
+   "min": 13.49,
+   "p50": 13.49,
+   "p95": 13.49,
+   "max": 13.49,
+   "n": 10
+  },
+  "lanes_plan": {
+   "mean": 0,
+   "min": 0,
+   "p50": 0,
+   "p95": 0,
+   "max": 0,
+   "n": 10
+  },
+  "spi_max": 40,
+  "lanes_max": 45,
+  "ddcs": {
+   "host": 0,
+   "web": 1,
+   "own": 0,
+   "total": 1
+  },
+  "ddcs_max": 1,
+  "ddc_list": [
+   {
+    "ddc": 1,
+    "who": "web",
+    "name": "20m",
+    "khz": 350.88,
+    "lane": "spi",
+    "R": 76,
+    "bits": 12,
+    "mbps": 10.69,
+    "users": 14
+   }
+  ],
+  "web_users": 15,
+  "external_users": 0,
+  "host_slices": 0,
+  "windows": [
+   {
+    "name": "20m",
+    "state": "active",
+    "users": 14,
+    "width": 350.88,
+    "on": "DDC 1",
+    "cost": 10.8
+   }
+  ],
+  "gps": {
+   "fix": "tracking",
+   "fixes": 0,
+   "used": 1
+  },
+  "samples": 10,
+  "procs": {
+   "kweb": 64.09,
+   "kbridge": 12.8
+  },
+  "cpu_split": {
+   "us": 67.8,
+   "ni": 2.7,
+   "sy": 6.3,
+   "id": 20.8,
+   "wa": 0,
+   "hi": 0,
+   "si": 2.5,
+   "st": 0
+  },
+  "hist": {
+   "points": 1,
+   "step": 5,
+   "cpu": 79.02,
+   "cpu_max": 79.8,
+   "load": 0.82,
+   "drops_spi": 0,
+   "drops_lanes": 0,
+   "fifo_spi_max": 26.17,
+   "fifo_lanes_max": 0,
+   "net_rx": 0.2,
+   "net_tx": 2.36,
+   "net_tx_max": 2.39,
+   "gps_acq": 0,
+   "ecpu_acq": 0,
+   "ecpu_other": 83,
+   "events": []
+  }
+ },
+ "host_window": null,
+ "users": [
+  {
+   "id": 2,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.92,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.16,
+     "muted_pct": 0,
+     "kbps": 107.02,
+     "age_ms": {
+      "mean": -4268.13,
+      "min": -4279.64,
+      "p50": -4276.44,
+      "p95": -4236.21,
+      "max": -4235.15,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 148.97,
+   "kbps_by": {
+    "wide_waterfall": 21.89,
+    "narrow_waterfall": 0,
+    "audio": 107.02,
+    "status_json": 20.06
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 3,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.12,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.45,
+     "age_ms": {
+      "mean": -4259.42,
+      "min": -4262.03,
+      "p50": -4259.08,
+      "p95": -4257.8,
+      "max": -4220.91,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.33,
+   "kbps_by": {
+    "wide_waterfall": 21.81,
+    "narrow_waterfall": 0,
+    "audio": 107.45,
+    "status_json": 20.07
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 4,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 50.02,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.24,
+     "age_ms": {
+      "mean": -4263.19,
+      "min": -4265.66,
+      "p50": -4262.88,
+      "p95": -4261.54,
+      "max": -4222.75,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 148.58,
+   "kbps_by": {
+    "wide_waterfall": 21.26,
+    "narrow_waterfall": 0,
+    "audio": 107.24,
+    "status_json": 20.08
+   },
+   "full_rows": {
+    "wide": 1,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 5,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 50.02,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.24,
+     "age_ms": {
+      "mean": -4263.44,
+      "min": -4266.98,
+      "p50": -4264.05,
+      "p95": -4262.05,
+      "max": -4223.79,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.28,
+   "kbps_by": {
+    "wide_waterfall": 21.97,
+    "narrow_waterfall": 0,
+    "audio": 107.24,
+    "status_json": 20.07
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 6,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.92,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.17,
+     "muted_pct": 0,
+     "kbps": 107.02,
+     "age_ms": {
+      "mean": -4265.26,
+      "min": -4274.3,
+      "p50": -4271.21,
+      "p95": -4231.19,
+      "max": -4230.12,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 148.98,
+   "kbps_by": {
+    "wide_waterfall": 21.88,
+    "narrow_waterfall": 0,
+    "audio": 107.02,
+    "status_json": 20.07
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 7,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 502,
+     "fps": 50.02,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.23,
+     "age_ms": {
+      "mean": -4266.63,
+      "min": -4274.22,
+      "p50": -4271.06,
+      "p95": -4231.01,
+      "max": -4229.11,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.21,
+   "kbps_by": {
+    "wide_waterfall": 21.87,
+    "narrow_waterfall": 0,
+    "audio": 107.23,
+    "status_json": 20.11
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 8,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.12,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.45,
+     "age_ms": {
+      "mean": -4264.87,
+      "min": -4271.18,
+      "p50": -4268.02,
+      "p95": -4229.6,
+      "max": -4224.35,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.42,
+   "kbps_by": {
+    "wide_waterfall": 21.9,
+    "narrow_waterfall": 0,
+    "audio": 107.45,
+    "status_json": 20.07
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 9,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.12,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.45,
+     "age_ms": {
+      "mean": -4255.64,
+      "min": -4294.58,
+      "p50": -4251.87,
+      "p95": -4249.25,
+      "max": -4244.23,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.45,
+   "kbps_by": {
+    "wide_waterfall": 21.92,
+    "narrow_waterfall": 0,
+    "audio": 107.45,
+    "status_json": 20.09
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 10,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 503,
+     "fps": 50.12,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0,
+     "muted_pct": 0,
+     "kbps": 107.45,
+     "age_ms": {
+      "mean": -4258.75,
+      "min": -4262.27,
+      "p50": -4259.18,
+      "p95": -4255.78,
+      "max": -4218.78,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 149.45,
+   "kbps_by": {
+    "wide_waterfall": 21.93,
+    "narrow_waterfall": 0,
+    "audio": 107.45,
+    "status_json": 20.08
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 11,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.92,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.17,
+     "muted_pct": 0,
+     "kbps": 107.02,
+     "age_ms": {
+      "mean": -4254.41,
+      "min": -4293.08,
+      "p50": -4250.37,
+      "p95": -4246.96,
+      "max": -4242.41,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 147.33,
+   "kbps_by": {
+    "wide_waterfall": 21.81,
+    "narrow_waterfall": 0,
+    "audio": 107.02,
+    "status_json": 18.5
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 12,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 500,
+     "fps": 49.82,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.37,
+     "muted_pct": 0,
+     "kbps": 106.81,
+     "age_ms": {
+      "mean": -4256.98,
+      "min": -4298.43,
+      "p50": -4255.64,
+      "p95": -4252.08,
+      "max": -4215.28,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 147.2,
+   "kbps_by": {
+    "wide_waterfall": 21.9,
+    "narrow_waterfall": 0,
+    "audio": 106.81,
+    "status_json": 18.49
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 13,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 500,
+     "fps": 49.82,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.37,
+     "muted_pct": 0,
+     "kbps": 106.8,
+     "age_ms": {
+      "mean": -4259.64,
+      "min": -4282.42,
+      "p50": -4242.34,
+      "p95": -4237.96,
+      "max": -4235.11,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 147.12,
+   "kbps_by": {
+    "wide_waterfall": 21.83,
+    "narrow_waterfall": 0,
+    "audio": 106.8,
+    "status_json": 18.49
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 14,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.91,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.17,
+     "muted_pct": 0,
+     "kbps": 107.02,
+     "age_ms": {
+      "mean": -4262.76,
+      "min": -4268.79,
+      "p50": -4265.47,
+      "p95": -4225.57,
+      "max": -4223.11,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 147.32,
+   "kbps_by": {
+    "wide_waterfall": 21.81,
+    "narrow_waterfall": 0,
+    "audio": 107.02,
+    "status_json": 18.49
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  },
+  {
+   "id": 15,
+   "src": -4,
+   "own": false,
+   "vfos": [
+    {
+     "id": 0,
+     "mode": "usb",
+     "codec": "adpcm",
+     "frames": 501,
+     "fps": 49.91,
+     "gaps": 0,
+     "loss_pct": 0,
+     "short_pct": 0.17,
+     "muted_pct": 0,
+     "kbps": 107.02,
+     "age_ms": {
+      "mean": -4254.52,
+      "min": -4296.67,
+      "p50": -4254.4,
+      "p95": -4251.15,
+      "max": -4213.05,
+      "n": 125
+     }
+    }
+   ],
+   "rows_wide_ps": 9.96,
+   "rows_narrow_ps": 0,
+   "kbps": 147.4,
+   "kbps_by": {
+    "wide_waterfall": 21.89,
+    "narrow_waterfall": 0,
+    "audio": 107.02,
+    "status_json": 18.49
+   },
+   "full_rows": {
+    "wide": 2,
+    "narrow": 0
+   },
+   "px": 1024,
+   "notes": [],
+   "closed": false
+  }
+ ],
+ "quality": {
+  "listeners": 14,
+  "vfos": 14,
+  "worst_short_pct": 0.37,
+  "worst_loss_pct": 0,
+  "mean_fps": 49.98,
+  "parked_vfos": 0,
+  "audio_age_ms_p50": -4260.86,
+  "audio_age_ms_p95": -4225.57,
+  "rows_wide_ps": 9.96,
+  "rows_narrow_ps": 0,
+  "kbps_per_listener": 148.5,
+  "degraded": false
+ },
+ "last": {
+  "windows": [
+   {
+    "name": "20m",
+    "width": 350.8768
+   }
+  ],
+  "hostTaps": [],
+  "vfos": [
+   {
+    "f": 14175000,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14203991,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14110175,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14261972,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14168156,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14074340,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14226138,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14132321,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14284119,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14190303,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14096487,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14248285,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14154468,
+    "mode": "usb",
+    "codec": "adpcm"
+   },
+   {
+    "f": 14060652,
+    "mode": "usb",
+    "codec": "adpcm"
+   }
+  ],
+  "users": 15
+ },
+ "ramp": {
+  "admitted": 14,
+  "stop": {
+   "at": 15,
+   "what": "vfo",
+   "reason": "the Beagle's CPU is busy: another VFO needs ~3.2 %, 4.2 % is free",
+   "class": "cpu"
+  },
+  "steps": [
+   {
+    "n": 1,
+    "busy": 25.7,
+    "free": 53.8,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.34,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 2,
+    "busy": 32,
+    "free": 52.2,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.36,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 3,
+    "busy": 34.3,
+    "free": 48.2,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.35,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 4,
+    "busy": 39,
+    "free": 44.4,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.66,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 5,
+    "busy": 41.7,
+    "free": 40.6,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.38,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 6,
+    "busy": 50,
+    "free": 33.9,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.68,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 7,
+    "busy": 49.3,
+    "free": 30.7,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.34,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 8,
+    "busy": 55.3,
+    "free": 27.9,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.66,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 9,
+    "busy": 59,
+    "free": 23.8,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 10,
+    "busy": 64.3,
+    "free": 19.3,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 1.36,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 11,
+    "busy": 67.3,
+    "free": 15.4,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.71,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 12,
+    "busy": 71.3,
+    "free": 11.4,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.01,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 13,
+    "busy": 75.7,
+    "free": 7.2,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.02,
+    "worst_loss_pct": 0,
+    "degraded": false
+   },
+   {
+    "n": 14,
+    "busy": 78.7,
+    "free": 3.5,
+    "spi": 13.5,
+    "lanes": 0,
+    "ddcs": 1,
+    "worst_short_pct": 0.7,
+    "worst_loss_pct": 0,
+    "degraded": false
+   }
+  ],
+  "degraded_while_admitting": []
+ },
+ "stop": {
+  "at": 15,
+  "what": "vfo",
+  "reason": "the Beagle's CPU is busy: another VFO needs ~3.2 %, 4.2 % is free",
+  "class": "cpu"
+ },
+ "failures": [
+  {
+   "at": 15,
+   "what": "vfo",
+   "reason": "the Beagle's CPU is busy: another VFO needs ~3.2 %, 4.2 % is free",
+   "class": "cpu"
+  }
+ ],
+ "limit": {
+  "hit": true,
+  "kind": "refused",
+  "resource": "cpu",
+  "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+  "detail": "the Beagle's CPU is busy: another VFO needs ~3.2 %, 4.2 % is free",
+  "via": "kweb CPU guard (refused before overloading)",
+  "cap": null,
+  "component": "kweb demodulator: USB",
+  "also": [],
+  "cpu_top": "kweb demodulator: USB"
+ },
+ "evidence": [
+  {
+   "kind": "refused",
+   "what": "vfo",
+   "res": "cpu",
+   "via": "kweb CPU guard (refused before overloading)",
+   "detail": "the Beagle's CPU is busy: another VFO needs ~3.2 %, 4.2 % is free"
+  }
+ ],
+ "utilisation": [
+  {
+   "res": "cpu",
+   "name": "Beagle CPU (one 1 GHz Cortex-A8 core)",
+   "used": 80.55,
+   "max": 100,
+   "unit": "% (p95 of 1 s)",
+   "pct": 80.6,
+   "note": "the CPU guard admits up to 85 %"
+  },
+  {
+   "res": "spi",
+   "name": "SPI link (McSPI at 48 MHz; kbridge budget spi_max)",
+   "used": 13.56,
+   "max": 40,
+   "unit": "Mbit/s",
+   "pct": 33.9,
+   "note": "planned 13.49, measured 13.56"
+  },
+  {
+   "res": "fifo",
+   "name": "FPGA FIFOs / DDR rings (drained by the PRUs; whole groups dropped)",
+   "used": 26.17,
+   "max": 100,
+   "unit": "% full (max)",
+   "pct": 26.2,
+   "note": "groups dropped: SPI 0, lanes 0"
+  },
+  {
+   "res": "total",
+   "name": "Ethernet (100 Mbit/s; kbridge budget 87 Mbit/s for both links)",
+   "used": 13.49,
+   "max": 87,
+   "unit": "Mbit/s",
+   "pct": 15.5
+  },
+  {
+   "res": "ddcs",
+   "name": "FPGA DDCs (13: the XC7A35T is ~97 % full)",
+   "used": 1,
+   "max": 13,
+   "unit": "DDCs",
+   "pct": 7.7,
+   "note": "1:web"
+  },
+  {
+   "res": "fir",
+   "name": "FPGA shared FIR (~10 clocks per output: ~6.7 M outputs/s for all DDCs)",
+   "used": 0.44,
+   "max": 6.67,
+   "unit": "M outputs/s",
+   "pct": 6.6
+  },
+  {
+   "res": "eth_tx",
+   "name": "Beagle Ethernet transmit (100 Mbit/s)",
+   "used": 2.39,
+   "max": 100,
+   "unit": "Mbit/s (max of 5 s)",
+   "pct": 2.4
+  },
+  {
+   "res": "lanes",
+   "name": "PRU lanes link (3 header pins sampled by the PRUs; kbridge budget lane_max)",
+   "used": 0,
+   "max": 45,
+   "unit": "Mbit/s",
+   "pct": 0,
+   "note": "planned 0, measured 0"
+  },
+  {
+   "res": "narrow",
+   "name": "FPGA narrow DDCs (only DDCs 0-3 decimate past R 256)",
+   "used": 0,
+   "max": 4,
+   "unit": "DDCs",
+   "pct": 0
+  }
+ ],
+ "cpu_breakdown": {
+  "kweb demodulator: USB": 40.68,
+  "kweb users: networking, waterfall rows, status": 13.62,
+  "kbridge: stream drain, decode of web groups, host forwarding, GPS": 12.8,
+  "kweb sources: 20m (350.9 kHz)": 9.79,
+  "other processes": 2.41
+ },
+ "limit_line": "Beagle CPU (one 1 GHz Cortex-A8 core) - kweb demodulator: USB [kweb CPU guard (refused before overloading)]"
+}
